@@ -34,11 +34,23 @@ export function validateSupabaseMigration(sql) {
     }
   }
 
-  if (!/create\s+or\s+replace\s+function\s+public\.owns_student_profile/i.test(sql)) {
-    errors.push('Função central de isolamento do perfil ausente.');
+  if (!/create\s+schema\s+if\s+not\s+exists\s+private/i.test(sql)) {
+    errors.push('Schema privado de autorização ausente.');
   }
 
-  if (!/auth\.uid\(\)\s+is\s+not\s+null/i.test(sql)) {
+  if (!/create\s+or\s+replace\s+function\s+private\.owns_student_profile/i.test(sql)) {
+    errors.push('Helper privado de isolamento do perfil ausente.');
+  }
+
+  if (!/private\.owns_student_profile[\s\S]*security\s+invoker/i.test(sql)) {
+    errors.push('O helper privado deve usar SECURITY INVOKER.');
+  }
+
+  if (!/drop\s+function\s+if\s+exists\s+public\.owns_student_profile\s*\(text\)/i.test(sql)) {
+    errors.push('O helper SECURITY DEFINER do schema público não foi removido.');
+  }
+
+  if (!/auth\.uid\(\)\)\s+is\s+not\s+null|auth\.uid\(\)\s+is\s+not\s+null/i.test(sql)) {
     errors.push('A verificação explícita de usuário autenticado está ausente.');
   }
 
@@ -48,6 +60,10 @@ export function validateSupabaseMigration(sql) {
 
   if (/to\s+anon/i.test(sql)) {
     errors.push('O progresso pessoal não pode conceder políticas ao papel anon.');
+  }
+
+  if (!/alter\s+default\s+privileges[\s\S]*revoke\s+execute\s+on\s+functions/i.test(sql)) {
+    errors.push('Privilégios padrão de funções públicas não foram endurecidos.');
   }
 
   for (const pattern of FORBIDDEN_PATTERNS) {
