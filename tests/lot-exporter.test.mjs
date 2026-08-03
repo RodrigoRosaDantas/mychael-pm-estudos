@@ -15,14 +15,31 @@ function catalog() {
     contentVersion: 1,
     studentProfileId: 'STU-MYCHAEL',
     features: { essay: false, taf: true, previousExams: true },
-    subjects: [{ id: 'MAT-1' }],
-    topics: [{ id: 'TOP-1' }],
-    sources: [{ id: 'FNT-1' }],
-    units: [{ id: 'U1' }],
-    materials: [{ id: 'M1' }],
+    subjects: [{ id: 'MAT-1', name: 'Português' }],
+    topics: [{ id: 'TOP-1', subjectId: 'MAT-1' }],
+    sources: [{ id: 'FNT-1', title: 'Fonte' }],
+    units: [{
+      id: 'U1',
+      subjectId: 'MAT-1',
+      topicIds: ['TOP-1'],
+      sourceIds: ['FNT-1'],
+      materialIds: ['M1'],
+      questionIds: ['Q1'],
+      questionSetIds: ['QS1']
+    }],
+    materials: [{
+      id: 'M1',
+      unitId: 'U1',
+      subjectId: 'MAT-1',
+      topicIds: ['TOP-1'],
+      sourceIds: ['FNT-1'],
+      blocks: [{ type: 'paragraph', text: 'Aula' }]
+    }],
     questions: [{
       id: 'Q1',
+      unitId: 'U1',
       statement: 'Texto',
+      options: [{ id: 'A', text: 'Certa' }, { id: 'B', text: 'Errada' }],
       answer: 'A',
       commentary: 'Comentário',
       foundation: 'Fundamento',
@@ -33,7 +50,7 @@ function catalog() {
       valid: true,
       imageRequired: false
     }],
-    questionSets: [{ id: 'QS1' }],
+    questionSets: [{ id: 'QS1', unitId: 'U1', questionIds: ['Q1'] }],
     tafRecords: [],
     previousExams: []
   };

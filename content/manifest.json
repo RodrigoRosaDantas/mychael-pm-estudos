@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-03T05:40:08.467Z",
-  "contentVersion": 0,
+  "generatedAt": "2026-08-03T17:21:08Z",
+  "contentVersion": 1,
   "files": [
     {
       "path": "content/catalog.json",
-      "sha256": "21b7d0e4faafffa1ab9da8001dd7ba483d0c25b8f8f06bb58f61087d20b4f55f",
-      "bytes": 401
+      "sha256": "dbeb6b2c149693d232e32d11120cf693832dfd55773ad9f35d5786f701853e7b",
+      "bytes": 17835
     }
   ]
 }
