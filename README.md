@@ -11,6 +11,13 @@ Plataforma estática, responsiva e guiada para preparação de Mychael aos concu
 - Redação está modelada, mas permanece desativada no MVP.
 - TAF integra a primeira versão, sempre distinguindo referência histórica de índice vigente.
 
-## Estado inicial
+## Comandos
 
-A `main` contém apenas a governança mínima do repositório. Mudanças relevantes devem ser implementadas em branch separada, testadas e submetidas por pull request.
+```bash
+npm run check
+npm run manifest
+```
+
+## Estado
+
+Estrutura técnica inicial em validação por pull request. Nenhum conteúdo editorial foi exportado e nenhum deploy foi autorizado.

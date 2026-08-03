@@ -1,9 +1,12 @@
-# Segurança
+# Segurança e privacidade
 
-## Regras
+Não adicionar ao repositório:
 
-- Não versionar tokens, senhas, chaves privadas ou credenciais.
-- Não versionar respostas, resultados, histórico, dispositivos ou dados pessoais de Mychael.
-- O GitHub contém somente código, conteúdo público validado, testes e documentação técnica.
-- O progresso individual pertence ao Supabase, com políticas de segurança por linha e privilégio mínimo.
-- Qualquer segredo deverá ser configurado nos mecanismos protegidos do GitHub ou do provedor correspondente.
+- respostas, notas ou histórico do estudante;
+- resultados individuais de TAF;
+- redações pessoais;
+- credenciais, tokens, chaves privadas ou códigos de recuperação;
+- segredos do Notion ou chaves de serviço do Supabase;
+- dados de aparelhos.
+
+A aplicação pública deverá usar apenas a chave anônima do Supabase, com RLS e privilégio mínimo. A `service_role` nunca pode ser exposta no cliente.

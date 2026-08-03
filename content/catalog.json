@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 0,
+  "generatedAt": null,
+  "publicationStatus": "not-published",
+  "studentProfileId": "STU-MYCHAEL",
+  "features": {
+    "essay": false,
+    "taf": true,
+    "previousExams": true
+  },
+  "subjects": [],
+  "topics": [],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": [],
+  "tafRecords": [],
+  "previousExams": []
+}

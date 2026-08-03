@@ -1,9 +1,8 @@
+.DS_Store
 node_modules/
 .env
 .env.*
 !.env.example
-.DS_Store
+config.local.json
 coverage/
-dist/
-.tmp/
 *.log
