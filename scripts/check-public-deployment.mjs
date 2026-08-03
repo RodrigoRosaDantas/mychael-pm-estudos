@@ -7,6 +7,8 @@ export const REQUIRED_DEPLOYMENT_PATHS = Object.freeze([
   'index.html',
   'assets/app.js',
   'assets/styles.css',
+  'assets/progress-panels.js',
+  'assets/progress-panels.css',
   'content/catalog.json',
   'content/manifest.json'
 ]);
@@ -41,15 +43,27 @@ export function validatePublicationFiles(files) {
   const index = toBuffer(files.get('index.html')).toString('utf8');
   const app = toBuffer(files.get('assets/app.js')).toString('utf8');
   const styles = toBuffer(files.get('assets/styles.css')).toString('utf8');
+  const progressPanels = toBuffer(files.get('assets/progress-panels.js')).toString('utf8');
+  const progressStyles = toBuffer(files.get('assets/progress-panels.css')).toString('utf8');
   const catalogBuffer = toBuffer(files.get('content/catalog.json'));
   const manifestBuffer = toBuffer(files.get('content/manifest.json'));
 
   assert(index.includes('id="publicationBadge"'), 'A página não contém o indicador de publicação.');
   assert(index.includes('id="unitWorkspace"'), 'A página não contém a área da unidade.');
   assert(index.includes('id="questionWorkspace"'), 'A página não contém a área de questões.');
+  assert(index.includes('id="reviewWorkspace"'), 'A página não contém a área de revisões.');
+  assert(index.includes('id="errorWorkspace"'), 'A página não contém o caderno de erros.');
+  assert(index.includes('id="performanceWorkspace"'), 'A página não contém o painel de desempenho.');
+  assert(index.includes('./assets/progress-panels.js'), 'A página não carrega os painéis privados.');
   assert(app.includes('renderQuestions'), 'O JavaScript não contém a experiência de questões.');
   assert(app.includes('saveQuestionAttempt'), 'O JavaScript não contém o registro de tentativas.');
   assert(styles.includes('.question-card'), 'O CSS não contém o componente de questão.');
+  assert(progressPanels.includes("from('review_items')"), 'O módulo não consulta as revisões privadas.');
+  assert(progressPanels.includes("from('error_items')"), 'O módulo não consulta o caderno de erros.');
+  assert(progressPanels.includes("from('question_attempts')"), 'O módulo não consulta as tentativas.');
+  assert(progressPanels.includes("from('study_units')"), 'O módulo não consulta o progresso das unidades.');
+  assert(!/signUp\s*\(|service_role|sb_secret_/i.test(progressPanels), 'O módulo privado contém cadastro ou segredo elevado.');
+  assert(progressStyles.includes('.private-panel'), 'O CSS não contém os painéis privados.');
 
   const catalog = JSON.parse(catalogBuffer.toString('utf8'));
   const manifest = JSON.parse(manifestBuffer.toString('utf8'));
