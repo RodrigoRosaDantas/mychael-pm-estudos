@@ -20,7 +20,19 @@ function catalog() {
     sources: [{ id: 'FNT-1' }],
     units: [{ id: 'U1' }],
     materials: [{ id: 'M1' }],
-    questions: [{ id: 'Q1' }],
+    questions: [{
+      id: 'Q1',
+      statement: 'Texto',
+      answer: 'A',
+      commentary: 'Comentário',
+      foundation: 'Fundamento',
+      sourceIds: ['FNT-1'],
+      subjectId: 'MAT-1',
+      topicIds: ['TOP-1'],
+      annulled: false,
+      valid: true,
+      imageRequired: false
+    }],
     questionSets: [{ id: 'QS1' }],
     tafRecords: [],
     previousExams: []
