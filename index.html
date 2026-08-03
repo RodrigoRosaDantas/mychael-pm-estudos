@@ -44,6 +44,27 @@
         </div>
       </section>
 
+      <section id="acesso" class="card auth-card">
+        <div>
+          <p class="eyebrow dark">Acesso individual</p>
+          <h2>Entrar na plataforma</h2>
+          <p id="authDescription">Use o acesso criado administrativamente para Mychael. Esta tela não cria contas novas.</p>
+        </div>
+        <form id="loginForm" class="auth-form">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="username" required>
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
+          <button id="loginButton" type="submit">Entrar</button>
+        </form>
+        <div id="sessionPanel" class="session-panel" hidden>
+          <p><strong>Sessão ativa:</strong> <span id="sessionEmail"></span></p>
+          <p><strong>Perfil:</strong> <span id="profileStatus">Verificando…</span></p>
+          <button id="logoutButton" class="secondary-button" type="button">Sair</button>
+        </div>
+        <p id="authStatus" class="status-message" role="status" aria-live="polite"></p>
+      </section>
+
       <section id="estudo" class="card">
         <h2>Estudo de hoje</h2>
         <div id="todayStudy" class="empty-state">Nenhuma unidade disponível para estudo.</div>
