@@ -1,64 +1,47 @@
 # Supabase — progresso do estudante
 
-## Estado desta etapa
+## Estado validado em 3 de agosto de 2026
 
-A fundação do banco foi modelada em migração versionada, mas **ainda não foi aplicada a um projeto remoto**. Nenhuma chave, usuário ou dado pessoal está no GitHub.
+O projeto remoto Supabase foi conectado e recebeu as quatro migrações versionadas desta branch.
+
+Validado remotamente:
+
+- 11 tabelas privadas de progresso no schema `public`;
+- Row Level Security habilitada em todas as tabelas;
+- nenhuma permissão para o papel `anon`;
+- permissões mínimas e explícitas para `authenticated`;
+- helper de autorização em schema `private`, com `SECURITY INVOKER`;
+- tentativas de questões e registros de TAF sem update/delete pelo cliente;
+- zero alertas no advisor de segurança;
+- foreign key `error_items.attempt_id` coberta por índice;
+- zero usuários Auth, perfis ou registros de progresso criados.
+
+Os avisos de índices não utilizados são informativos e esperados enquanto o banco estiver vazio.
 
 ## Perfil permanente
 
-O perfil funcional do estudante será:
+O identificador editorial e técnico do estudante será:
 
 ```text
 STU-MYCHAEL
 ```
 
-Esse identificador não substitui a conta de autenticação. O registro `STU-MYCHAEL` deverá ser relacionado ao UUID de um usuário criado no Supabase Auth por convite administrativo.
+O registro só poderá ser criado após a existência de um usuário autenticado real e será vinculado pelo `user_id`. O cliente público não possui permissão para criar ou alterar `student_profiles`.
 
-Exemplo para execução posterior, somente no ambiente administrativo do Supabase:
+## Segurança
 
-```sql
-insert into public.student_profiles (id, user_id)
-values ('STU-MYCHAEL', '<UUID_DO_USUARIO_AUTH>');
-```
+- Nunca expor `service_role`, secret key, senha de banco ou credenciais administrativas.
+- O navegador usará apenas URL pública do projeto e publishable key.
+- Todas as operações do estudante dependem de autenticação e RLS.
+- Dados de progresso não são versionados no GitHub.
+- O helper central de autorização permanece fora do schema exposto.
 
-Não preencher o UUID no repositório.
+## Próximas etapas
 
-## Dados previstos
+1. Criar o usuário Auth de Mychael por processo administrativo seguro.
+2. Inserir `STU-MYCHAEL` relacionado ao UUID real do usuário.
+3. Testar isolamento RLS com usuário autenticado e acesso anônimo.
+4. Integrar o cliente web usando apenas a publishable key.
+5. Sincronizar a fila IndexedDB com o Supabase.
 
-A migração cria estruturas privadas para:
-
-- unidades estudadas;
-- sessões de estudo;
-- respostas e tentativas de questões;
-- caderno de erros;
-- revisões;
-- provas anteriores;
-- simulados;
-- registros de treino de TAF;
-- aparelhos;
-- configurações do estudante.
-
-## Segurança obrigatória
-
-- Todas as tabelas de progresso usam Row Level Security.
-- O navegador acessa apenas linhas pertencentes ao usuário autenticado relacionado ao perfil.
-- O perfil não pode ser criado pelo cliente público; ele será provisionado administrativamente.
-- Tentativas de questões e registros de TAF são históricos append-only no cliente.
-- Nenhum dado pessoal ou progresso é exportado para `content/`.
-- O cliente público usará apenas a **Publishable key** do Supabase.
-- Chaves `sb_secret_...`, credenciais administrativas e chaves legadas elevadas nunca podem aparecer no site, no GitHub ou em logs.
-
-## Sequência de ativação remota
-
-1. Criar um projeto gratuito e exclusivo no Supabase.
-2. Manter cadastro público desativado; criar o usuário por convite administrativo.
-3. Vincular o repositório ao projeto sem registrar token no código.
-4. Aplicar a migração versionada.
-5. Criar o registro `STU-MYCHAEL` com o UUID real do Auth.
-6. Executar testes de isolamento com usuário autenticado e sem autenticação.
-7. Configurar no cliente somente URL do projeto e Publishable key.
-8. Validar gravação, leitura, sincronização e recuperação entre aparelhos.
-
-## Regra de implantação
-
-Mudanças futuras no banco devem ser feitas por novas migrações. Não alterar o banco remoto diretamente sem registrar a mudança no histórico do repositório.
+Nenhum conteúdo editorial do Notion depende desta etapa e o LOT-0001 permanece bloqueado para publicação.
