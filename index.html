@@ -7,6 +7,7 @@
   <meta name="description" content="Plataforma guiada de estudos para PMGO e PMDF.">
   <title>Mychael PM</title>
   <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./assets/progress-panels.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -89,16 +90,33 @@
         <div id="questionWorkspace">Carregando questões.</div>
       </section>
 
-      <section id="revisoes" class="card"><h2>Revisões</h2><p>As revisões serão organizadas conforme o progresso sincronizado.</p></section>
-      <section id="erros" class="card"><h2>Caderno de erros</h2><p>As questões erradas são registradas no Supabase e permanecem privadas.</p></section>
+      <section id="revisoes" class="card">
+        <h2>Revisões</h2>
+        <p class="section-intro">Uma pendência por vez, conforme o progresso sincronizado.</p>
+        <div id="reviewWorkspace" class="private-panel empty-state" aria-live="polite">Entre para consultar as revisões.</div>
+      </section>
+
+      <section id="erros" class="card">
+        <h2>Caderno de erros</h2>
+        <p class="section-intro">Os erros ficam privados e retornam como revisão.</p>
+        <div id="errorWorkspace" class="private-panel empty-state" aria-live="polite">Entre para consultar o caderno de erros.</div>
+      </section>
+
       <section id="provas" class="card"><h2>Provas anteriores</h2><p>Provas autênticas serão separadas de simulados e questões por assunto.</p></section>
       <section id="simulados" class="card"><h2>Simulados</h2><p>O módulo será liberado após formação de base mínima.</p></section>
       <section id="taf" class="card warning"><h2>TAF</h2><p>Índices históricos não são índices vigentes. Treino não substitui teste oficial, avaliação médica ou orientação profissional.</p></section>
-      <section id="desempenho" class="card"><h2>Desempenho</h2><p>O histórico individual é sincronizado nos bastidores pelo Supabase.</p></section>
+
+      <section id="desempenho" class="card">
+        <h2>Desempenho</h2>
+        <p class="section-intro">Resumo privado das unidades e tentativas sincronizadas.</p>
+        <div id="performanceWorkspace" class="private-panel empty-state" aria-live="polite">Entre para consultar o desempenho.</div>
+      </section>
+
       <section id="configuracoes" class="card"><h2>Configurações</h2><p>Perfil técnico: <code>STU-MYCHAEL</code>.</p></section>
     </main>
   </div>
 
   <script type="module" src="./assets/app.js"></script>
+  <script type="module" src="./assets/progress-panels.js"></script>
 </body>
 </html>
