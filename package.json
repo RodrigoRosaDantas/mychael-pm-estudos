@@ -1,14 +1,15 @@
 {
   "name": "mychael-pm-estudos",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "validate": "node scripts/validate-content.mjs",
     "manifest": "node scripts/generate-manifest.mjs",
+    "supabase:check": "node scripts/check-supabase.mjs",
     "test": "node --test",
     "static": "node scripts/check-static.mjs",
-    "check": "npm run validate && npm run static && npm test"
+    "check": "npm run validate && npm run static && npm run supabase:check && npm test"
   },
   "engines": {
     "node": ">=22"
