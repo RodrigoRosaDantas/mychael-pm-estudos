@@ -7,6 +7,7 @@
     "validate": "node scripts/validate-content.mjs",
     "manifest": "node scripts/generate-manifest.mjs",
     "export:lot": "node scripts/export-lot.mjs",
+    "deployment:check": "node scripts/check-public-deployment.mjs",
     "supabase:check": "node scripts/check-supabase.mjs",
     "test": "node --test",
     "static": "node scripts/check-static.mjs",
