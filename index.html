@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#122033">
+  <meta name="description" content="Plataforma guiada de estudos para PMGO e PMDF.">
+  <title>Mychael PM</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Preparação PMGO e PMDF</p>
+      <h1>Mychael PM</h1>
+    </div>
+    <button id="menuButton" class="menu-button" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+  </header>
+
+  <div class="layout">
+    <nav id="nav" class="sidebar" aria-label="Navegação principal">
+      <a class="active" href="#inicio">Início</a>
+      <a href="#estudo">Estudo de hoje</a>
+      <a href="#materias">Matérias</a>
+      <a href="#questoes">Questões</a>
+      <a href="#revisoes">Revisões</a>
+      <a href="#erros">Caderno de erros</a>
+      <a href="#provas">Provas anteriores</a>
+      <a href="#simulados">Simulados</a>
+      <a href="#taf">TAF</a>
+      <a href="#desempenho">Desempenho</a>
+      <a href="#configuracoes">Configurações</a>
+    </nav>
+
+    <main id="conteudo" tabindex="-1">
+      <section id="inicio" class="hero card">
+        <p class="status-badge">Estrutura inicial</p>
+        <h2>Uma tarefa por vez.</h2>
+        <p>A plataforma está pronta para receber apenas conteúdos liberados e validados. Nenhuma unidade foi publicada ainda.</p>
+        <div class="actions">
+          <button id="refreshButton" type="button">Atualizar catálogo</button>
+          <span id="catalogStatus" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section id="estudo" class="card">
+        <h2>Estudo de hoje</h2>
+        <div id="todayStudy" class="empty-state">Nenhuma unidade disponível para estudo.</div>
+      </section>
+
+      <section class="grid" aria-label="Resumo da plataforma">
+        <article class="card metric"><span id="unitCount">0</span><p>unidades publicadas</p></article>
+        <article class="card metric"><span id="questionCount">0</span><p>questões disponíveis</p></article>
+        <article class="card metric"><span id="tafCount">0</span><p>referências de TAF</p></article>
+      </section>
+
+      <section id="materias" class="card"><h2>Matérias</h2><div id="subjectList" class="empty-state">Nenhuma matéria publicada.</div></section>
+      <section id="questoes" class="card"><h2>Questões</h2><p>As questões serão apresentadas somente após validação de gabarito, fonte, comentário e relações.</p></section>
+      <section id="revisoes" class="card"><h2>Revisões</h2><p>As revisões serão organizadas conforme o progresso sincronizado.</p></section>
+      <section id="erros" class="card"><h2>Caderno de erros</h2><p>Os erros pessoais ficarão no Supabase, nunca no repositório público.</p></section>
+      <section id="provas" class="card"><h2>Provas anteriores</h2><p>Provas autênticas serão separadas de simulados e questões por assunto.</p></section>
+      <section id="simulados" class="card"><h2>Simulados</h2><p>O módulo será liberado após formação de base mínima.</p></section>
+      <section id="taf" class="card warning"><h2>TAF</h2><p>Índices históricos não são índices vigentes. Treino não substitui teste oficial, avaliação médica ou orientação profissional.</p></section>
+      <section id="desempenho" class="card"><h2>Desempenho</h2><p>O histórico individual será sincronizado nos bastidores pelo Supabase.</p></section>
+      <section id="configuracoes" class="card"><h2>Configurações</h2><p>Perfil técnico: <code>STU-MYCHAEL</code>.</p></section>
+    </main>
+  </div>
+
+  <script type="module" src="./assets/app.js"></script>
+</body>
+</html>
