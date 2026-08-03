@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  statuses: write
 
 concurrency:
   group: pages
@@ -51,6 +52,38 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Validate public deployment
+        id: smoke
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: npm run deployment:check -- "$PAGE_URL"
+      - name: Publish deployment status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+          TARGET_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$SMOKE_OUTCOME" = "success" ]; then
+            STATE="success"
+            DESCRIPTION="GitHub Pages validado após o deploy."
+          else
+            STATE="failure"
+            DESCRIPTION="Falha na validação pública do GitHub Pages."
+          fi
+
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state="$STATE" \
+            -f context="pages-smoke" \
+            -f description="$DESCRIPTION" \
+            -f target_url="$TARGET_URL"
