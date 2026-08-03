@@ -22,11 +22,21 @@ test('cadeia real possui tabelas, RLS e isolamento obrigatórios', async () => {
 test('detecta tabela sem RLS', () => {
   const sql = `
     create table if not exists public.student_profiles (id text);
-    create or replace function public.owns_student_profile(target_profile_id text)
-    returns boolean language sql as $$ select auth.uid() is not null $$;
     create policy sample on public.student_profiles to authenticated using (true);
   `;
   assert.ok(validateSupabaseMigration(sql).some((error) => error.includes('RLS não habilitada')));
+});
+
+test('exige helper privado com security invoker', () => {
+  const sql = `
+    create or replace function public.owns_student_profile(target_profile_id text)
+    returns boolean language sql security definer
+    as $$ select auth.uid() is not null $$;
+  `;
+  const errors = validateSupabaseMigration(sql);
+  assert.ok(errors.some((error) => error.includes('Helper privado')));
+  assert.ok(errors.some((error) => error.includes('SECURITY INVOKER')));
+  assert.ok(errors.some((error) => error.includes('não foi removido')));
 });
 
 test('detecta segredo elevado exposto', () => {
