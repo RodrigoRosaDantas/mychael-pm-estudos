@@ -1,12 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { validateSupabaseMigration } from '../scripts/supabase-rules.mjs';
 
-const migrationUrl = new URL('../supabase/migrations/20260803033000_create_progress_schema.sql', import.meta.url);
+async function readMigrationChain() {
+  const migrationsUrl = new URL('../supabase/migrations/', import.meta.url);
+  const filenames = (await readdir(migrationsUrl))
+    .filter((name) => name.endsWith('.sql'))
+    .sort();
+  const parts = await Promise.all(
+    filenames.map((name) => readFile(new URL(name, migrationsUrl), 'utf8'))
+  );
+  return parts.join('\n\n');
+}
 
-test('migração real possui tabelas e RLS obrigatórias', async () => {
-  const sql = await readFile(migrationUrl, 'utf8');
+test('cadeia real possui tabelas, RLS e isolamento obrigatórios', async () => {
+  const sql = await readMigrationChain();
   assert.deepEqual(validateSupabaseMigration(sql), []);
 });
 
