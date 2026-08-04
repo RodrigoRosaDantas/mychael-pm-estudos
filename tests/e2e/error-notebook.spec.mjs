@@ -121,22 +121,28 @@ async function prepare(page) {
     const data = await response.json();
     const baseQuestion = data.questions.find(({ id }) => id === 'Q000005');
     const baseUnit = data.units.find(({ id }) => id === 'U001');
-    data.questions.push({
-      ...baseQuestion,
+    const secondQuestionIndex = data.questions.findIndex(({ id }) => id === 'Q000006');
+    const secondUnitIndex = data.units.findIndex(({ id }) => id === 'U002');
+    const secondQuestion = {
+      ...(secondQuestionIndex >= 0 ? data.questions[secondQuestionIndex] : baseQuestion),
       id: 'Q000006',
       unitId: 'U002',
       title: 'Questão de outra unidade',
       statement: 'Questão simulada de uma segunda unidade para validar o caderno global.',
       answer: 'A'
-    });
-    data.units.push({
-      ...baseUnit,
+    };
+    const secondUnit = {
+      ...(secondUnitIndex >= 0 ? data.units[secondUnitIndex] : baseUnit),
       id: 'U002',
       order: 20,
       title: 'Português — Segunda unidade de teste',
       questionIds: ['Q000006'],
       materialIds: []
-    });
+    };
+    if (secondQuestionIndex >= 0) data.questions[secondQuestionIndex] = secondQuestion;
+    else data.questions.push(secondQuestion);
+    if (secondUnitIndex >= 0) data.units[secondUnitIndex] = secondUnit;
+    else data.units.push(secondUnit);
     await route.fulfill({
       status: 200,
       contentType: 'application/json; charset=utf-8',

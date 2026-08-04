@@ -21,10 +21,10 @@ test('normaliza a URL pública sem perder o caminho do projeto', () => {
 
 test('arquivos locais formam uma publicação íntegra', () => {
   const result = validatePublicationFiles(expectedFiles);
-  assert.equal(result.contentVersion, 1);
+  assert.equal(result.contentVersion, 2);
   assert.equal(result.publicationStatus, 'published');
-  assert.equal(result.units, 1);
-  assert.equal(result.questions, 5);
+  assert.equal(result.units, 2);
+  assert.equal(result.questions, 11);
 });
 
 test('detecta arquivo público desatualizado', () => {
@@ -54,8 +54,8 @@ test('validação remota compara o deploy com o commit atual', async () => {
   });
 
   assert.equal(result.attempt, 1);
-  assert.equal(result.units, 1);
-  assert.equal(result.questions, 5);
+  assert.equal(result.units, 2);
+  assert.equal(result.questions, 11);
 });
 
 test('validação remota falha quando o site não responde', async () => {
