@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 
 const catalogUrl = './content/catalog.json';
@@ -72,9 +72,17 @@ function firstUnit() {
   return [...(catalog?.units ?? [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))[0] ?? null;
 }
 
+function requestedUnit() {
+  const id = queryParam('unit');
+  return id ? findById(catalog?.units, id) : null;
+}
+
 function currentUnit() {
-  const requested = queryParam('unit');
-  return findById(catalog?.units, requested) ?? firstUnit();
+  return requestedUnit() ?? firstUnit();
+}
+
+function unitForQuestion(question) {
+  return findById(catalog?.units, question?.unitId) ?? null;
 }
 
 function pageUrl(page, params = {}) {
@@ -593,26 +601,61 @@ function feedback(question, attempt) {
   return box;
 }
 
-async function renderQuestions(target) {
-  const unit = currentUnit();
-  if (!unit) return target.append(el('section', { className: 'card empty-card', text: 'Nenhuma unidade publicada.' }));
-  if (!session?.user || !profileActive) return requireLoginMessage(target, 'Entre para responder questões e salvar tentativas.');
+function questionScope(mode, openErrors) {
+  if (mode !== 'errors') {
+    const unit = currentUnit();
+    return {
+      unit,
+      global: false,
+      questions: unit?.questionIds.map((id) => findById(catalog.questions, id)).filter(Boolean) ?? []
+    };
+  }
+  const unit = requestedUnit();
+  const candidates = unit
+    ? unit.questionIds.map((id) => findById(catalog.questions, id)).filter(Boolean)
+    : catalog.questions;
+  return {
+    unit,
+    global: !unit,
+    questions: candidates.filter((question) => openErrors.includes(question.id))
+  };
+}
 
+async function renderQuestions(target) {
+  if (!session?.user || !profileActive) return requireLoginMessage(target, 'Entre para responder questões e salvar tentativas.');
   const mode = queryParam('mode') === 'errors' ? 'errors' : 'all';
   const openErrors = await loadOpenErrorQuestionIds();
-  const allQuestions = unit.questionIds.map((id) => findById(catalog.questions, id)).filter(Boolean);
-  const questions = mode === 'errors' ? allQuestions.filter((question) => openErrors.includes(question.id)) : allQuestions;
-  const latest = await loadLatestAttempts(allQuestions.map(({ id }) => id));
+  const scope = questionScope(mode, openErrors);
+  if (mode === 'all' && !scope.unit) return target.append(el('section', { className: 'card empty-card', text: 'Nenhuma unidade publicada.' }));
+  const questions = scope.questions;
+  const latest = mode === 'all' ? await loadLatestAttempts(questions.map(({ id }) => id)) : new Map();
+  const retryAttempts = new Map();
   let index = Math.max(0, questions.findIndex(({ id }) => id === queryParam('question')));
 
   const top = el('section', { className: 'card question-toolbar' });
   const tabs = el('div', { className: 'filter-tabs' });
+  const allLinkUnit = scope.unit ?? firstUnit();
+  const scopedErrorCount = scope.unit
+    ? scope.unit.questionIds.filter((id) => openErrors.includes(id)).length
+    : openErrors.length;
   tabs.append(
-    el('a', { className: mode === 'all' ? 'active' : '', text: 'Todas da unidade', href: pageUrl('questions', { unit: unit.id }) }),
-    el('a', { className: mode === 'errors' ? 'active' : '', text: `Refazer erradas (${openErrors.length})`, href: pageUrl('questions', { unit: unit.id, mode: 'errors' }) })
+    el('a', {
+      className: mode === 'all' ? 'active' : '',
+      text: scope.global ? 'Todas as questões' : 'Todas da unidade',
+      href: pageUrl('questions', allLinkUnit ? { unit: allLinkUnit.id } : {})
+    }),
+    el('a', {
+      className: mode === 'errors' ? 'active' : '',
+      text: `Refazer erradas (${scopedErrorCount})`,
+      href: pageUrl('questions', scope.unit ? { unit: scope.unit.id, mode: 'errors' } : { mode: 'errors' })
+    })
   );
   const heading = el('div', { className: 'section-heading' });
-  heading.append(el('p', { className: 'eyebrow', text: unit.title }), el('h2', { text: mode === 'errors' ? 'Refazer questões erradas' : 'Questões da unidade' }));
+  const scopeLabel = scope.global ? 'Todas as unidades' : scope.unit?.title ?? 'Questões';
+  heading.append(
+    el('p', { className: 'eyebrow', text: scopeLabel }),
+    el('h2', { text: mode === 'errors' ? 'Refazer questões erradas' : 'Questões da unidade' })
+  );
   top.append(heading, tabs);
   target.append(top);
 
@@ -637,7 +680,11 @@ async function renderQuestions(target) {
   const draw = () => {
     paletteGrid.replaceChildren();
     questions.forEach((question, position) => {
-      const button = el('button', { className: `palette-button ${position === index ? 'active' : ''} ${latest.get(question.id)?.is_correct ? 'correct' : latest.has(question.id) ? 'incorrect' : ''}`, text: String(position + 1) });
+      const visible = mode === 'errors' ? retryAttempts.get(question.id) : latest.get(question.id);
+      const button = el('button', {
+        className: `palette-button ${position === index ? 'active' : ''} ${visible?.is_correct ? 'correct' : visible ? 'incorrect' : ''}`,
+        text: String(position + 1)
+      });
       button.type = 'button';
       button.setAttribute('aria-label', `Abrir questão ${position + 1}`);
       button.addEventListener('click', () => { index = position; draw(); });
@@ -645,14 +692,23 @@ async function renderQuestions(target) {
     });
 
     const question = questions[index];
+    const unit = unitForQuestion(question);
+    if (!unit) {
+      stage.replaceChildren(el('section', { className: 'card empty-card', text: 'A unidade desta questão não foi localizada.' }));
+      return;
+    }
     if (!questionTimers.has(question.id)) questionTimers.set(question.id, Date.now());
+    const visibleAttempt = mode === 'errors' ? retryAttempts.get(question.id) : latest.get(question.id);
     const card = el('article', { className: 'card question-card' });
     card.dataset.questionId = question.id;
-    card.append(el('p', { className: 'question-number', text: `Questão ${index + 1} de ${questions.length} · ${question.difficulty}` }), el('h2', { text: question.statement }));
+    card.append(
+      el('p', { className: 'question-number', text: `Questão ${index + 1} de ${questions.length} · ${question.difficulty}` }),
+      el('h2', { text: question.statement })
+    );
+    if (scope.global) card.prepend(el('p', { className: 'eyebrow', text: unit.title }));
     const form = el('form', { className: 'question-form' });
     const fieldset = el('fieldset');
     fieldset.append(el('legend', { text: 'Escolha uma alternativa' }));
-    const existing = latest.get(question.id);
     for (const option of question.options ?? []) {
       const label = el('label', { className: 'option-row' });
       const input = document.createElement('input');
@@ -660,12 +716,12 @@ async function renderQuestions(target) {
       input.name = `answer-${question.id}`;
       input.value = option.id;
       input.required = true;
-      if (existing?.answer === option.id) input.checked = true;
+      if (mode === 'all' && visibleAttempt?.answer === option.id) input.checked = true;
       label.append(input, el('span', { className: 'option-marker', text: option.id }), el('span', { text: option.text }));
       fieldset.append(label);
     }
     const status = el('span', { className: 'question-save-status' });
-    const submit = el('button', { text: existing ? 'Responder novamente' : 'Responder' });
+    const submit = el('button', { text: mode === 'errors' ? 'Refazer questão' : visibleAttempt ? 'Responder novamente' : 'Responder' });
     submit.type = 'submit';
     const actions = el('div', { className: 'question-actions' });
     actions.append(submit, status);
@@ -678,22 +734,30 @@ async function renderQuestions(target) {
       submit.textContent = 'Salvando…';
       try {
         const attempt = await saveAttempt(question, unit, String(answer));
-        latest.set(question.id, attempt);
+        if (mode === 'errors') retryAttempts.set(question.id, attempt);
+        else latest.set(question.id, attempt);
+        status.textContent = attempt.is_correct
+          ? 'Correto. O erro foi resolvido.'
+          : mode === 'errors'
+            ? 'Nova tentativa salva; a questão permanece no caderno.'
+            : 'Tentativa salva no caderno de erros.';
         if (mode === 'errors' && attempt.is_correct) {
-          window.location.href = pageUrl('questions', { unit: unit.id, mode: 'errors' });
+          const destination = scope.unit
+            ? pageUrl('questions', { unit: scope.unit.id, mode: 'errors' })
+            : pageUrl('questions', { mode: 'errors' });
+          window.location.href = destination;
           return;
         }
-        status.textContent = attempt.is_correct ? 'Correto. O erro foi resolvido.' : 'Tentativa salva no caderno de erros.';
         draw();
       } catch (error) {
         console.error(error);
         status.textContent = 'Não foi possível salvar. Tente novamente.';
         submit.disabled = false;
-        submit.textContent = existing ? 'Responder novamente' : 'Responder';
+        submit.textContent = mode === 'errors' ? 'Refazer questão' : visibleAttempt ? 'Responder novamente' : 'Responder';
       }
     });
     card.append(form);
-    if (existing) card.append(feedback(question, existing));
+    if (visibleAttempt) card.append(feedback(question, visibleAttempt));
 
     const nav = el('div', { className: 'question-nav' });
     const previous = el('button', { className: 'secondary-button', text: 'Anterior' });
@@ -749,7 +813,11 @@ async function renderErrors(target) {
   const rows = [...unique.values()];
   const summary = el('section', { className: 'card error-summary' });
   const copy = el('div');
-  copy.append(el('p', { className: 'eyebrow', text: 'Pendências atuais' }), el('h2', { text: `${rows.length} questão(ões) para refazer` }), el('p', { text: 'Ao acertar novamente, a questão sai da lista pendente. O histórico da tentativa permanece salvo.' }));
+  copy.append(
+    el('p', { className: 'eyebrow', text: 'Pendências atuais' }),
+    el('h2', { text: `${rows.length} questão(ões) para refazer` }),
+    el('p', { text: 'Ao acertar novamente, a questão sai da lista pendente. O histórico da tentativa permanece salvo.' })
+  );
   summary.append(copy);
   if (rows.length) summary.append(el('a', { className: 'primary-link', text: 'Refazer todas', href: pageUrl('questions', { mode: 'errors' }) }));
   target.append(summary);
@@ -758,8 +826,13 @@ async function renderErrors(target) {
   for (const row of rows) {
     const question = findById(catalog.questions, row.question_id);
     if (!question) continue;
+    const unit = unitForQuestion(question);
     const card = el('article', { className: 'card error-card' });
-    card.append(el('p', { className: 'eyebrow', text: question.difficulty }), el('h2', { text: question.title }), el('p', { text: question.statement }));
+    card.append(
+      el('p', { className: 'eyebrow', text: unit?.title ?? question.difficulty }),
+      el('h2', { text: question.title }),
+      el('p', { text: question.statement })
+    );
     const actions = el('div', { className: 'button-row' });
     actions.append(el('a', { className: 'primary-link', text: 'Refazer esta questão', href: pageUrl('questions', { unit: question.unitId, mode: 'errors', question: question.id }) }));
     card.append(actions);
@@ -798,7 +871,7 @@ async function renderPlaceholder(target, type) {
   const copy = {
     exams: ['Provas anteriores', 'O acervo será publicado somente com prova, fonte e gabarito definitivo validados.'],
     simulations: ['Simulados', 'Este módulo será liberado gradualmente, depois da formação de uma base mínima.'],
-    taf: ['TAF', 'Índices históricos não são índices vigentes. Treino não substitui avaliação médica, orientação profissional ou teste oficial.']
+    taf: ['TAF', 'Área criada, ainda sem treino publicado. Índices históricos não são índices vigentes; treino não substitui avaliação médica, orientação profissional ou teste oficial.']
   }[type];
   const card = el('section', { className: `card empty-card ${type === 'taf' ? 'warning-card' : ''}` });
   card.append(el('h2', { text: copy[0] }), el('p', { text: copy[1] }));
@@ -813,7 +886,7 @@ async function renderSettings(target) {
   for (const [term, description] of [
     ['Perfil técnico', 'STU-MYCHAEL'],
     ['Redação', 'Desativada no MVP'],
-    ['TAF', 'Ativo'],
+    ['TAF', 'Área prevista no MVP; treino ainda não publicado'],
     ['Progresso', 'Supabase com acesso individual']
   ]) {
     list.append(el('dt', { text: term }), el('dd', { text: description }));
