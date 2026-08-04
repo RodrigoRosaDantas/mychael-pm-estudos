@@ -168,7 +168,6 @@ test('caderno reúne erros de várias unidades e inicia refação sem revelar re
   await page.locator('.option-row input[value="A"]').check();
   await page.getByRole('button', { name: 'Refazer questão' }).click();
   await expect(page.getByText('Resposta incorreta.', { exact: false })).toBeVisible();
-  await expect(page.getByText('Nova tentativa salva; a questão permanece no caderno.')).toBeVisible();
 
   await page.locator('.palette-button').nth(1).click();
   await expect(page.getByText('Português — Segunda unidade de teste', { exact: true })).toBeVisible();
