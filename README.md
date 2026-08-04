@@ -14,9 +14,9 @@ Plataforma estática, responsiva e guiada para preparação aos concursos de Sol
 - TAF integra a arquitetura inicial, porém ainda não possui treino publicado.
 - Nenhum serviço pago faz parte da implementação atual.
 
-## Estado atual
+## Estado do catálogo candidato
 
-A `main` publica uma plataforma com 11 páginas:
+A plataforma possui 11 páginas:
 
 - Início;
 - Estudo de hoje;
@@ -30,7 +30,12 @@ A `main` publica uma plataforma com 11 páginas:
 - Desempenho;
 - Configurações.
 
-O primeiro lote contém a U001, o material M001, cinco questões e o conjunto QS001. O fluxo de questões salva tentativas no Supabase, encaminha erros para revisão e oferece refação individual ou conjunta. A refação limpa não mostra alternativa anterior, comentário ou gabarito antes da nova resposta.
+O catálogo cumulativo v2 reúne:
+
+- `U001`, `M001`, `Q000001` a `Q000005` e `QS001` — informações explícitas e implícitas;
+- `U002`, `M002`, `Q000006` a `Q000011` e `QS002` — inferência, pressupostos e subentendidos.
+
+No total, são duas unidades, dois materiais, onze questões e dois conjuntos de fixação. O fluxo de questões salva tentativas no Supabase, encaminha erros para revisão e oferece refação individual ou conjunta. A refação limpa não mostra alternativa anterior, comentário ou gabarito antes da nova resposta.
 
 Provas Anteriores, Simulados e TAF possuem áreas próprias, mas ainda dependem de conteúdo editorial autorizado para se tornarem atividades completas. O IndexedDB previsto para contingência offline ainda não foi implementado.
 
