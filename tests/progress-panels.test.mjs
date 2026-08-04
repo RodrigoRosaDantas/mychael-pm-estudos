@@ -2,60 +2,54 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const [html, panels, css, deploymentCheck, staticCheck] = await Promise.all([
-  readFile(new URL('../index.html', import.meta.url), 'utf8'),
-  readFile(new URL('../assets/progress-panels.js', import.meta.url), 'utf8'),
-  readFile(new URL('../assets/progress-panels.css', import.meta.url), 'utf8'),
+const [site, errorsPage, reviewsPage, performancePage, deploymentCheck, staticCheck] = await Promise.all([
+  readFile(new URL('../assets/site.js', import.meta.url), 'utf8'),
+  readFile(new URL('../erros.html', import.meta.url), 'utf8'),
+  readFile(new URL('../revisoes.html', import.meta.url), 'utf8'),
+  readFile(new URL('../desempenho.html', import.meta.url), 'utf8'),
   readFile(new URL('../scripts/check-public-deployment.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../scripts/check-static.mjs', import.meta.url), 'utf8')
 ]);
 
-test('página possui painéis privados de revisão, erros e desempenho', () => {
-  for (const id of ['reviewWorkspace', 'errorWorkspace', 'performanceWorkspace']) {
-    assert.match(html, new RegExp(`id="${id}"`));
-  }
-  assert.match(html, /assets\/progress-panels\.js/);
-  assert.match(html, /assets\/progress-panels\.css/);
+test('erros, revisões e desempenho possuem páginas próprias', () => {
+  assert.match(errorsPage, /data-page="errors"/);
+  assert.match(reviewsPage, /data-page="reviews"/);
+  assert.match(performancePage, /data-page="performance"/);
 });
 
 test('módulo consulta somente tabelas privadas necessárias', () => {
-  for (const table of ['review_items', 'error_items', 'question_attempts', 'study_units']) {
-    assert.ok(panels.includes(`from('${table}')`));
+  for (const table of ['review_items', 'error_items', 'question_attempts', 'study_units']) assert.ok(site.includes(`from('${table}')`));
+  assert.doesNotMatch(site, /signUp\s*\(|service_role|sb_secret_/i);
+});
+
+test('caderno permite refazer todas ou uma questão específica', () => {
+  assert.match(site, /Refazer todas/);
+  assert.match(site, /Refazer esta questão/);
+  assert.match(site, /loadOpenErrorQuestionIds/);
+  assert.match(site, /mode: 'errors'/);
+  assert.match(site, /question: question\.id/);
+});
+
+test('acerto resolve o erro e preserva a tentativa', () => {
+  assert.match(site, /async function resolveError/);
+  assert.match(site, /status: 'resolved'/);
+  assert.match(site, /status: 'completed'/);
+  assert.match(site, /from\('question_attempts'\)\.insert/);
+  assert.doesNotMatch(site, /delete\(\).*question_attempts/s);
+});
+
+test('novo erro não duplica pendência aberta', () => {
+  assert.match(site, /async function registerError/);
+  assert.match(site, /\.in\('status', \['open', 'reviewing'\]\)/);
+  assert.match(site, /maybeSingle\(\)/);
+  assert.match(site, /scheduleReview/);
+});
+
+test('smoke e validação estática exigem páginas e fluxo de erros', () => {
+  for (const path of ['questoes.html', 'revisoes.html', 'erros.html', 'desempenho.html', 'assets/site.js']) {
+    assert.ok(deploymentCheck.includes(`'${path}'`), `Smoke sem ${path}.`);
+    assert.ok(staticCheck.includes(`'${path}'`), `Validação sem ${path}.`);
   }
-  assert.doesNotMatch(panels, /signUp\s*\(|service_role|sb_secret_/i);
-});
-
-test('erro agenda revisão e resposta correta preserva o fluxo', () => {
-  assert.match(panels, /ensureReview/);
-  assert.match(panels, /resolveErrors/);
-  assert.match(panels, /completeDueReview/);
-  assert.match(panels, /86_400_000/);
-  assert.match(panels, /status: 'resolved'/);
-  assert.match(panels, /status: 'completed'/);
-});
-
-test('painéis calculam indicadores sem expor identidade', () => {
-  assert.match(panels, /totalAttempts/);
-  assert.match(panels, /accuracy/);
-  assert.match(panels, /completedUnits/);
-  assert.match(panels, /openErrors/);
-  assert.match(panels, /pendingReviews/);
-  assert.doesNotMatch(panels, /session\.user\.email|sessionEmail|user\.id/);
-});
-
-test('smoke test e validação estática exigem os novos módulos', () => {
-  for (const path of ['assets/progress-panels.js', 'assets/progress-panels.css']) {
-    assert.ok(deploymentCheck.includes(`'${path}'`));
-    assert.ok(staticCheck.includes(`'${path}'`));
-  }
-  assert.match(deploymentCheck, /id="reviewWorkspace"/);
-  assert.match(deploymentCheck, /id="errorWorkspace"/);
-  assert.match(deploymentCheck, /id="performanceWorkspace"/);
-});
-
-test('estilos cobrem componentes privados e responsividade', () => {
-  for (const selector of ['.private-panel', '.private-list', '.performance-grid', '.review-target']) {
-    assert.ok(css.includes(selector));
-  }
-  assert.match(css, /@media\(max-width:760px\)/);
+  assert.match(deploymentCheck, /loadOpenErrorQuestionIds/);
+  assert.match(staticCheck, /Refazer todas/);
 });
