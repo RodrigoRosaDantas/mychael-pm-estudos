@@ -39,7 +39,7 @@ jobs:
       - name: Assemble static site
         run: |
           mkdir -p _site
-          cp -R index.html assets content .nojekyll _site/
+          cp -R ./*.html assets content .nojekyll _site/
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -80,7 +80,6 @@ jobs:
             STATE="failure"
             DESCRIPTION="Falha na validação pública do GitHub Pages."
           fi
-
           gh api --method POST \
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
             -f state="$STATE" \
