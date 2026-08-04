@@ -9,12 +9,12 @@ Plataforma estática, responsiva e guiada para preparação aos concursos de Sol
 - O Notion é a fonte editorial privada administrada por Rodrigo.
 - O GitHub contém somente código, conteúdo publicável, testes e documentação técnica.
 - O GitHub Pages é a interface usada pelo estudante.
-- Respostas, tentativas, erros, revisões e desempenho permanecem no Supabase, com autenticação individual e RLS.
+- Respostas, tentativas, erros, revisões, desempenho e registros pessoais de treino permanecem no Supabase, com autenticação individual e RLS.
 - Redação está modelada, mas desativada no MVP.
-- TAF integra a arquitetura inicial, porém ainda não possui treino publicado.
+- TAF integra o MVP com acompanhamento privado de treinos, sem apresentar índice oficial vigente enquanto não houver exportação editorial validada.
 - Nenhum serviço pago faz parte da implementação atual.
 
-## Estado do catálogo candidato
+## Estado do catálogo
 
 A plataforma possui 11 páginas:
 
@@ -37,7 +37,9 @@ O catálogo cumulativo v2 reúne:
 
 No total, são duas unidades, dois materiais, onze questões e dois conjuntos de fixação. O fluxo de questões salva tentativas no Supabase, encaminha erros para revisão e oferece refação individual ou conjunta. A refação limpa não mostra alternativa anterior, comentário ou gabarito antes da nova resposta.
 
-Provas Anteriores, Simulados e TAF possuem áreas próprias, mas ainda dependem de conteúdo editorial autorizado para se tornarem atividades completas. O IndexedDB previsto para contingência offline ainda não foi implementado.
+O módulo TAF permite registrar sessões físicas, consultar o histórico privado e informar avaliação médica ou supervisão profissional. Os registros usam `taf_attempts`, permanecem vinculados ao perfil `STU-MYCHAEL` e não entram no GitHub ou no Notion editorial. O módulo não apresenta índice numérico oficial vigente; índices históricos e futuros índices vigentes dependem de exportação editorial própria e fonte oficial validada.
+
+Provas Anteriores e Simulados ainda dependem de conteúdo editorial autorizado para se tornarem atividades completas. O IndexedDB previsto para contingência offline ainda não foi implementado.
 
 ## Testes
 
