@@ -116,14 +116,14 @@ async function readAccess() {
 
   const { data: profile, error: profileError } = await supabase
     .from('student_profiles')
-    .select('id, status')
+    .select('id, is_active')
     .eq('id', supabaseConfig.profileId)
     .maybeSingle();
   if (profileError) throw profileError;
 
   return {
     session,
-    profileActive: profile?.status === 'active'
+    profileActive: profile?.is_active === true
   };
 }
 

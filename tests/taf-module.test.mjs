@@ -1,9 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
 
-const rootDir = fileURLToPath(new URL('..', import.meta.url));
 const [html, script, css, readme] = await Promise.all([
   readFile(new URL('../taf.html', import.meta.url), 'utf8'),
   readFile(new URL('../assets/taf-page.js', import.meta.url), 'utf8'),
@@ -16,6 +14,13 @@ test('página TAF carrega o shell e o módulo funcional dedicado', () => {
   assert.match(html, /assets\/taf-page\.js/);
   assert.match(html, /assets\/taf\.css/);
   assert.ok(html.indexOf('assets/site.js') < html.indexOf('assets/taf-page.js'));
+});
+
+test('módulo TAF usa o contrato real do perfil Supabase', () => {
+  assert.match(script, /\.select\('id, is_active'\)/);
+  assert.match(script, /profile\?\.is_active === true/);
+  assert.doesNotMatch(script, /\.select\('id, status'\)/);
+  assert.doesNotMatch(script, /profile\?\.status/);
 });
 
 test('módulo TAF grava somente no armazenamento privado previsto', () => {
