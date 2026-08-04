@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const MOCK_SUPABASE_MODULE = String.raw`
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const db = {
-  student_profiles: [{ id: 'STU-MYCHAEL', status: 'active' }],
+  student_profiles: [{ id: 'STU-MYCHAEL', is_active: true }],
   taf_attempts: [{
     id: 'taf-1',
     profile_id: 'STU-MYCHAEL',
@@ -75,7 +75,7 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test('TAF registra treino privado e atualiza o histórico', async ({ page }) => {
+test('TAF usa perfil is_active, registra treino privado e atualiza o histórico', async ({ page }) => {
   await page.goto('/taf.html');
 
   await expect(page.getByRole('heading', { name: 'Acompanhamento de treino' })).toBeVisible();
