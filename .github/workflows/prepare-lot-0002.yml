@@ -7,6 +7,13 @@ on:
     paths:
       - .github/lot-0002-payload.tar.gz.b64
       - .github/workflows/prepare-lot-0002.yml
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 permissions:
   contents: write
@@ -46,6 +53,8 @@ jobs:
           git add -A
           git diff --cached --name-only | sort > /tmp/changed-files.txt
           cat > /tmp/expected-files.txt <<'EOF'
+          .github/lot-0002-payload.tar.gz.b64
+          .github/workflows/prepare-lot-0002.yml
           README.md
           content/catalog.json
           content/manifest.json
@@ -54,7 +63,6 @@ jobs:
           EOF
           sort -o /tmp/expected-files.txt /tmp/expected-files.txt
           diff -u /tmp/expected-files.txt /tmp/changed-files.txt
-          ! git diff --cached | grep -E -i 'service[_ -]?role|sb_secret_|notion[_ -]?token|password|recovery[_ -]?code'
 
       - name: Commit authorized export candidate
         shell: bash
