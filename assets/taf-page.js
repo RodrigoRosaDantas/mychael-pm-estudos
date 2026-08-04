@@ -66,7 +66,6 @@ function formatMeasurement(value, unit) {
 
 function publicIntro() {
   const fragment = document.createDocumentFragment();
-
   const intro = el('section', { className: 'card taf-intro' });
   intro.append(
     el('p', { className: 'status-pill', text: 'Módulo funcional de acompanhamento' }),
@@ -112,7 +111,6 @@ function loginCard() {
 async function readAccess() {
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
-
   const session = data.session;
   if (!session?.user) return { session: null, profileActive: false };
 
@@ -176,7 +174,6 @@ function historySection(attempts) {
     row.append(copy);
     list.append(row);
   }
-
   section.append(list);
   return section;
 }
@@ -191,12 +188,16 @@ function trainingForm(onSaved) {
 
   const form = el('form', { className: 'taf-form' });
 
+  const dateLabel = el('label', { text: 'Data e horário do treino' });
+  dateLabel.htmlFor = 'tafPerformedAt';
   const performedAt = el('input', { id: 'tafPerformedAt' });
   performedAt.name = 'performed_at';
   performedAt.type = 'datetime-local';
   performedAt.value = localDateTimeValue();
   performedAt.required = true;
 
+  const testLabelNode = el('label', { text: 'Tipo de teste ou exercício' });
+  testLabelNode.htmlFor = 'tafTest';
   const test = el('select', { id: 'tafTest' });
   test.name = 'test_id';
   test.required = true;
@@ -206,6 +207,8 @@ function trainingForm(onSaved) {
     test.append(item);
   }
 
+  const valueLabel = el('label', { text: 'Resultado medido' });
+  valueLabel.htmlFor = 'tafMeasuredValue';
   const value = el('input', { id: 'tafMeasuredValue' });
   value.name = 'measured_value';
   value.type = 'number';
@@ -214,6 +217,8 @@ function trainingForm(onSaved) {
   value.inputMode = 'decimal';
   value.required = true;
 
+  const unitLabel = el('label', { text: 'Unidade de medida' });
+  unitLabel.htmlFor = 'tafMeasuredUnit';
   const unit = el('select', { id: 'tafMeasuredUnit' });
   unit.name = 'measured_unit';
   unit.required = true;
@@ -244,6 +249,8 @@ function trainingForm(onSaved) {
   supervision.type = 'checkbox';
   supervisionLabel.append(supervision, el('span', { text: 'O treino teve supervisão profissional' }));
 
+  const notesLabel = el('label', { text: 'Observações opcionais' });
+  notesLabel.htmlFor = 'tafNotes';
   const notes = el('textarea', { id: 'tafNotes' });
   notes.name = 'notes';
   notes.rows = 4;
@@ -252,28 +259,26 @@ function trainingForm(onSaved) {
 
   const submit = el('button', { text: 'Salvar treino' });
   submit.type = 'submit';
-
   const status = el('p', { className: 'inline-status taf-save-status' });
   status.setAttribute('role', 'status');
   status.setAttribute('aria-live', 'polite');
 
-  const fields = [
-    ['Data e horário do treino', 'tafPerformedAt', performedAt],
-    ['Tipo de teste ou exercício', 'tafTest', test],
-    ['Resultado medido', 'tafMeasuredValue', value],
-    ['Unidade de medida', 'tafMeasuredUnit', unit],
-    ['Observações opcionais', 'tafNotes', notes]
-  ];
-
-  for (const [text, htmlFor, control] of fields.slice(0, 4)) {
-    const label = el('label', { text });
-    label.htmlFor = htmlFor;
-    form.append(label, control);
-  }
-  form.append(clearanceLabel, supervisionLabel);
-  const notesLabel = el('label', { text: fields[4][0] });
-  notesLabel.htmlFor = fields[4][1];
-  form.append(notesLabel, notes, submit, status);
+  form.append(
+    dateLabel,
+    performedAt,
+    testLabelNode,
+    test,
+    valueLabel,
+    value,
+    unitLabel,
+    unit,
+    clearanceLabel,
+    supervisionLabel,
+    notesLabel,
+    notes,
+    submit,
+    status
+  );
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -349,7 +354,6 @@ async function renderTafModule() {
       history.replaceWith(updated);
       history = updated;
     });
-
     root.append(form, history);
     target.replaceChildren(root);
 
@@ -360,7 +364,6 @@ async function renderTafModule() {
     const root = el('div', { className: 'taf-module-root' });
     root.dataset.tafModule = 'true';
     root.append(publicIntro());
-
     const card = el('section', { className: 'card empty-card' });
     card.append(
       el('h2', { text: 'Não foi possível carregar os registros' }),
@@ -385,7 +388,6 @@ function queueRender() {
 function waitForTarget() {
   const existing = document.querySelector('#pageContent');
   if (existing) return Promise.resolve(existing);
-
   return new Promise((resolve) => {
     const observer = new MutationObserver(() => {
       const target = document.querySelector('#pageContent');
@@ -400,7 +402,6 @@ function waitForTarget() {
 async function bootTaf() {
   if (document.body.dataset.page !== 'taf') return;
   const target = await waitForTarget();
-
   const observer = new MutationObserver(() => {
     if (!rendering && !target.querySelector('[data-taf-module="true"]')) queueRender();
   });
