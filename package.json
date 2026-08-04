@@ -1,6 +1,6 @@
 {
   "name": "mychael-pm-estudos",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
     "deployment:check": "node scripts/check-public-deployment.mjs",
     "supabase:check": "node scripts/check-supabase.mjs",
     "test": "node --test",
+    "test:e2e": "playwright test",
     "static": "node scripts/check-static.mjs",
     "check": "npm run validate && npm run static && npm run supabase:check && npm test"
   },
