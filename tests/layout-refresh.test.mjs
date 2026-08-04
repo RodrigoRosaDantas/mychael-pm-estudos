@@ -7,7 +7,9 @@ const pageFiles = [
   'erros.html', 'provas.html', 'simulados.html', 'taf.html', 'desempenho.html',
   'configuracoes.html'
 ];
-const pages = await Promise.all(pageFiles.map((file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8'));
+const pages = await Promise.all(
+  pageFiles.map((file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8'))
+);
 const [site, styles, workflow] = await Promise.all([
   readFile(new URL('../assets/site.js', import.meta.url), 'utf8'),
   readFile(new URL('../assets/styles.css', import.meta.url), 'utf8'),
