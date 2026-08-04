@@ -20,6 +20,7 @@ const requiredFiles = [
   ...Object.keys(pages),
   'assets/styles.css',
   'assets/site.js',
+  'assets/supabase-client.js',
   'assets/supabase-config.js',
   'content/catalog.json',
   'content/manifest.json',
@@ -33,6 +34,7 @@ const htmlEntries = await Promise.all(Object.entries(pages).map(async ([file, pa
   await readFile(path.join(root, file), 'utf8')
 ]));
 const site = await readFile(path.join(root, 'assets/site.js'), 'utf8');
+const client = await readFile(path.join(root, 'assets/supabase-client.js'), 'utf8');
 const styles = await readFile(path.join(root, 'assets/styles.css'), 'utf8');
 const config = await readFile(path.join(root, 'assets/supabase-config.js'), 'utf8');
 const catalog = JSON.parse(await readFile(path.join(root, 'content/catalog.json'), 'utf8'));
@@ -58,14 +60,26 @@ for (const integration of [
 ]) {
   if (!site.includes(integration)) throw new Error(`Integração privada ausente: ${integration}.`);
 }
-for (const behavior of ['loadOpenErrorQuestionIds', 'registerError', 'resolveError', 'Refazer todas', "mode: 'errors'"]) {
+for (const behavior of [
+  'loadOpenErrorQuestionIds',
+  'registerError',
+  'resolveError',
+  'questionScope',
+  'retryAttempts',
+  'Refazer todas',
+  "mode: 'errors'"
+]) {
   if (!site.includes(behavior)) throw new Error(`Fluxo do caderno de erros incompleto: ${behavior}.`);
 }
+if (!site.includes("import { createClient } from './supabase-client.js'")) {
+  throw new Error('Cliente Supabase não está isolado para validação segura no navegador.');
+}
+if (!client.includes("@supabase/supabase-js@2")) throw new Error('Wrapper do cliente Supabase inválido.');
 if (!site.includes('signInWithPassword') || /signUp\s*\(|Cadastrar|Criar conta/i.test(site)) {
   throw new Error('A autenticação deve permitir somente entrada, sem cadastro público.');
 }
 if (!config.includes('sb_publishable_')) throw new Error('Configuração deve usar publishable key moderna.');
-if (/sb_secret_|service_role/i.test(config + site + htmlEntries.map(([, , html]) => html).join('\n'))) {
+if (/sb_secret_|service_role/i.test(config + site + client + htmlEntries.map(([, , html]) => html).join('\n'))) {
   throw new Error('Segredo elevado encontrado no conteúdo público.');
 }
 if (!styles.includes('@media(max-width:860px)') || !styles.includes('.app-shell{min-height:100vh;display:grid')) {
@@ -77,4 +91,4 @@ if (catalog.contentVersion < 1 || catalog.units.length < 1 || catalog.questions.
 if (catalog.features?.essay !== false || catalog.features?.taf !== true) {
   throw new Error('Restrições do MVP divergentes.');
 }
-console.log(`Estrutura estática válida: ${Object.keys(pages).length} páginas, navegação responsiva e fluxo de refação de erros conferidos.`);
+console.log(`Estrutura estática válida: ${Object.keys(pages).length} páginas, navegação responsiva e refação limpa conferidas.`);

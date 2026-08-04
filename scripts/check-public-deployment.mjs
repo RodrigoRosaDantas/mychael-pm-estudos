@@ -12,6 +12,7 @@ export const REQUIRED_DEPLOYMENT_PATHS = Object.freeze([
   ...PAGE_PATHS,
   'assets/site.js',
   'assets/styles.css',
+  'assets/supabase-client.js',
   'assets/supabase-config.js',
   'content/catalog.json',
   'content/manifest.json'
@@ -39,6 +40,7 @@ export function normalizeBaseUrl(input) {
 export function validatePublicationFiles(files) {
   for (const path of REQUIRED_DEPLOYMENT_PATHS) assert(files.has(path), `Arquivo obrigatório ausente: ${path}`);
   const site = toBuffer(files.get('assets/site.js')).toString('utf8');
+  const client = toBuffer(files.get('assets/supabase-client.js')).toString('utf8');
   const styles = toBuffer(files.get('assets/styles.css')).toString('utf8');
   for (const page of PAGE_PATHS) {
     const html = toBuffer(files.get(page)).toString('utf8');
@@ -50,8 +52,12 @@ export function validatePublicationFiles(files) {
   }
   assert(site.includes("from('error_items')"), 'O caderno de erros não consulta dados privados.');
   assert(site.includes('loadOpenErrorQuestionIds'), 'A opção de refazer erros está ausente.');
+  assert(site.includes('questionScope'), 'A refação global entre unidades está ausente.');
+  assert(site.includes('retryAttempts'), 'A refação limpa sem gabarito prévio está ausente.');
   assert(site.includes('resolveError'), 'A resolução de erros está ausente.');
-  assert(!/signUp\s*\(|service_role|sb_secret_/i.test(site), 'O módulo público contém cadastro ou segredo elevado.');
+  assert(site.includes("import { createClient } from './supabase-client.js'"), 'O cliente Supabase não está isolado.');
+  assert(client.includes('@supabase/supabase-js@2'), 'Wrapper público do Supabase inválido.');
+  assert(!/signUp\s*\(|service_role|sb_secret_/i.test(site + client), 'O módulo público contém cadastro ou segredo elevado.');
   assert(styles.includes('@media(max-width:860px)'), 'O CSS não contém visualização móvel.');
   assert(styles.includes('.app-shell{min-height:100vh;display:grid'), 'O CSS não contém visualização para computador.');
 
