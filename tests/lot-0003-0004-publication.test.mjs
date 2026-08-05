@@ -9,11 +9,11 @@ function findById(collection, id) {
   return collection.find((item) => item.id === id);
 }
 
-test('LOT-0003 e LOT-0004 integram U003 e U004 ao catálogo válido', () => {
+test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v5', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 4);
-  assert.equal(catalog.publication.lotId, 'LOT-0004');
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004']);
+  assert.equal(catalog.contentVersion, 5);
+  assert.equal(catalog.publication.lotId, 'LOT-0005');
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005']);
 });
 
 test('U003 referencia taxonomia, fontes e componentes corretos', () => {
@@ -52,7 +52,7 @@ test('M003 e M004 mantêm teoria separada das questões e orientação de revis�
   }
 });
 
-test('as doze novas questões possuem gabaritos e integridade editorial auditados', () => {
+test('as doze questões de U003 e U004 mantêm gabaritos auditados', () => {
   const expected = {
     Q000012: 'C', Q000013: 'A', Q000014: 'D', Q000015: 'B', Q000016: 'E', Q000017: 'C',
     Q000018: 'B', Q000019: 'D', Q000020: 'A', Q000021: 'C', Q000022: 'E', Q000023: 'B'
