@@ -12,17 +12,17 @@ function findById(collection, id) {
   return collection.find((item) => item.id === id);
 }
 
-test('LOT-0002 amplia o catálogo cumulativo sem relações quebradas', () => {
+test('LOT-0004 amplia o catálogo cumulativo sem relações quebradas', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 2);
-  assert.equal(catalog.units.length, 2);
-  assert.equal(catalog.materials.length, 2);
-  assert.equal(catalog.questions.length, 11);
-  assert.equal(catalog.questionSets.length, 2);
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002']);
+  assert.equal(catalog.contentVersion, 4);
+  assert.equal(catalog.units.length, 4);
+  assert.equal(catalog.materials.length, 4);
+  assert.equal(catalog.questions.length, 23);
+  assert.equal(catalog.questionSets.length, 4);
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004']);
 });
 
-test('U002 referencia exatamente M002, Q000006 a Q000011 e QS002', () => {
+test('U002 permanece referenciando exatamente M002, Q000006 a Q000011 e QS002', () => {
   const unit = findById(catalog.units, 'U002');
   assert.ok(unit);
   assert.equal(unit.subjectId, 'MAT-PORT');
@@ -60,7 +60,7 @@ test('M002 mantém teoria separada das questões e sequência pedagógica comple
   ]);
 });
 
-test('seis questões da U002 possuem gabaritos auditados e integridade editorial', () => {
+test('seis questões da U002 mantêm gabaritos auditados e integridade editorial', () => {
   const expected = {
     Q000006: 'B',
     Q000007: 'B',
@@ -105,7 +105,7 @@ test('fonte FNT-0013 e manifesto público correspondem ao catálogo exportado', 
 
   const digest = createHash('sha256').update(catalogBytes).digest('hex');
   assert.equal(manifest.schemaVersion, 1);
-  assert.equal(manifest.contentVersion, 2);
+  assert.equal(manifest.contentVersion, 4);
   assert.equal(manifest.files.length, 1);
   assert.equal(manifest.files[0].path, 'content/catalog.json');
   assert.equal(manifest.files[0].sha256, digest);
