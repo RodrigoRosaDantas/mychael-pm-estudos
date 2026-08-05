@@ -7,11 +7,11 @@ const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', imp
 
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v7', () => {
+test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v8', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 7);
-  assert.equal(catalog.publication.lotId, 'LOT-0007');
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005', 'U006', 'U007']);
+  assert.equal(catalog.contentVersion, 8);
+  assert.equal(catalog.publication.lotId, 'LOT-0008');
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005', 'U006', 'U007', 'U008']);
 });
 
 test('U003 referencia taxonomia, fontes e componentes corretos', () => {

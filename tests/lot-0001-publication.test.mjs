@@ -20,15 +20,15 @@ function collectKeys(value, keys = []) {
   return keys;
 }
 
-test('catálogo cumulativo autorizado permanece válido até o LOT-0007', () => {
-  assert.equal(catalog.contentVersion, 7);
+test('catálogo cumulativo autorizado permanece válido até o LOT-0008', () => {
+  assert.equal(catalog.contentVersion, 8);
   assert.equal(catalog.publicationStatus, 'published');
-  assert.equal(catalog.publication.lotId, 'LOT-0007');
+  assert.equal(catalog.publication.lotId, 'LOT-0008');
   assert.equal(catalog.publication.authorized, true);
   assert.deepEqual(validateCatalog(catalog), []);
 });
 
-test('LOT-0001 permanece íntegro após a inclusão das U002 a U007', () => {
+test('LOT-0001 permanece íntegro após a inclusão das U002 a U008', () => {
   assert.ok(findById(catalog.subjects, 'MAT-PORT'));
   assert.ok(findById(catalog.topics, 'ASS-PORT-001'));
   assert.ok(findById(catalog.topics, 'ASS-PORT-001-01'));
@@ -46,31 +46,15 @@ test('LOT-0001 permanece íntegro após a inclusão das U002 a U007', () => {
       .map(({ id, answer }) => [id, answer])
   );
   assert.deepEqual(answers, {
-    Q000001: 'C',
-    Q000002: 'A',
-    Q000003: 'D',
-    Q000004: 'B',
-    Q000005: 'E'
+    Q000001: 'C', Q000002: 'A', Q000003: 'D', Q000004: 'B', Q000005: 'E'
   });
 });
 
 test('material M001 preserva a sequência pedagógica completa', () => {
   const material = findById(catalog.materials, 'M001');
-  const headings = material.blocks
-    .filter(({ type }) => type === 'heading')
-    .map(({ text }) => text);
+  const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
   assert.deepEqual(headings, [
-    '1. Comece por uma ideia simples',
-    '2. Informação explícita',
-    '3. Informação implícita',
-    '4. Diferença prática',
-    '5. Método em quatro passos',
-    '6. Exemplos comentados',
-    '7. Explicação técnica',
-    '8. Erros comuns',
-    '9. Resumo da aula',
-    '10. Orientação de revisão',
-    '11. Fontes editoriais'
+    '1. Comece por uma ideia simples','2. Informação explícita','3. Informação implícita','4. Diferença prática','5. Método em quatro passos','6. Exemplos comentados','7. Explicação técnica','8. Erros comuns','9. Resumo da aula','10. Orientação de revisão','11. Fontes editoriais'
   ]);
 });
 
@@ -86,11 +70,7 @@ test('todas as questões têm cinco alternativas e gabarito compatível', () => 
 });
 
 test('catálogo não contém dados pessoais nem segredos', () => {
-  const forbidden = new Set([
-    'email', 'password', 'userId', 'uuid', 'studentAnswers', 'personalAnswers',
-    'grades', 'scores', 'studyHistory', 'tafResults', 'deviceData', 'recoveryCodes',
-    'serviceRoleKey', 'notionToken', 'privateKey', 'secret', 'accessToken', 'refreshToken'
-  ]);
+  const forbidden = new Set(['email','password','userId','uuid','studentAnswers','personalAnswers','grades','scores','studyHistory','tafResults','deviceData','recoveryCodes','serviceRoleKey','notionToken','privateKey','secret','accessToken','refreshToken']);
   const found = collectKeys(catalog).filter((key) => forbidden.has(key));
   assert.deepEqual(found, []);
   assert.equal(catalog.features.essay, false);
