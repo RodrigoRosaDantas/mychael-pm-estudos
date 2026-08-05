@@ -2,23 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { validateCatalog } from '../scripts/content-rules.mjs';
-
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
-
-function findById(collection, id) {
-  return collection.find((item) => item.id === id);
-}
-
-test('LOT-0005 permanece íntegro no catálogo cumulativo v6', () => {
+function findById(collection, id) { return collection.find((item) => item.id === id); }
+test('LOT-0005 permanece íntegro no catálogo cumulativo v7', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 6);
-  assert.equal(catalog.publication.lotId, 'LOT-0006');
-  assert.equal(catalog.units.length, 6);
-  assert.equal(catalog.materials.length, 6);
-  assert.equal(catalog.questions.length, 36);
-  assert.equal(catalog.questionSets.length, 6);
+  assert.equal(catalog.contentVersion, 7);
+  assert.equal(catalog.publication.lotId, 'LOT-0007');
+  assert.equal(catalog.units.length, 7);
+  assert.equal(catalog.materials.length, 7);
+  assert.equal(catalog.questions.length, 42);
+  assert.equal(catalog.questionSets.length, 7);
 });
-
 test('U005 referencia taxonomia, fontes e componentes auditados', () => {
   const unit = findById(catalog.units, 'U005');
   assert.ok(unit);
@@ -28,7 +22,6 @@ test('U005 referencia taxonomia, fontes e componentes auditados', () => {
   assert.deepEqual(unit.questionIds, ['Q000024', 'Q000025', 'Q000026', 'Q000027', 'Q000028', 'Q000029', 'Q000030']);
   assert.deepEqual(unit.questionSetIds, ['QS005']);
 });
-
 test('M005 mantém teoria separada das questões e orientação de revisão', () => {
   const material = findById(catalog.materials, 'M005');
   assert.ok(material);
@@ -43,35 +36,20 @@ test('M005 mantém teoria separada das questões e orientação de revisão', ()
   assert.ok(headings.some((heading) => heading.includes('Locução verbal')));
   assert.ok(headings.some((heading) => heading.includes('Orientação de revisão')));
 });
-
 test('sete questões da U005 mantêm gabaritos e integridade editorial', () => {
-  const expected = {
-    Q000024: 'B', Q000025: 'D', Q000026: 'A', Q000027: 'C',
-    Q000028: 'E', Q000029: 'B', Q000030: 'D'
-  };
+  const expected = { Q000024: 'B', Q000025: 'D', Q000026: 'A', Q000027: 'C', Q000028: 'E', Q000029: 'B', Q000030: 'D' };
   for (const [id, answer] of Object.entries(expected)) {
     const question = findById(catalog.questions, id);
-    assert.ok(question, id);
-    assert.equal(question.answer, answer, id);
-    assert.equal(question.unitId, 'U005', id);
-    assert.deepEqual(question.sourceIds, ['FNT-0016', 'FNT-0022'], id);
-    assert.equal(question.options.length, 5, id);
-    assert.ok(question.options.some((option) => option.id === answer), id);
-    assert.ok(question.commentary.length > 20, id);
-    assert.ok(question.foundation.length > 20, id);
-    assert.equal(question.annulled, false, id);
-    assert.equal(question.duplicateOf, null, id);
-    assert.equal(question.imageRequired, false, id);
-    assert.equal(question.valid, true, id);
+    assert.ok(question, id); assert.equal(question.answer, answer, id); assert.equal(question.unitId, 'U005', id);
+    assert.deepEqual(question.sourceIds, ['FNT-0016', 'FNT-0022'], id); assert.equal(question.options.length, 5, id);
+    assert.ok(question.options.some((option) => option.id === answer), id); assert.ok(question.commentary.length > 20, id);
+    assert.ok(question.foundation.length > 20, id); assert.equal(question.annulled, false, id);
+    assert.equal(question.duplicateOf, null, id); assert.equal(question.imageRequired, false, id); assert.equal(question.valid, true, id);
   }
 });
-
 test('QS005 apenas referencia questões do Banco Mestre na ordem auditada', () => {
   const set = findById(catalog.questionSets, 'QS005');
-  assert.ok(set);
-  assert.equal(set.unitId, 'U005');
-  assert.equal(set.correctionMode, 'Por questão');
+  assert.ok(set); assert.equal(set.unitId, 'U005'); assert.equal(set.correctionMode, 'Por questão');
   assert.deepEqual(set.questionIds, ['Q000024', 'Q000025', 'Q000026', 'Q000027', 'Q000028', 'Q000029', 'Q000030']);
-  assert.equal('questions' in set, false);
-  assert.equal('answers' in set, false);
+  assert.equal('questions' in set, false); assert.equal('answers' in set, false);
 });
