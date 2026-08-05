@@ -10,9 +10,10 @@ const fragmentUrls = [
   new URL('content/lots/lot-0004-questions.json', root),
   new URL('content/lots/lot-0005.json', root),
   new URL('content/lots/lot-0006.json', root),
+  new URL('content/lots/lot-0007-subject.json', root),
   new URL('content/lots/lot-0007.json', root)
 ];
-const collections = ['topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
+const collections = ['subjects', 'topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
 
 function uniqueById(items) {
   const result = [];
