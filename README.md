@@ -30,12 +30,16 @@ A plataforma possui 11 páginas:
 - Desempenho;
 - Configurações.
 
-O catálogo cumulativo v2 reúne:
+O catálogo cumulativo v4 reúne:
 
 - `U001`, `M001`, `Q000001` a `Q000005` e `QS001` — informações explícitas e implícitas;
-- `U002`, `M002`, `Q000006` a `Q000011` e `QS002` — inferência, pressupostos e subentendidos.
+- `U002`, `M002`, `Q000006` a `Q000011` e `QS002` — inferência, pressupostos e subentendidos;
+- `U003`, `M003`, `Q000012` a `Q000017` e `QS003` — substantivo, adjetivo e artigo;
+- `U004`, `M004`, `Q000018` a `Q000023` e `QS004` — pronomes e referenciação.
 
-No total, são duas unidades, dois materiais, onze questões e dois conjuntos de fixação. O fluxo de questões salva tentativas no Supabase, encaminha erros para revisão e oferece refação individual ou conjunta. A refação limpa não mostra alternativa anterior, comentário ou gabarito antes da nova resposta.
+No total, são quatro unidades, quatro materiais, 23 questões e quatro conjuntos de fixação. O fluxo de questões salva tentativas no Supabase, encaminha erros para revisão e oferece refação individual ou conjunta. A refação limpa não mostra alternativa anterior, comentário ou gabarito antes da nova resposta.
+
+Os LOT-0003 e LOT-0004 são mantidos como exportações editoriais estruturadas em `content/lots/`. O script `scripts/assemble-published-catalog.mjs` monta o catálogo cumulativo de forma idempotente, preserva as unidades já publicadas e recalcula o manifesto antes das validações.
 
 O módulo TAF permite registrar sessões físicas, consultar o histórico privado e informar avaliação médica ou supervisão profissional. Os registros usam `taf_attempts`, permanecem vinculados ao perfil `STU-MYCHAEL` e não entram no GitHub ou no Notion editorial. O módulo não apresenta índice numérico oficial vigente; índices históricos e futuros índices vigentes dependem de exportação editorial própria e fonte oficial validada.
 
@@ -47,7 +51,7 @@ Provas Anteriores e Simulados ainda dependem de conteúdo editorial autorizado p
 npm run check
 ```
 
-A suíte acima valida catálogo, estrutura multipágina, segurança do Supabase e testes unitários/estáticos.
+A suíte acima monta e valida o catálogo cumulativo, confere relações editoriais, estrutura multipágina, segurança do Supabase e testes unitários/estáticos.
 
 Os testes de navegador usam Chromium real com perfis de computador e celular:
 
@@ -62,6 +66,7 @@ No GitHub Actions, o Chromium e as dependências do sistema são instalados auto
 ## Comandos adicionais
 
 ```bash
+npm run assemble
 npm run manifest
 npm run deployment:check -- https://rodrigorosadantas.github.io/mychael-pm-estudos/
 npm run supabase:check
