@@ -9,7 +9,7 @@ function findById(collection, id) {
   return collection.find((item) => item.id === id);
 }
 
-test('LOT-0005 permanece íntegro no catálogo cumulativo v6', () => {
+test('LOT-0006 integra U006 ao catálogo cumulativo válido', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(catalog.contentVersion, 6);
   assert.equal(catalog.publication.lotId, 'LOT-0006');
@@ -19,42 +19,43 @@ test('LOT-0005 permanece íntegro no catálogo cumulativo v6', () => {
   assert.equal(catalog.questionSets.length, 6);
 });
 
-test('U005 referencia taxonomia, fontes e componentes auditados', () => {
-  const unit = findById(catalog.units, 'U005');
+test('U006 referencia taxonomia, fontes e componentes auditados', () => {
+  const unit = findById(catalog.units, 'U006');
   assert.ok(unit);
-  assert.deepEqual(unit.topicIds, ['ASS-PORT-003', 'ASS-PORT-003-03']);
-  assert.deepEqual(unit.sourceIds, ['FNT-0016', 'FNT-0022']);
-  assert.deepEqual(unit.materialIds, ['M005']);
-  assert.deepEqual(unit.questionIds, ['Q000024', 'Q000025', 'Q000026', 'Q000027', 'Q000028', 'Q000029', 'Q000030']);
-  assert.deepEqual(unit.questionSetIds, ['QS005']);
+  assert.deepEqual(unit.topicIds, ['ASS-PORT-008', 'ASS-PORT-008-01']);
+  assert.deepEqual(unit.sourceIds, ['FNT-0018', 'FNT-0019']);
+  assert.deepEqual(unit.materialIds, ['M006']);
+  assert.deepEqual(unit.questionIds, ['Q000031', 'Q000032', 'Q000033', 'Q000034', 'Q000035', 'Q000036']);
+  assert.deepEqual(unit.questionSetIds, ['QS006']);
 });
 
-test('M005 mantém teoria separada das questões e orientação de revisão', () => {
-  const material = findById(catalog.materials, 'M005');
+test('M006 mantém teoria separada das questões e orientação de revisão', () => {
+  const material = findById(catalog.materials, 'M006');
   assert.ok(material);
-  assert.equal(material.unitId, 'U005');
+  assert.equal(material.unitId, 'U006');
   assert.equal(material.required, true);
   assert.equal('questionIds' in material, false);
   assert.equal('answer' in material, false);
   assert.equal('options' in material, false);
   const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
-  assert.ok(headings.some((heading) => heading.includes('Infinitivo e conjugações')));
-  assert.ok(headings.some((heading) => heading.includes('Modo verbal')));
-  assert.ok(headings.some((heading) => heading.includes('Locução verbal')));
+  assert.ok(headings.some((heading) => heading.includes('Sinonímia')));
+  assert.ok(headings.some((heading) => heading.includes('Antonímia')));
+  assert.ok(headings.some((heading) => heading.includes('Polissemia')));
+  assert.ok(headings.some((heading) => heading.includes('Ambiguidade')));
   assert.ok(headings.some((heading) => heading.includes('Orientação de revisão')));
 });
 
-test('sete questões da U005 mantêm gabaritos e integridade editorial', () => {
+test('seis questões da U006 mantêm gabaritos e integridade editorial', () => {
   const expected = {
-    Q000024: 'B', Q000025: 'D', Q000026: 'A', Q000027: 'C',
-    Q000028: 'E', Q000029: 'B', Q000030: 'D'
+    Q000031: 'C', Q000032: 'A', Q000033: 'E',
+    Q000034: 'B', Q000035: 'D', Q000036: 'C'
   };
   for (const [id, answer] of Object.entries(expected)) {
     const question = findById(catalog.questions, id);
     assert.ok(question, id);
     assert.equal(question.answer, answer, id);
-    assert.equal(question.unitId, 'U005', id);
-    assert.deepEqual(question.sourceIds, ['FNT-0016', 'FNT-0022'], id);
+    assert.equal(question.unitId, 'U006', id);
+    assert.deepEqual(question.sourceIds, ['FNT-0018', 'FNT-0019'], id);
     assert.equal(question.options.length, 5, id);
     assert.ok(question.options.some((option) => option.id === answer), id);
     assert.ok(question.commentary.length > 20, id);
@@ -66,12 +67,12 @@ test('sete questões da U005 mantêm gabaritos e integridade editorial', () => {
   }
 });
 
-test('QS005 apenas referencia questões do Banco Mestre na ordem auditada', () => {
-  const set = findById(catalog.questionSets, 'QS005');
+test('QS006 apenas referencia questões do Banco Mestre na ordem auditada', () => {
+  const set = findById(catalog.questionSets, 'QS006');
   assert.ok(set);
-  assert.equal(set.unitId, 'U005');
+  assert.equal(set.unitId, 'U006');
   assert.equal(set.correctionMode, 'Por questão');
-  assert.deepEqual(set.questionIds, ['Q000024', 'Q000025', 'Q000026', 'Q000027', 'Q000028', 'Q000029', 'Q000030']);
+  assert.deepEqual(set.questionIds, ['Q000031', 'Q000032', 'Q000033', 'Q000034', 'Q000035', 'Q000036']);
   assert.equal('questions' in set, false);
   assert.equal('answers' in set, false);
 });

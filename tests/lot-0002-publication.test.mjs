@@ -12,14 +12,14 @@ function findById(collection, id) {
   return collection.find((item) => item.id === id);
 }
 
-test('LOT-0005 amplia o catálogo cumulativo sem relações quebradas', () => {
+test('LOT-0006 amplia o catálogo cumulativo sem relações quebradas', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 5);
-  assert.equal(catalog.units.length, 5);
-  assert.equal(catalog.materials.length, 5);
-  assert.equal(catalog.questions.length, 30);
-  assert.equal(catalog.questionSets.length, 5);
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005']);
+  assert.equal(catalog.contentVersion, 6);
+  assert.equal(catalog.units.length, 6);
+  assert.equal(catalog.materials.length, 6);
+  assert.equal(catalog.questions.length, 36);
+  assert.equal(catalog.questionSets.length, 6);
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005', 'U006']);
 });
 
 test('U002 permanece referenciando exatamente M002, Q000006 a Q000011 e QS002', () => {
@@ -99,7 +99,7 @@ test('fonte FNT-0013 e manifesto público correspondem ao catálogo exportado', 
 
   const digest = createHash('sha256').update(catalogBytes).digest('hex');
   assert.equal(manifest.schemaVersion, 1);
-  assert.equal(manifest.contentVersion, 5);
+  assert.equal(manifest.contentVersion, 6);
   assert.equal(manifest.files.length, 1);
   assert.equal(manifest.files[0].path, 'content/catalog.json');
   assert.equal(manifest.files[0].sha256, digest);
