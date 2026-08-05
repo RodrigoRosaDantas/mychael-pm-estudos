@@ -5,15 +5,13 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 
-function findById(collection, id) {
-  return collection.find((item) => item.id === id);
-}
+function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v6', () => {
+test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v7', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 6);
-  assert.equal(catalog.publication.lotId, 'LOT-0006');
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005', 'U006']);
+  assert.equal(catalog.contentVersion, 7);
+  assert.equal(catalog.publication.lotId, 'LOT-0007');
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005', 'U006', 'U007']);
 });
 
 test('U003 referencia taxonomia, fontes e componentes corretos', () => {
