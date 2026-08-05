@@ -9,14 +9,14 @@ function findById(collection, id) {
   return collection.find((item) => item.id === id);
 }
 
-test('LOT-0005 integra U005 ao catálogo cumulativo válido', () => {
+test('LOT-0005 permanece íntegro no catálogo cumulativo v6', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 5);
-  assert.equal(catalog.publication.lotId, 'LOT-0005');
-  assert.equal(catalog.units.length, 5);
-  assert.equal(catalog.materials.length, 5);
-  assert.equal(catalog.questions.length, 30);
-  assert.equal(catalog.questionSets.length, 5);
+  assert.equal(catalog.contentVersion, 6);
+  assert.equal(catalog.publication.lotId, 'LOT-0006');
+  assert.equal(catalog.units.length, 6);
+  assert.equal(catalog.materials.length, 6);
+  assert.equal(catalog.questions.length, 36);
+  assert.equal(catalog.questionSets.length, 6);
 });
 
 test('U005 referencia taxonomia, fontes e componentes auditados', () => {
