@@ -1,0 +1,1 @@
+Conteúdo editorial público. Progresso individual e dados pessoais permanecem exclusivamente no Supabase.
