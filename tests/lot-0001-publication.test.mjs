@@ -20,15 +20,15 @@ function collectKeys(value, keys = []) {
   return keys;
 }
 
-test('catálogo cumulativo autorizado permanece válido até o LOT-0004', () => {
-  assert.equal(catalog.contentVersion, 4);
+test('catálogo cumulativo autorizado permanece válido até o LOT-0005', () => {
+  assert.equal(catalog.contentVersion, 5);
   assert.equal(catalog.publicationStatus, 'published');
-  assert.equal(catalog.publication.lotId, 'LOT-0004');
+  assert.equal(catalog.publication.lotId, 'LOT-0005');
   assert.equal(catalog.publication.authorized, true);
   assert.deepEqual(validateCatalog(catalog), []);
 });
 
-test('LOT-0001 permanece íntegro após a inclusão das U002, U003 e U004', () => {
+test('LOT-0001 permanece íntegro após a inclusão das U002 a U005', () => {
   assert.ok(findById(catalog.subjects, 'MAT-PORT'));
   assert.ok(findById(catalog.topics, 'ASS-PORT-001'));
   assert.ok(findById(catalog.topics, 'ASS-PORT-001-01'));

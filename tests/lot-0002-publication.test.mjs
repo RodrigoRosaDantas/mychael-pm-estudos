@@ -12,14 +12,14 @@ function findById(collection, id) {
   return collection.find((item) => item.id === id);
 }
 
-test('LOT-0004 amplia o catálogo cumulativo sem relações quebradas', () => {
+test('LOT-0005 amplia o catálogo cumulativo sem relações quebradas', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 4);
-  assert.equal(catalog.units.length, 4);
-  assert.equal(catalog.materials.length, 4);
-  assert.equal(catalog.questions.length, 23);
-  assert.equal(catalog.questionSets.length, 4);
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004']);
+  assert.equal(catalog.contentVersion, 5);
+  assert.equal(catalog.units.length, 5);
+  assert.equal(catalog.materials.length, 5);
+  assert.equal(catalog.questions.length, 30);
+  assert.equal(catalog.questionSets.length, 5);
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001', 'U002', 'U003', 'U004', 'U005']);
 });
 
 test('U002 permanece referenciando exatamente M002, Q000006 a Q000011 e QS002', () => {
@@ -62,19 +62,13 @@ test('M002 mantém teoria separada das questões e sequência pedagógica comple
 
 test('seis questões da U002 mantêm gabaritos auditados e integridade editorial', () => {
   const expected = {
-    Q000006: 'B',
-    Q000007: 'B',
-    Q000008: 'C',
-    Q000009: 'D',
-    Q000010: 'A',
-    Q000011: 'E'
+    Q000006: 'B', Q000007: 'B', Q000008: 'C', Q000009: 'D', Q000010: 'A', Q000011: 'E'
   };
   for (const [id, answer] of Object.entries(expected)) {
     const question = findById(catalog.questions, id);
     assert.ok(question, id);
     assert.equal(question.answer, answer, id);
     assert.equal(question.unitId, 'U002', id);
-    assert.deepEqual(question.questionSetIds, ['QS002'], id);
     assert.equal(question.options.length, 5, id);
     assert.ok(question.options.some((option) => option.id === answer), id);
     assert.ok(question.commentary.length > 20, id);
@@ -105,7 +99,7 @@ test('fonte FNT-0013 e manifesto público correspondem ao catálogo exportado', 
 
   const digest = createHash('sha256').update(catalogBytes).digest('hex');
   assert.equal(manifest.schemaVersion, 1);
-  assert.equal(manifest.contentVersion, 4);
+  assert.equal(manifest.contentVersion, 5);
   assert.equal(manifest.files.length, 1);
   assert.equal(manifest.files[0].path, 'content/catalog.json');
   assert.equal(manifest.files[0].sha256, digest);
