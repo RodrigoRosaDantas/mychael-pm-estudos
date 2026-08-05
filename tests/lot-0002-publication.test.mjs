@@ -41,9 +41,23 @@ test('M002 mantém teoria separada das questões e sequência pedagógica comple
   assert.equal('questionIds' in material, false);
   assert.equal('answer' in material, false);
   assert.equal('options' in material, false);
-  const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
-  assert.ok(headings.some((heading) => heading.includes('Inferência')));
-  assert.ok(headings.some((heading) => heading.includes('Orientação de revisão')));
+  const headings = material.blocks
+    .filter(({ type }) => type === 'heading')
+    .map(({ text }) => text);
+  assert.deepEqual(headings, [
+    '1. Comece por uma ideia simples',
+    '2. O que é inferência',
+    '3. O que é pressuposto',
+    '4. O que é subentendido',
+    '5. Diferença prática',
+    '6. Método em três passos',
+    '7. Exemplos comentados',
+    '8. Explicação técnica',
+    '9. Erros comuns',
+    '10. Resumo da aula',
+    '11. Orientação de revisão',
+    '12. Fontes editoriais'
+  ]);
 });
 
 test('seis questões da U002 mantêm gabaritos auditados e integridade editorial', () => {
