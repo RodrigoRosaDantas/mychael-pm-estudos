@@ -34,8 +34,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Assemble cumulative catalog
+        run: npm run assemble
       - name: Assemble static site
         run: |
           mkdir -p _site
@@ -58,6 +64,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22
+      - name: Assemble expected cumulative catalog
+        run: npm run assemble
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
