@@ -5,17 +5,16 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
-
 const questionIds = ['Q000050', 'Q000051', 'Q000052', 'Q000053', 'Q000054', 'Q000055', 'Q000056'];
 
-test('LOT-0009 integra direitos e deveres individuais ao catálogo cumulativo válido', () => {
+test('LOT-0009 permanece íntegro no catálogo cumulativo v10', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 9);
-  assert.equal(catalog.publication.lotId, 'LOT-0009');
-  assert.equal(catalog.units.length, 9);
-  assert.equal(catalog.materials.length, 9);
-  assert.equal(catalog.questions.length, 56);
-  assert.equal(catalog.questionSets.length, 9);
+  assert.equal(catalog.contentVersion, 10);
+  assert.equal(catalog.publication.lotId, 'LOT-0010');
+  assert.equal(catalog.units.length, 10);
+  assert.equal(catalog.materials.length, 10);
+  assert.equal(catalog.questions.length, 63);
+  assert.equal(catalog.questionSets.length, 10);
 });
 
 test('U009 referencia taxonomia, fonte e componentes auditados', () => {
