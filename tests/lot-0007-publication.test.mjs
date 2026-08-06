@@ -4,9 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { validateCatalog } from '../scripts/content-rules.mjs';
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
-test('LOT-0007 permanece íntegro no catálogo cumulativo v9', () => {
-  assert.deepEqual(validateCatalog(catalog), []); assert.equal(catalog.contentVersion, 9); assert.equal(catalog.publication.lotId, 'LOT-0009');
-  assert.equal(catalog.units.length, 9); assert.equal(catalog.materials.length, 9); assert.equal(catalog.questions.length, 56); assert.equal(catalog.questionSets.length, 9); assert.ok(findById(catalog.subjects, 'MAT-DCON'));
+test('LOT-0007 permanece íntegro no catálogo cumulativo v10', () => {
+  assert.deepEqual(validateCatalog(catalog), []); assert.equal(catalog.contentVersion, 10); assert.equal(catalog.publication.lotId, 'LOT-0010');
+  assert.equal(catalog.units.length, 10); assert.equal(catalog.materials.length, 10); assert.equal(catalog.questions.length, 63); assert.equal(catalog.questionSets.length, 10); assert.ok(findById(catalog.subjects, 'MAT-DCON'));
 });
 test('U007 referencia taxonomia, fontes e componentes auditados', () => {
   const unit = findById(catalog.units, 'U007'); assert.ok(unit); assert.equal(unit.subjectId, 'MAT-DCON');
