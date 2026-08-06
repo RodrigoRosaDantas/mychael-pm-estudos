@@ -4,9 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { validateCatalog } from '../scripts/content-rules.mjs';
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
-test('LOT-0008 permanece íntegro no catálogo cumulativo v9', () => {
-  assert.deepEqual(validateCatalog(catalog), []); assert.equal(catalog.contentVersion, 9); assert.equal(catalog.publication.lotId, 'LOT-0009');
-  assert.equal(catalog.units.length, 9); assert.equal(catalog.materials.length, 9); assert.equal(catalog.questions.length, 56); assert.equal(catalog.questionSets.length, 9);
+test('LOT-0008 permanece íntegro no catálogo cumulativo v10', () => {
+  assert.deepEqual(validateCatalog(catalog), []); assert.equal(catalog.contentVersion, 10); assert.equal(catalog.publication.lotId, 'LOT-0010');
+  assert.equal(catalog.units.length, 10); assert.equal(catalog.materials.length, 10); assert.equal(catalog.questions.length, 63); assert.equal(catalog.questionSets.length, 10);
 });
 test('U008 referencia taxonomia, fonte e componentes auditados', () => { const unit=findById(catalog.units,'U008'); assert.ok(unit); assert.equal(unit.subjectId,'MAT-DCON'); assert.deepEqual(unit.topicIds,['ASS-DCON-002']); assert.deepEqual(unit.sourceIds,['FNT-0001']); assert.deepEqual(unit.materialIds,['M008']); assert.deepEqual(unit.questionIds,['Q000043','Q000044','Q000045','Q000046','Q000047','Q000048','Q000049']); assert.deepEqual(unit.questionSetIds,['QS008']); });
 test('M008 mantém teoria separada das questões e orientação de revisão', () => { const material=findById(catalog.materials,'M008'); assert.ok(material); assert.equal(material.unitId,'U008'); assert.equal(material.required,true); assert.equal('questionIds' in material,false); assert.equal('answer' in material,false); assert.equal('options' in material,false); const headings=material.blocks.filter(({type})=>type==='heading').map(({text})=>text); for(const term of ['Erros comuns','Resumo da aula','Orientação de revisão']) assert.ok(headings.some((heading)=>heading.includes(term))); });
