@@ -1,0 +1,74 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { validateCatalog } from '../scripts/content-rules.mjs';
+
+const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
+function findById(collection, id) { return collection.find((item) => item.id === id); }
+const questionIds = ['Q000057','Q000058','Q000059','Q000060','Q000061','Q000062','Q000063'];
+
+test('LOT-0010 integra remédios constitucionais ao catálogo cumulativo válido', () => {
+  assert.deepEqual(validateCatalog(catalog), []);
+  assert.equal(catalog.contentVersion, 10);
+  assert.equal(catalog.publication.lotId, 'LOT-0010');
+  assert.equal(catalog.units.length, 10);
+  assert.equal(catalog.materials.length, 10);
+  assert.equal(catalog.questions.length, 63);
+  assert.equal(catalog.questionSets.length, 10);
+});
+
+test('U013 referencia taxonomia, fonte e componentes auditados', () => {
+  const unit = findById(catalog.units, 'U013');
+  assert.ok(unit);
+  assert.equal(unit.subjectId, 'MAT-DCON');
+  assert.deepEqual(unit.topicIds, ['ASS-DCON-003-02']);
+  assert.deepEqual(unit.sourceIds, ['FNT-0001']);
+  assert.deepEqual(unit.materialIds, ['M013']);
+  assert.deepEqual(unit.questionIds, questionIds);
+  assert.deepEqual(unit.questionSetIds, ['QS013']);
+});
+
+test('M013 mantém teoria separada das questões e orientação de revisão', () => {
+  const material = findById(catalog.materials, 'M013');
+  assert.ok(material);
+  assert.equal(material.unitId, 'U013');
+  assert.equal(material.required, true);
+  assert.equal('questionIds' in material, false);
+  assert.equal('answer' in material, false);
+  assert.equal('options' in material, false);
+  const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
+  for (const term of ['Habeas corpus','Habeas data','Mandado de segurança','Mandado de injunção','Ação popular','Erros comuns','Resumo da aula','Orientação de revisão']) {
+    assert.ok(headings.some((heading) => heading.includes(term)), term);
+  }
+});
+
+test('sete questões da U013 mantêm gabaritos e integridade editorial', () => {
+  const expected = { Q000057:'C',Q000058:'A',Q000059:'B',Q000060:'D',Q000061:'A',Q000062:'B',Q000063:'C' };
+  for (const [id, answer] of Object.entries(expected)) {
+    const question = findById(catalog.questions, id);
+    assert.ok(question, id);
+    assert.equal(question.answer, answer, id);
+    assert.equal(question.unitId, 'U013', id);
+    assert.equal(question.subjectId, 'MAT-DCON', id);
+    assert.deepEqual(question.topicIds, ['ASS-DCON-003-02'], id);
+    assert.deepEqual(question.sourceIds, ['FNT-0001'], id);
+    assert.equal(question.options.length, 5, id);
+    assert.ok(question.options.some((option) => option.id === answer), id);
+    assert.ok(question.commentary.length > 20, id);
+    assert.ok(question.foundation.length > 10, id);
+    assert.equal(question.annulled, false, id);
+    assert.equal(question.duplicateOf, null, id);
+    assert.equal(question.imageRequired, false, id);
+    assert.equal(question.valid, true, id);
+  }
+});
+
+test('QS013 apenas referencia questões do Banco Mestre na ordem auditada', () => {
+  const set = findById(catalog.questionSets, 'QS013');
+  assert.ok(set);
+  assert.equal(set.unitId, 'U013');
+  assert.equal(set.correctionMode, 'Por questão');
+  assert.deepEqual(set.questionIds, questionIds);
+  assert.equal('questions' in set, false);
+  assert.equal('answers' in set, false);
+});
