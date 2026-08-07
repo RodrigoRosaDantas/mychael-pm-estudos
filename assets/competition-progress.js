@@ -63,15 +63,19 @@ function privateData() {
     state.privatePromise = (async () => {
       try {
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !sessionData.session?.user) return { authenticated: false, studyUnits: [], attempts: [] };
+        if (sessionError || !sessionData.session?.user) {
+          return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [] };
+        }
         const { data: profile, error: profileError } = await supabase
           .from('student_profiles')
           .select('id, status')
           .eq('id', supabaseConfig.profileId)
           .maybeSingle();
-        if (profileError || profile?.status !== 'active') return { authenticated: false, studyUnits: [], attempts: [] };
+        if (profileError || profile?.status !== 'active') {
+          return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [] };
+        }
 
-        const [unitsResult, attemptsResult] = await Promise.all([
+        const [unitsResult, attemptsResult, errorsResult] = await Promise.all([
           supabase
             .from('study_units')
             .select('unit_id, status, mastery_percent, last_activity_at')
@@ -79,21 +83,27 @@ function privateData() {
           supabase
             .from('question_attempts')
             .select('question_id, is_correct, answered_at')
+            .eq('profile_id', supabaseConfig.profileId),
+          supabase
+            .from('error_items')
+            .select('question_id, status')
             .eq('profile_id', supabaseConfig.profileId)
+            .in('status', ['open', 'reviewing'])
         ]);
-        if (unitsResult.error || attemptsResult.error) {
-          console.warn('Competition progress: dados privados indisponíveis.', unitsResult.error || attemptsResult.error);
-          return { authenticated: true, studyUnits: [], attempts: [], degraded: true };
+        if (unitsResult.error || attemptsResult.error || errorsResult.error) {
+          console.warn('Competition progress: dados privados indisponíveis.', unitsResult.error || attemptsResult.error || errorsResult.error);
+          return { authenticated: true, studyUnits: [], attempts: [], openErrorQuestionIds: [], degraded: true };
         }
         return {
           authenticated: true,
           studyUnits: unitsResult.data ?? [],
           attempts: attemptsResult.data ?? [],
+          openErrorQuestionIds: [...new Set((errorsResult.data ?? []).map((row) => row.question_id).filter(Boolean))],
           degraded: false
         };
       } catch (error) {
         console.warn('Competition progress: falha ao consultar progresso.', error);
-        return { authenticated: false, studyUnits: [], attempts: [], degraded: true };
+        return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [], degraded: true };
       }
     })();
   }
@@ -126,10 +136,13 @@ function progressGrid(model) {
 
 function progressDisclaimer(model) {
   const pending = model.pendingClassificationUnits.length;
+  const correction = model.blockedUnitIds?.length
+    ? ` ${model.blockedUnitIds.length} unidade(s) com erro aberto não contam como concluídas até a correção.`
+    : '';
   return `
     <div class="competition-progress-disclaimer">
       <strong>Como ler estes percentuais</strong>
-      <p>Os números medem somente o <b>acervo publicado e validado que já foi classificado como aplicável</b>. Eles não representam percentual do edital completo. ${pending ? `${pending} unidade(s) publicada(s) ainda aguardam classificação explícita.` : 'Todas as unidades publicadas estão classificadas nesta camada.'}</p>
+      <p>Os números medem somente o <b>acervo publicado e validado que já foi classificado como aplicável</b>. Eles não representam percentual do edital completo. ${pending ? `${pending} unidade(s) publicada(s) ainda aguardam classificação explícita.` : 'Todas as unidades publicadas estão classificadas nesta camada.'}${correction}</p>
     </div>`;
 }
 
@@ -150,7 +163,8 @@ async function renderPerformancePanel() {
     catalog,
     applicability,
     studyUnits: privateProgress.studyUnits,
-    attempts: privateProgress.attempts
+    attempts: privateProgress.attempts,
+    openErrorQuestionIds: privateProgress.openErrorQuestionIds
   });
   const section = document.createElement('section');
   section.className = 'card competition-progress-panel';
@@ -189,6 +203,18 @@ function guidedStepMarkup(step, authenticated) {
         <p>${escapeHtml(step.message)}</p>
       </div>`;
   }
+  if (step.phase === 'correction') {
+    return `
+      <div class="guided-step-copy" data-phase="correction">
+        <p class="eyebrow">${escapeHtml(step.phaseLabel)}</p>
+        <h2>${escapeHtml(step.unit.title)}</h2>
+        <p>${escapeHtml(step.message)}</p>
+        <div class="guided-step-actions">
+          <a class="primary-link" href="questoes.html?unit=${encodeURIComponent(step.unit.id)}&mode=errors">Corrigir erros pendentes</a>
+          <a class="secondary-link" href="estudar.html?unit=${encodeURIComponent(step.unit.id)}">Rever teoria</a>
+        </div>
+      </div>`;
+  }
   return `
     <div class="guided-step-copy">
       <p class="eyebrow">${escapeHtml(step.phaseLabel)}</p>
@@ -211,9 +237,15 @@ async function renderScheduleProgress() {
     catalog,
     applicability,
     studyUnits: privateProgress.studyUnits,
-    attempts: privateProgress.attempts
+    attempts: privateProgress.attempts,
+    openErrorQuestionIds: privateProgress.openErrorQuestionIds
   });
-  const step = nextGuidedStep({ catalog, applicability, studyUnits: privateProgress.studyUnits });
+  const step = nextGuidedStep({
+    catalog,
+    applicability,
+    studyUnits: privateProgress.studyUnits,
+    openErrorQuestionIds: privateProgress.openErrorQuestionIds
+  });
   const section = document.createElement('section');
   section.className = 'card guided-cycle-progress';
   section.id = 'guidedCycleProgress';
@@ -222,9 +254,9 @@ async function renderScheduleProgress() {
       ${guidedStepMarkup(step, privateProgress.authenticated)}
       <div class="guided-cycle-status">
         <strong>Regra do ciclo</strong>
-        <span>1. núcleo comum aos três</span>
-        <span>2. convergências entre dois</span>
-        <span>3. específicas PMDF → PMGO → PMMG</span>
+        <span>1. aprender e praticar</span>
+        <span>2. corrigir e revisar pendências</span>
+        <span>3. avançar: comum → compartilhado → específicas</span>
       </div>
     </div>
     ${privateProgress.authenticated ? progressGrid(model) : ''}
