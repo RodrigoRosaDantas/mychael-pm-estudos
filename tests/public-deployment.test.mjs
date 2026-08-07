@@ -16,10 +16,10 @@ test('arquivos locais formam uma publicação íntegra e multi-concurso', () => 
   assert.equal(result.questions, 133);
   assert.equal(result.coverage.unitCounts.PMDF, 20);
   assert.equal(result.coverage.unitCounts.PMGO, 20);
-  assert.equal(result.coverage.unitCounts.PMMG, 12);
-  assert.equal(result.coverage.questionCounts.PMMG, 79);
-  assert.equal(result.coverage.commonUnits, 12);
-  assert.equal(result.coverage.pmmgTopicReviewPending, 2);
+  assert.equal(result.coverage.unitCounts.PMMG, 14);
+  assert.equal(result.coverage.questionCounts.PMMG, 92);
+  assert.equal(result.coverage.commonUnits, 14);
+  assert.equal(result.coverage.pmmgTopicReviewPending, 0);
   assert.deepEqual(result.coverage.unclassifiedUnits, []);
 });
 test('detecta arquivo público desatualizado', () => {
@@ -44,7 +44,7 @@ test('validação remota compara o deploy completo com o commit atual', async ()
   assert.equal(result.pages, 12);
   assert.equal(result.units, 20);
   assert.equal(result.questions, 133);
-  assert.equal(result.coverage.questionCounts.PMMG, 79);
+  assert.equal(result.coverage.questionCounts.PMMG, 92);
 });
 test('validação remota falha quando o site não responde', async () => {
   const fetchImpl = async () => new Response('indisponível', { status: 503 });

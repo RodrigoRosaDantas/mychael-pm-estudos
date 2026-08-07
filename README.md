@@ -89,9 +89,9 @@ Na camada atual de aplicabilidade:
 
 - PMDF: 20 unidades / 133 questões aplicáveis;
 - PMGO: 20 unidades / 133 questões aplicáveis;
-- PMMG: 12 unidades / 79 questões aplicáveis;
-- núcleo comum aos três: 12 unidades / 79 questões;
-- U006 e U013 permanecem com revisão temática da PMMG pendente.
+- PMMG: 14 unidades / 92 questões aplicáveis;
+- núcleo comum aos três: 14 unidades / 92 questões;
+- U006 (Semântica) e U013 (remédios constitucionais) foram revalidadas para PMMG em 07/08/2026 com evidência temática explícita do programa de referência.
 
 Essas contagens representam o acervo físico publicado e seus vínculos de aplicabilidade. Não significam percentual do edital completo nem quantidade de questões produzidas especificamente para cada corporação.
 
