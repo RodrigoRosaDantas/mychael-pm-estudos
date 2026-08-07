@@ -376,7 +376,10 @@ function enhanceHome() {
   const unitId = primary ? new URL(primary.href, window.location.href).searchParams.get('unit') : null;
   if (primary && unitId) {
     const progress = readProgress(unitId);
-    if (progress?.percent > 4 && progress.percent < 98) primary.textContent = `Continuar leitura (${progress.percent}%)`;
+    if (progress?.percent > 4 && progress.percent < 98) {
+      const nextText = `Continuar leitura (${progress.percent}%)`;
+      if (primary.textContent !== nextText) primary.textContent = nextText;
+    }
   }
 }
 
@@ -739,7 +742,8 @@ function queueRefresh() {
 
 function startObserver() {
   const observer = new MutationObserver(queueRefresh);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  const content = document.querySelector('#pageContent');
+  if (content) observer.observe(content, { childList: true });
   queueRefresh();
 }
 
