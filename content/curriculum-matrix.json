@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-07",
+  "purpose": "Matriz curricular de planejamento para orientar ciclos e comparações sem reclassificar automaticamente o conteúdo editorial publicado.",
+  "guardrails": {
+    "doesNotTagEditorialContent": true,
+    "weightsAreReferenceOnly": true,
+    "futureNoticesOverrideReferences": true,
+    "commonClassificationRequiresVerifiedOverlap": true
+  },
+  "competitions": [
+    {
+      "id": "PMDF-SOLDADO",
+      "label": "PMDF — Soldado / Curso de Formação de Praças",
+      "referenceNotice": "Edital Normativo nº 04/2023-DGP/PMDF",
+      "referenceDate": "2023-01-23",
+      "referenceStatus": "official-current-reference",
+      "currentState": "Em andamento na página oficial da PMDF consultada em 2026-08-07.",
+      "exam": { "objectiveQuestions": 80, "objectivePoints": 80, "essayPoints": 20, "objectiveAlternatives": 5 },
+      "sources": [
+        { "type": "official-status", "url": "https://portal.pm.df.gov.br/concursos/", "authority": "Polícia Militar do Distrito Federal" },
+        { "type": "official-notice", "url": "https://www.sinj.df.gov.br/sinj/TextoArquivoDiario.aspx?id_file=876a4f4d-ffe3-3705-a8ca-ef0255d614dd", "authority": "Diário Oficial do Distrito Federal / SINJ-DF" }
+      ]
+    },
+    {
+      "id": "PMGO-SOLDADO",
+      "label": "PMGO — Soldado de 2ª Classe Combatente",
+      "referenceNotice": "Edital de Concurso Público nº 002/2022 — retificado",
+      "referenceDate": "2022-04-08",
+      "referenceStatus": "official-current-reference",
+      "currentState": "Página oficial da SEAD atualizada em 2026-07-22, com atos do certame e situações sub judice.",
+      "exam": { "objectiveQuestions": 50, "objectivePoints": 85, "essayPoints": 25, "objectiveAlternatives": 5 },
+      "sources": [
+        { "type": "official-status", "url": "https://goias.gov.br/administracao/edital-002-2022-concurso-pm-go-soldado/", "authority": "Secretaria de Estado da Administração de Goiás" },
+        { "type": "official-notice", "url": "https://goias.gov.br/escoladegoverno/wp-content/uploads/sites/28/2022/04/171122-EdPM002Retificado-b53.pdf", "authority": "Secretaria de Estado da Administração de Goiás" },
+        { "type": "official-program", "url": "https://goias.gov.br/administracao/wp-content/uploads/sites/27/2022/04/120522-AnexoIIRetificado-fd3.pdf", "authority": "Secretaria de Estado da Administração de Goiás" }
+      ]
+    },
+    {
+      "id": "PMMG-SOLDADO",
+      "label": "PMMG — Soldado / CFSd QP-PM",
+      "referenceNotice": "Edital DRH/CRS nº 10/2024 — CFSd QP-PM/2025",
+      "referenceDate": "2024-05-09",
+      "referenceStatus": "latest-soldier-reference-no-newer-notice-found",
+      "currentState": "O CFSd do Edital 10/2024 foi citado oficialmente pela ALMG em 2026 e o Governo de Minas informou a formatura de 3.142 novos soldados; até 2026-08-07 não foi localizado edital externo de Soldado mais novo.",
+      "exam": { "objectiveQuestions": 50, "objectivePoints": 100, "essayPoints": 0, "objectiveAlternatives": 4 },
+      "sources": [
+        { "type": "reference-notice-copy", "url": "https://jcconcursos.com.br/media/uploads/anexos/concurso-pm-mg-edital-10-2024-soldado.pdf", "authority": "Cópia do Edital DRH/CRS nº 10/2024; URL oficial direta do arquivo ainda não localizada" },
+        { "type": "official-current-state", "url": "https://www.almg.gov.br/atividade-parlamentar/comissoes/reuniao/?ano=2026&dia=03&hr=11%3A15&idCom=508&idTipo=2&mes=03", "authority": "Assembleia Legislativa de Minas Gerais" },
+        { "type": "official-current-state", "url": "https://agenciaminas.mg.gov.br/noticia/minas-gerais-forma-mais-de-3-mil-novos-soldados-da-policia-militar", "authority": "Agência Minas / Governo de Minas Gerais" }
+      ]
+    }
+  ],
+  "disciplines": [
+    {
+      "id": "PORT",
+      "canonicalName": "Língua Portuguesa e interpretação de textos",
+      "classification": "common-3",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Língua Portuguesa", "questions": 10, "points": 10, "objectivePointShare": 0.125 },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Língua Portuguesa", "questions": 10, "points": 10, "objectivePointShare": 0.117647 },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "Língua Portuguesa, incluindo estudo e interpretação de texto", "questions": 20, "points": 40, "objectivePointShare": 0.4 }
+      },
+      "note": "Única disciplina autônoma explicitamente presente nos três editais de referência."
+    },
+    {
+      "id": "ING",
+      "canonicalName": "Língua Inglesa",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Língua Inglesa", "questions": 4, "points": 4, "objectivePointShare": 0.05 },
+        "PMGO-SOLDADO": { "present": false },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "Noções de Língua Inglesa", "questions": 5, "points": 10, "objectivePointShare": 0.1 }
+      }
+    },
+    {
+      "id": "RLM",
+      "canonicalName": "Matemática e Raciocínio Lógico",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Matemática e Raciocínio Lógico", "questions": 9, "points": 9, "objectivePointShare": 0.1125 },
+        "PMGO-SOLDADO": { "present": false },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "Raciocínio Lógico-Matemático", "questions": 10, "points": 20, "objectivePointShare": 0.2 }
+      }
+    },
+    {
+      "id": "LOCAL",
+      "canonicalName": "Realidade local / atualidades regionais",
+      "classification": "parallel-local",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Atualidades — DF e RIDE", "questions": 7, "points": 7, "objectivePointShare": 0.0875, "scope": "Distrito Federal e RIDE" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Realidade étnica, social, histórica, geográfica, cultural, política e econômica do Estado de Goiás", "questions": 5, "points": 5, "objectivePointShare": 0.058824, "scope": "Estado de Goiás" },
+        "PMMG-SOLDADO": { "present": false }
+      },
+      "note": "Mesma família pedagógica, mas conteúdo territorial distinto e não intercambiável."
+    },
+    {
+      "id": "LEG-PMDF",
+      "canonicalName": "Legislação aplicada à PMDF",
+      "classification": "specific-pmdf",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Legislação aplicada à PMDF", "questions": 10, "points": 10, "objectivePointShare": 0.125 },
+        "PMGO-SOLDADO": { "present": false },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "DCON",
+      "canonicalName": "Direito Constitucional",
+      "classification": "overlap-3-topic-level",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Constitucional e de Direitos Humanos", "questions": null, "points": null, "withinBlock": "Conhecimentos Específicos — 40 pontos sem distribuição interna por disciplina" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Noções de Direito Constitucional", "questions": 6, "points": 12, "objectivePointShare": 0.141176 },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "Noções de Direito e Direitos Humanos", "questions": null, "points": null, "withinBlock": "Bloco jurídico conjunto — 10 questões / 20 pontos" }
+      },
+      "note": "Há sobreposição constitucional verificada nos três, mas PMDF e PMMG agrupam a matéria com Direitos Humanos; não se deve atribuir automaticamente todo o bloco a DCON."
+    },
+    {
+      "id": "DH",
+      "canonicalName": "Direitos Humanos",
+      "classification": "common-2-explicit",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Constitucional e de Direitos Humanos" },
+        "PMGO-SOLDADO": { "present": false, "note": "Não há disciplina ou bloco explícito de Direitos Humanos no Anexo II retificado." },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "Noções de Direito e Direitos Humanos" }
+      }
+    },
+    {
+      "id": "DADM",
+      "canonicalName": "Direito Administrativo",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Administrativo" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Noções de Direito Administrativo", "questions": 6, "points": 12, "objectivePointShare": 0.141176 },
+        "PMMG-SOLDADO": { "present": false, "note": "Há recortes constitucionais de Administração Pública, mas não disciplina autônoma de Direito Administrativo." }
+      }
+    },
+    {
+      "id": "DPEN",
+      "canonicalName": "Direito Penal",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Penal" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Noções de Direito Penal", "questions": 5, "points": 10, "objectivePointShare": 0.117647 },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "DPROC-PEN",
+      "canonicalName": "Direito Processual Penal",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Processual Penal" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Noções de Direito Processual Penal", "questions": 5, "points": 10, "objectivePointShare": 0.117647 },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "DPEN-MIL",
+      "canonicalName": "Direito Penal Militar",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Penal Militar" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Noções de Direito Penal Militar", "questions": 4, "points": 8, "objectivePointShare": 0.094118 },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "DPROC-PEN-MIL",
+      "canonicalName": "Direito Processual Penal Militar",
+      "classification": "common-2",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Noções de Direito Processual Penal Militar" },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Noções de Direito Processual Penal Militar", "questions": 5, "points": 10, "objectivePointShare": 0.117647 },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "LEG-EXTRA",
+      "canonicalName": "Legislação penal extravagante",
+      "classification": "specific-pmgo-discipline-overlap-pmdf-topics",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": false, "note": "Várias leis especiais aparecem dentro de Direito Penal e Processo Penal, mas não como disciplina autônoma." },
+        "PMGO-SOLDADO": { "present": true, "examLabel": "Legislação Extravagante", "questions": 4, "points": 8, "objectivePointShare": 0.094118 },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "CRIM",
+      "canonicalName": "Criminologia",
+      "classification": "specific-pmdf",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": true, "examLabel": "Criminologia" },
+        "PMGO-SOLDADO": { "present": false },
+        "PMMG-SOLDADO": { "present": false }
+      }
+    },
+    {
+      "id": "LIT",
+      "canonicalName": "Literatura",
+      "classification": "specific-pmmg",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": false },
+        "PMGO-SOLDADO": { "present": false },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "Literatura", "questions": 5, "points": 10, "objectivePointShare": 0.1, "works": ["Campo Geral — João Guimarães Rosa", "Vidas Secas — Graciliano Ramos"] }
+      }
+    },
+    {
+      "id": "LINDB",
+      "canonicalName": "Lei de Introdução às Normas do Direito Brasileiro",
+      "classification": "specific-pmmg-topic",
+      "coverage": {
+        "PMDF-SOLDADO": { "present": false },
+        "PMGO-SOLDADO": { "present": false },
+        "PMMG-SOLDADO": { "present": true, "examLabel": "LINDB dentro de Noções de Direito e Direitos Humanos" }
+      }
+    }
+  ],
+  "verifiedTopicOverlaps": [
+    { "id": "TOP-PORT-CORE", "label": "Interpretação de textos, ortografia, acentuação, pontuação, classes de palavras, sintaxe, concordância, regência e crase", "competitions": ["PMDF-SOLDADO", "PMGO-SOLDADO", "PMMG-SOLDADO"], "useInCycle": "common-first" },
+    { "id": "TOP-CONST-FUND", "label": "Princípios fundamentais e direitos e garantias fundamentais", "competitions": ["PMDF-SOLDADO", "PMGO-SOLDADO", "PMMG-SOLDADO"], "useInCycle": "common-first" },
+    { "id": "TOP-CONST-STATE", "label": "Organização do Estado e Administração Pública em perspectiva constitucional", "competitions": ["PMDF-SOLDADO", "PMGO-SOLDADO", "PMMG-SOLDADO"], "useInCycle": "common-first" },
+    { "id": "TOP-CONST-SEC", "label": "Defesa do Estado / Segurança Pública", "competitions": ["PMDF-SOLDADO", "PMGO-SOLDADO", "PMMG-SOLDADO"], "useInCycle": "common-first" },
+    { "id": "TOP-DH-DUDH", "label": "Declaração Universal dos Direitos Humanos", "competitions": ["PMDF-SOLDADO", "PMMG-SOLDADO"], "useInCycle": "shared-2" },
+    { "id": "TOP-DH-CADH", "label": "Convenção Americana sobre Direitos Humanos", "competitions": ["PMDF-SOLDADO", "PMMG-SOLDADO"], "useInCycle": "shared-2" }
+  ],
+  "cycleModel": {
+    "status": "provisional-structure-validated",
+    "sequence": [
+      { "stage": 1, "id": "COMMON-3", "label": "Núcleo comum aos três", "rule": "Priorizar sobreposição verificada nos três editais, começando por Português e pelos tópicos constitucionais comuns." },
+      { "stage": 2, "id": "SHARED-2", "label": "Núcleo compartilhado por dois concursos", "rule": "Intercalar Inglês e RLM para PMDF/PMMG e disciplinas jurídicas comuns a PMDF/PMGO, sem estender essas últimas à PMMG." },
+      { "stage": 3, "id": "SPECIFIC", "label": "Específicas em rotação", "rule": "Rodar PMDF → PMGO → PMMG, preservando teoria → questões → revisão." }
+    ],
+    "finalWeightsStatus": "pending",
+    "finalWeightsRule": "Pesos de prova são referência; a distribuição definitiva de horas depende de granularidade temática, cobertura editorial e novos editais."
+  }
+}
