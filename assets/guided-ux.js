@@ -96,7 +96,8 @@ function percent(part, whole) {
 async function alignHomeWithCycle() {
   if (pageId !== 'home') return;
   const hero = document.querySelector('.hero-card');
-  if (!hero) return;
+  const nextCopy = hero?.querySelector('.home-next-step');
+  if (!hero || !nextCopy) return;
 
   const privateProgress = await privateSnapshot();
   if (!privateProgress.authenticated) return;
@@ -110,21 +111,13 @@ async function alignHomeWithCycle() {
   if (hero.dataset.guidedCycle === signature) return;
   hero.dataset.guidedCycle = signature;
 
-  let nextCopy = hero.querySelector('.home-next-step');
-  if (!nextCopy) {
-    nextCopy = document.createElement('p');
-    nextCopy.className = 'home-next-step';
-    const description = [...hero.querySelectorAll('p')].find((node) => !node.classList.contains('status-pill'));
-    description?.after(nextCopy);
-  }
-
   const actions = hero.querySelector('.button-row');
   const primary = actions?.querySelector('a.primary-link');
   const questionLink = [...(actions?.querySelectorAll('a') ?? [])]
     .find((link) => link.getAttribute('href')?.includes('questoes.html'));
 
   if (step.unit) {
-    if (nextCopy) nextCopy.textContent = `Próximo passo do seu ciclo: ${step.unit.title}. ${step.message}`;
+    nextCopy.textContent = `Próximo passo do seu ciclo: ${step.unit.title}. ${step.message}`;
     if (primary) {
       primary.href = `estudar.html?unit=${encodeURIComponent(step.unit.id)}`;
       primary.textContent = 'Continuar próximo passo';
@@ -137,7 +130,7 @@ async function alignHomeWithCycle() {
     return;
   }
 
-  if (nextCopy) nextCopy.textContent = step.message;
+  nextCopy.textContent = step.message;
   if (primary) {
     primary.href = 'cronograma.html';
     primary.textContent = 'Ver próximo passo do ciclo';
