@@ -93,6 +93,15 @@ function percent(part, whole) {
   return whole ? Math.round((part / whole) * 100) : 0;
 }
 
+function simplifyAccessCopy() {
+  if (!['home', 'settings'].includes(pageId)) return;
+  for (const paragraph of document.querySelectorAll('.auth-card p')) {
+    if (paragraph.textContent?.includes('STU-MYCHAEL')) {
+      paragraph.textContent = 'Sua sessão está ativa e o progresso pode ser salvo com privacidade.';
+    }
+  }
+}
+
 async function alignHomeWithCycle() {
   if (pageId !== 'home') return;
   const hero = document.querySelector('.hero-card');
@@ -163,6 +172,40 @@ async function alignPerformanceWithLatestAttempts() {
   grid.dataset.latestAttemptMetrics = 'true';
 }
 
+function alignQuestionFeedback() {
+  if (pageId !== 'questions') return;
+  const retryMode = new URLSearchParams(window.location.search).get('mode') === 'errors';
+  if (retryMode) return;
+  for (const status of document.querySelectorAll('.question-save-status')) {
+    if (status.textContent === 'Correto. O erro foi resolvido.') {
+      status.textContent = 'Correto. Tentativa salva.';
+    }
+  }
+}
+
+function simplifySettings() {
+  if (pageId !== 'settings') return;
+  const card = document.querySelector('.settings-card');
+  if (!card || card.dataset.studentCopy === 'true') return;
+  const heading = card.querySelector('h2');
+  if (heading) heading.textContent = 'Preferências e acesso';
+  const replacements = new Map([
+    ['Perfil técnico', ['Perfil de estudo', 'Individual e privado']],
+    ['Redação', ['Redação', 'Desativada nesta primeira versão']],
+    ['TAF', ['TAF', 'Integrado à primeira versão; conteúdos entram após validação']],
+    ['Progresso', ['Progresso', 'Salvo de forma privada na sua conta']]
+  ]);
+  for (const term of card.querySelectorAll('dt')) {
+    const current = term.textContent?.trim();
+    const replacement = replacements.get(current);
+    if (!replacement) continue;
+    const description = term.nextElementSibling;
+    term.textContent = replacement[0];
+    if (description?.tagName === 'DD') description.textContent = replacement[1];
+  }
+  card.dataset.studentCopy = 'true';
+}
+
 function alignScheduleCopy() {
   if (pageId !== 'schedule') return;
   const page = document.querySelector('.cycle-page');
@@ -193,6 +236,9 @@ async function refresh() {
   if (state.busy) return;
   state.busy = true;
   try {
+    simplifyAccessCopy();
+    alignQuestionFeedback();
+    simplifySettings();
     alignScheduleCopy();
     await alignHomeWithCycle();
     await alignPerformanceWithLatestAttempts();
