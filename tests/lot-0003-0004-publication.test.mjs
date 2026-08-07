@@ -5,62 +5,16 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v13', () => {
+test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v14', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 13);
-  assert.equal(catalog.publication.lotId, 'LOT-0017');
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017']);
+  assert.equal(catalog.contentVersion, 14);
+  assert.equal(catalog.publication.lotId, 'LOT-0018');
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017','U018']);
 });
 
-test('U003 referencia taxonomia, fontes e componentes corretos', () => {
-  const unit = findById(catalog.units, 'U003'); assert.ok(unit);
-  assert.deepEqual(unit.topicIds, ['ASS-PORT-003','ASS-PORT-003-01']);
-  assert.deepEqual(unit.sourceIds, ['FNT-0016','FNT-0017']);
-  assert.deepEqual(unit.materialIds, ['M003']);
-  assert.deepEqual(unit.questionIds, ['Q000012','Q000013','Q000014','Q000015','Q000016','Q000017']);
-  assert.deepEqual(unit.questionSetIds, ['QS003']);
-});
-
-test('U004 referencia taxonomia, fontes e componentes corretos', () => {
-  const unit = findById(catalog.units, 'U004'); assert.ok(unit);
-  assert.deepEqual(unit.topicIds, ['ASS-PORT-003','ASS-PORT-003-02']);
-  assert.deepEqual(unit.sourceIds, ['FNT-0016','FNT-0017']);
-  assert.deepEqual(unit.materialIds, ['M004']);
-  assert.deepEqual(unit.questionIds, ['Q000018','Q000019','Q000020','Q000021','Q000022','Q000023']);
-  assert.deepEqual(unit.questionSetIds, ['QS004']);
-});
-
-test('M003 e M004 mantêm teoria separada das questões e orientação de revisão', () => {
-  for (const id of ['M003','M004']) {
-    const material = findById(catalog.materials, id); assert.ok(material, id);
-    assert.equal(material.required, true, id); assert.equal('questionIds' in material, false, id);
-    assert.equal('answer' in material, false, id); assert.equal('options' in material, false, id);
-    const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
-    for (const term of ['Erros comuns','Resumo da aula','Orientação de revisão','Fontes editoriais']) assert.ok(headings.some((heading) => heading.includes(term)), id);
-  }
-});
-
-test('as doze questões de U003 e U004 mantêm gabaritos auditados', () => {
-  const expected = { Q000012:'C',Q000013:'A',Q000014:'D',Q000015:'B',Q000016:'E',Q000017:'C',Q000018:'B',Q000019:'D',Q000020:'A',Q000021:'C',Q000022:'E',Q000023:'B' };
-  for (const [id, answer] of Object.entries(expected)) {
-    const question = findById(catalog.questions, id); assert.ok(question, id); assert.equal(question.answer, answer, id);
-    assert.equal(question.options.length, 5, id); assert.ok(question.options.some((option) => option.id === answer), id);
-    assert.deepEqual(question.sourceIds, ['FNT-0016','FNT-0017'], id); assert.equal(question.annulled, false, id);
-    assert.equal(question.duplicateOf, null, id); assert.equal(question.imageRequired, false, id); assert.equal(question.valid, true, id);
-  }
-});
-
-test('QS003 e QS004 apenas referenciam o Banco Mestre', () => {
-  const expected = { QS003:['Q000012','Q000013','Q000014','Q000015','Q000016','Q000017'], QS004:['Q000018','Q000019','Q000020','Q000021','Q000022','Q000023'] };
-  for (const [id, questionIds] of Object.entries(expected)) {
-    const set = findById(catalog.questionSets, id); assert.ok(set, id); assert.deepEqual(set.questionIds, questionIds, id);
-    assert.equal(set.correctionMode, 'Por questão', id); assert.equal('questions' in set, false, id); assert.equal('answers' in set, false, id);
-  }
-});
-
-test('FNT-0016 e FNT-0017 são referências institucionais históricas verificadas', () => {
-  for (const id of ['FNT-0016','FNT-0017']) {
-    const source = findById(catalog.sources, id); assert.ok(source, id); assert.equal(source.official, true, id);
-    assert.equal(source.temporalStatus, 'Histórica', id); assert.equal(source.lastVerifiedAt, '2026-08-04', id); assert.match(source.organization, /CECIERJ/, id);
-  }
-});
+test('U003 referencia taxonomia, fontes e componentes corretos', () => { const unit = findById(catalog.units, 'U003'); assert.ok(unit); assert.deepEqual(unit.topicIds, ['ASS-PORT-003','ASS-PORT-003-01']); assert.deepEqual(unit.sourceIds, ['FNT-0016','FNT-0017']); assert.deepEqual(unit.materialIds, ['M003']); assert.deepEqual(unit.questionIds, ['Q000012','Q000013','Q000014','Q000015','Q000016','Q000017']); assert.deepEqual(unit.questionSetIds, ['QS003']); });
+test('U004 referencia taxonomia, fontes e componentes corretos', () => { const unit = findById(catalog.units, 'U004'); assert.ok(unit); assert.deepEqual(unit.topicIds, ['ASS-PORT-003','ASS-PORT-003-02']); assert.deepEqual(unit.sourceIds, ['FNT-0016','FNT-0017']); assert.deepEqual(unit.materialIds, ['M004']); assert.deepEqual(unit.questionIds, ['Q000018','Q000019','Q000020','Q000021','Q000022','Q000023']); assert.deepEqual(unit.questionSetIds, ['QS004']); });
+test('M003 e M004 mantêm teoria separada das questões e orientação de revisão', () => { for (const id of ['M003','M004']) { const material = findById(catalog.materials, id); assert.ok(material, id); assert.equal(material.required, true, id); assert.equal('questionIds' in material, false, id); assert.equal('answer' in material, false, id); assert.equal('options' in material, false, id); const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text); for (const term of ['Erros comuns','Resumo da aula','Orientação de revisão','Fontes editoriais']) assert.ok(headings.some((heading) => heading.includes(term)), id); } });
+test('as doze questões de U003 e U004 mantêm gabaritos auditados', () => { const expected = { Q000012:'C',Q000013:'A',Q000014:'D',Q000015:'B',Q000016:'E',Q000017:'C',Q000018:'B',Q000019:'D',Q000020:'A',Q000021:'C',Q000022:'E',Q000023:'B' }; for (const [id, answer] of Object.entries(expected)) { const question = findById(catalog.questions, id); assert.ok(question, id); assert.equal(question.answer, answer, id); assert.equal(question.options.length, 5, id); assert.ok(question.options.some((option) => option.id === answer), id); assert.deepEqual(question.sourceIds, ['FNT-0016','FNT-0017'], id); assert.equal(question.annulled, false, id); assert.equal(question.duplicateOf, null, id); assert.equal(question.imageRequired, false, id); assert.equal(question.valid, true, id); } });
+test('QS003 e QS004 apenas referenciam o Banco Mestre', () => { const expected = { QS003:['Q000012','Q000013','Q000014','Q000015','Q000016','Q000017'], QS004:['Q000018','Q000019','Q000020','Q000021','Q000022','Q000023'] }; for (const [id, questionIds] of Object.entries(expected)) { const set = findById(catalog.questionSets, id); assert.ok(set, id); assert.deepEqual(set.questionIds, questionIds, id); assert.equal(set.correctionMode, 'Por questão', id); assert.equal('questions' in set, false, id); assert.equal('answers' in set, false, id); } });
+test('FNT-0016 e FNT-0017 são referências institucionais históricas verificadas', () => { for (const id of ['FNT-0016','FNT-0017']) { const source = findById(catalog.sources, id); assert.ok(source, id); assert.equal(source.official, true, id); assert.equal(source.temporalStatus, 'Histórica', id); assert.equal(source.lastVerifiedAt, '2026-08-04', id); assert.match(source.organization, /CECIERJ/, id); } });
