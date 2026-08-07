@@ -2,7 +2,7 @@
 
 Plataforma estática, responsiva e guiada para preparação aos concursos de Soldado da PMDF, PMGO e PMMG.
 
-A integração curricular da PMMG faz parte oficialmente da governança do projeto desde a Fonte Principal v1.2. A interface, a navegação, a matriz curricular, a aplicabilidade por unidade, o cronograma por ciclos e o monitoramento público estão preparados para os três concursos. Conteúdo só pode ser atribuído à PMMG quando houver validação específica por matéria, assunto ou tópico e rastreabilidade de fonte.
+A integração curricular da PMMG faz parte oficialmente da governança do projeto na Fonte Principal v1.3. A interface, a navegação, a matriz curricular, a aplicabilidade por unidade, o cronograma por ciclos e o monitoramento público estão preparados para os três concursos. Conteúdo só pode ser atribuído à PMMG quando houver validação específica por matéria, assunto ou tópico e rastreabilidade de fonte.
 
 ## Arquitetura
 
@@ -78,19 +78,19 @@ A camada de experiência inclui:
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado está na versão 14 com o `LOT-0018`:
+O catálogo cumulativo publicado está na versão 20 com o `LOT-0024`:
 
-- 14 unidades;
-- 14 materiais;
-- 91 questões;
-- 14 conjuntos de questões.
+- 20 unidades;
+- 20 materiais;
+- 133 questões;
+- 20 conjuntos de questões.
 
 Na camada atual de aplicabilidade:
 
-- PMDF: 14 unidades / 91 questões aplicáveis;
-- PMGO: 14 unidades / 91 questões aplicáveis;
-- PMMG: 7 unidades / 44 questões aplicáveis;
-- núcleo comum aos três: 7 unidades / 44 questões;
+- PMDF: 20 unidades / 133 questões aplicáveis;
+- PMGO: 20 unidades / 133 questões aplicáveis;
+- PMMG: 12 unidades / 79 questões aplicáveis;
+- núcleo comum aos três: 12 unidades / 79 questões;
 - U006 e U013 permanecem com revisão temática da PMMG pendente.
 
 Essas contagens representam o acervo físico publicado e seus vínculos de aplicabilidade. Não significam percentual do edital completo nem quantidade de questões produzidas especificamente para cada corporação.
