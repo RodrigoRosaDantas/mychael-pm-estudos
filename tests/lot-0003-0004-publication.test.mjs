@@ -5,11 +5,11 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v19', () => {
+test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v20', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 19);
-  assert.equal(catalog.publication.lotId, 'LOT-0019');
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017','U018','U019','U020','U021','U022','U023']);
+  assert.equal(catalog.contentVersion, 20);
+  assert.equal(catalog.publication.lotId, 'LOT-0024');
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017','U018','U019','U020','U021','U022','U023','U024']);
 });
 
 test('U003 referencia taxonomia, fontes e componentes corretos', () => { const unit = findById(catalog.units, 'U003'); assert.ok(unit); assert.deepEqual(unit.topicIds, ['ASS-PORT-003','ASS-PORT-003-01']); assert.deepEqual(unit.sourceIds, ['FNT-0016','FNT-0017']); assert.deepEqual(unit.materialIds, ['M003']); assert.deepEqual(unit.questionIds, ['Q000012','Q000013','Q000014','Q000015','Q000016','Q000017']); assert.deepEqual(unit.questionSetIds, ['QS003']); });
