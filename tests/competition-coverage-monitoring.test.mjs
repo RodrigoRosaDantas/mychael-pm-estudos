@@ -12,14 +12,14 @@ const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
 
 test('monitoramento consolida contagem física e vínculos por concurso', () => {
   const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 14);
-  assert.equal(summary.catalogLotId, 'LOT-0018');
-  assert.equal(summary.physicalUnits, 14);
-  assert.equal(summary.physicalQuestions, 91);
-  assert.deepEqual(summary.unitCounts, { PMDF: 14, PMGO: 14, PMMG: 7 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 91, PMGO: 91, PMMG: 44 });
-  assert.equal(summary.commonUnits, 7);
-  assert.equal(summary.commonQuestions, 44);
+  assert.equal(summary.catalogContentVersion, 16);
+  assert.equal(summary.catalogLotId, 'LOT-0021');
+  assert.equal(summary.physicalUnits, 16);
+  assert.equal(summary.physicalQuestions, 105);
+  assert.deepEqual(summary.unitCounts, { PMDF: 16, PMGO: 16, PMMG: 9 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 105, PMGO: 105, PMMG: 58 });
+  assert.equal(summary.commonUnits, 9);
+  assert.equal(summary.commonQuestions, 58);
   assert.equal(summary.pmmgTopicReviewPending, 2);
   assert.equal(summary.specificRotationEnabled, false);
   assert.deepEqual(summary.unclassifiedUnits, []);
@@ -28,10 +28,7 @@ test('monitoramento consolida contagem física e vínculos por concurso', () => 
 test('publicação é bloqueada quando surge unidade sem aplicabilidade explícita', () => {
   const brokenCatalog = structuredClone(catalog);
   brokenCatalog.units.push({ id: 'U999', coverage: ['PMGO', 'PMDF'] });
-  assert.throws(
-    () => buildCoverageSummary(brokenCatalog, applicability),
-    /Unidades publicadas sem aplicabilidade explícita: U999/
-  );
+  assert.throws(() => buildCoverageSummary(brokenCatalog, applicability), /Unidades publicadas sem aplicabilidade explícita: U999/);
 });
 
 test('PMMG é bloqueada sem evidência temática explícita', () => {
@@ -57,13 +54,7 @@ test('CI e Pages incorporam o gate e os artefatos multi-concurso', () => {
   assert.match(pagesWorkflow, /buildCoverageSummary/);
   assert.match(pagesWorkflow, /coverage/);
   assert.match(pagesWorkflow, /GitHub Pages e cobertura multi-concurso validados/);
-  for (const path of [
-    'cronograma.html',
-    'assets/curriculum-matrix.js',
-    'assets/competition-progress.js',
-    'content/curriculum-matrix.json',
-    'content/content-applicability.json'
-  ]) {
+  for (const path of ['cronograma.html','assets/curriculum-matrix.js','assets/competition-progress.js','content/curriculum-matrix.json','content/content-applicability.json']) {
     assert.match(deploymentScript, new RegExp(path.replace(/[./-]/g, '\\$&')));
   }
 });
