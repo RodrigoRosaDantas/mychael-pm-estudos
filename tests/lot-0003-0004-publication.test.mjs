@@ -5,11 +5,11 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v12', () => {
+test('LOT-0003 e LOT-0004 permanecem íntegros no catálogo v13', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 12);
-  assert.equal(catalog.publication.lotId, 'LOT-0016');
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016']);
+  assert.equal(catalog.contentVersion, 13);
+  assert.equal(catalog.publication.lotId, 'LOT-0017');
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017']);
 });
 
 test('U003 referencia taxonomia, fontes e componentes corretos', () => {
