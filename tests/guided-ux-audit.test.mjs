@@ -2,19 +2,21 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const [homeHtml, performanceHtml, scheduleHtml, questionsHtml, settingsHtml, guidedModule] = await Promise.all([
+const [homeHtml, performanceHtml, scheduleHtml, questionsHtml, settingsHtml, guidedModule, cycleSyncModule] = await Promise.all([
   readFile(new URL('../index.html', import.meta.url), 'utf8'),
   readFile(new URL('../desempenho.html', import.meta.url), 'utf8'),
   readFile(new URL('../cronograma.html', import.meta.url), 'utf8'),
   readFile(new URL('../questoes.html', import.meta.url), 'utf8'),
   readFile(new URL('../configuracoes.html', import.meta.url), 'utf8'),
-  readFile(new URL('../assets/guided-ux.js', import.meta.url), 'utf8')
+  readFile(new URL('../assets/guided-ux.js', import.meta.url), 'utf8'),
+  readFile(new URL('../assets/cycle-progress-sync.js', import.meta.url), 'utf8')
 ]);
 
 test('páginas auditadas carregam a correção progressiva de UX', () => {
   for (const html of [homeHtml, performanceHtml, scheduleHtml, questionsHtml, settingsHtml]) {
     assert.match(html, /assets\/guided-ux\.js/);
   }
+  assert.match(questionsHtml, /assets\/cycle-progress-sync\.js/);
 });
 
 test('home autenticada usa o próximo passo real do ciclo em vez da primeira unidade estática', () => {
@@ -27,12 +29,30 @@ test('home autenticada usa o próximo passo real do ciclo em vez da primeira uni
   assert.doesNotMatch(guidedModule, /service_role|sb_secret_/i);
 });
 
+test('home prioriza erros abertos e oferece correção antes de teoria nova', () => {
+  assert.match(guidedModule, /error_items/);
+  assert.match(guidedModule, /openErrorQuestionIds/);
+  assert.match(guidedModule, /step\.phase === 'correction'/);
+  assert.match(guidedModule, /Corrigir erros pendentes/);
+  assert.match(guidedModule, /mode=errors/);
+  assert.match(guidedModule, /Rever teoria/);
+});
+
 test('desempenho usa a tentativa mais recente de cada questão', () => {
   assert.match(guidedModule, /latestAttemptsByQuestion/);
   assert.match(guidedModule, /answered_at/);
   assert.match(guidedModule, /questões respondidas/);
   assert.match(guidedModule, /acerto atual · última tentativa/);
   assert.match(guidedModule, /question_attempts/);
+});
+
+test('sincronizador só conclui unidade com todas as últimas respostas corretas e sem erro aberto', () => {
+  assert.match(cycleSyncModule, /latestAttemptsByQuestion/);
+  assert.match(cycleSyncModule, /error_items/);
+  assert.match(cycleSyncModule, /answered === questionIds\.length && correct === questionIds\.length && !hasOpenError/);
+  assert.match(cycleSyncModule, /desiredStatus = completed \? 'completed'/);
+  assert.match(cycleSyncModule, /completed_at: completed/);
+  assert.doesNotMatch(cycleSyncModule, /service_role|sb_secret_/i);
 });
 
 test('questão correta fora da refação não afirma que havia erro pendente', () => {
