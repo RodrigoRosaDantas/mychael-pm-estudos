@@ -28,13 +28,21 @@ test('camada de aplicabilidade preserva guardrails e não infere PMMG', () => {
     applicability.unitApplicability
       .filter((rule) => rule.classification === 'common-3')
       .map((rule) => rule.unitId),
-    ['U001', 'U002', 'U003', 'U004', 'U005', 'U008', 'U009', 'U020', 'U021', 'U022', 'U023', 'U024']
+    ['U001', 'U002', 'U003', 'U004', 'U005', 'U006', 'U008', 'U009', 'U013', 'U020', 'U021', 'U022', 'U023', 'U024']
   );
 
-  for (const id of ['U006', 'U007', 'U013', 'U015', 'U016', 'U017', 'U018', 'U019']) {
+  for (const id of ['U007', 'U015', 'U016', 'U017', 'U018', 'U019']) {
     const rule = applicability.unitApplicability.find((item) => item.unitId === id);
     assert.ok(rule, `regra ausente para ${id}`);
     assert.equal(rule.competitions.includes('PMMG'), false, `${id} não pode herdar PMMG automaticamente`);
+  }
+
+  for (const id of ['U006', 'U013']) {
+    const rule = applicability.unitApplicability.find((item) => item.unitId === id);
+    assert.equal(rule.classification, 'common-3');
+    assert.equal(rule.status, 'verified');
+    assert.equal(rule.competitions.includes('PMMG'), true);
+    assert.ok(rule.evidenceIds.length > 0, `${id} precisa preservar evidência temática explícita`);
   }
 });
 
