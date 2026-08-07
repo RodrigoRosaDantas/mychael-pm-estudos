@@ -16,11 +16,11 @@ test('monitoramento consolida contagem física e vínculos por concurso', () => 
   assert.equal(summary.catalogLotId, 'LOT-0024');
   assert.equal(summary.physicalUnits, 20);
   assert.equal(summary.physicalQuestions, 133);
-  assert.deepEqual(summary.unitCounts, { PMDF: 20, PMGO: 20, PMMG: 12 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 133, PMGO: 133, PMMG: 79 });
-  assert.equal(summary.commonUnits, 12);
-  assert.equal(summary.commonQuestions, 79);
-  assert.equal(summary.pmmgTopicReviewPending, 2);
+  assert.deepEqual(summary.unitCounts, { PMDF: 20, PMGO: 20, PMMG: 14 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 133, PMGO: 133, PMMG: 92 });
+  assert.equal(summary.commonUnits, 14);
+  assert.equal(summary.commonQuestions, 92);
+  assert.equal(summary.pmmgTopicReviewPending, 0);
   assert.equal(summary.specificRotationEnabled, false);
   assert.deepEqual(summary.unclassifiedUnits, []);
 });
