@@ -46,15 +46,19 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           import { readFile, writeFile } from 'node:fs/promises';
+          import { buildCoverageSummary } from './scripts/check-competition-coverage.mjs';
           const catalog = JSON.parse(await readFile('content/catalog.json', 'utf8'));
+          const applicability = JSON.parse(await readFile('content/content-applicability.json', 'utf8'));
+          const coverage = buildCoverageSummary(catalog, applicability);
           const metadata = {
-            schemaVersion: 1,
+            schemaVersion: 2,
             deployedAt: new Date().toISOString(),
             commitSha: process.env.GITHUB_SHA,
             runId: process.env.GITHUB_RUN_ID,
             contentVersion: catalog.contentVersion,
             lotId: catalog.publication?.lotId ?? null,
-            status: 'published'
+            status: 'published',
+            coverage
           };
           await writeFile('content/deployment.json', `${JSON.stringify(metadata, null, 2)}\n`);
           NODE
@@ -99,10 +103,10 @@ jobs:
         run: |
           if [ "$SMOKE_OUTCOME" = "success" ]; then
             STATE="success"
-            DESCRIPTION="GitHub Pages validado após o deploy."
+            DESCRIPTION="GitHub Pages e cobertura multi-concurso validados."
           else
             STATE="failure"
-            DESCRIPTION="Falha na validação pública do GitHub Pages."
+            DESCRIPTION="Falha na validação pública ou na cobertura multi-concurso."
           fi
           gh api --method POST \
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
