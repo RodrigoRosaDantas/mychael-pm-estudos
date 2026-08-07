@@ -75,7 +75,8 @@ function applyTheme(theme) {
   const button = document.querySelector('#themeToggle');
   if (button) {
     const names = { light: 'Claro', dark: 'Escuro', comfort: 'Conforto' };
-    button.textContent = `◐ ${names[safeTheme]}`;
+    const nextText = `◐ ${names[safeTheme]}`;
+    if (button.textContent !== nextText) button.textContent = nextText;
     button.setAttribute('aria-label', `Tema atual: ${names[safeTheme]}. Alterar tema.`);
   }
 }
@@ -179,7 +180,7 @@ function enhanceBrand() {
     if (small) small.textContent = 'PMDF • PMGO • PMMG';
   }
   const mobile = document.querySelector('.mobile-brand span:last-child');
-  if (mobile) mobile.textContent = 'Mychael PM';
+  if (mobile && mobile.textContent !== 'Mychael PM') mobile.textContent = 'Mychael PM';
 }
 
 function createUtilityPanel() {
@@ -325,7 +326,8 @@ function createBreadcrumb() {
   } else {
     pieces.push(`<span>${escapeHtml(PAGE_LABELS[pageId] || 'Área')}</span>`);
   }
-  breadcrumb.innerHTML = pieces.join('<b aria-hidden="true">›</b>');
+  const markup = pieces.join('<b aria-hidden="true">›</b>');
+  if (breadcrumb.innerHTML !== markup) breadcrumb.innerHTML = markup;
 }
 
 function escapeHtml(value) {
@@ -341,8 +343,8 @@ function enhanceHome() {
   const pill = hero.querySelector('.status-pill');
   const title = hero.querySelector('h2');
   const description = [...hero.querySelectorAll('p')].find((node) => !node.classList.contains('status-pill'));
-  if (pill) pill.textContent = 'PMDF • PMGO • PMMG — preparação integrada';
-  if (title) title.textContent = 'Estude com método. Avance com constância.';
+  if (pill && pill.textContent !== 'PMDF • PMGO • PMMG — preparação integrada') pill.textContent = 'PMDF • PMGO • PMMG — preparação integrada';
+  if (title && title.textContent !== 'Estude com método. Avance com constância.') title.textContent = 'Estude com método. Avance com constância.';
   if (description && !description.dataset.beginnerCopy) {
     const oldText = description.textContent;
     description.dataset.beginnerCopy = 'true';
@@ -398,7 +400,10 @@ function applyReaderSettings(settings = readerSettings()) {
   lesson.style.setProperty('--reader-width-step', String(settings.width));
   document.body.classList.toggle('reader-focus', Boolean(settings.focus));
   const focusButton = document.querySelector('[data-reader-action="focus"]');
-  if (focusButton) focusButton.textContent = settings.focus ? 'Sair do foco' : 'Modo foco';
+  if (focusButton) {
+    const nextText = settings.focus ? 'Sair do foco' : 'Modo foco';
+    if (focusButton.textContent !== nextText) focusButton.textContent = nextText;
+  }
 }
 
 function unitIdFromUrl() {
@@ -425,7 +430,7 @@ function saveReadingProgress() {
   const bar = document.querySelector('.reading-progress-bar');
   const label = document.querySelector('.reading-progress-label');
   if (bar) bar.style.width = `${percent}%`;
-  if (label) label.textContent = `${percent}% lido`;
+  if (label && label.textContent !== `${percent}% lido`) label.textContent = `${percent}% lido`;
 }
 
 function enhanceStudy() {
@@ -433,7 +438,7 @@ function enhanceStudy() {
   const lesson = document.querySelector('.lesson');
   if (!lesson) return;
   const existingFooterLink = lesson.querySelector('.lesson-footer .primary-link');
-  if (existingFooterLink) existingFooterLink.textContent = 'Fazer questões desta aula';
+  if (existingFooterLink && existingFooterLink.textContent !== 'Fazer questões desta aula') existingFooterLink.textContent = 'Fazer questões desta aula';
   const footer = lesson.querySelector('.lesson-footer');
   if (footer && !footer.querySelector('.subject-question-link')) {
     const subjectQuestions = make('a', 'secondary-link subject-question-link', 'Escolher questões por matéria');
@@ -483,7 +488,12 @@ function enhanceStudy() {
     });
     toolbar.querySelector('.reader-tools-main')?.append(resume);
   }
-  saveReadingProgress();
+  if (saved) {
+    const bar = document.querySelector('.reading-progress-bar');
+    const label = document.querySelector('.reading-progress-label');
+    if (bar) bar.style.width = `${saved.percent}%`;
+    if (label && label.textContent !== `${saved.percent}% lido`) label.textContent = `${saved.percent}% lido`;
+  }
   if (!state.readerScrollBound) {
     state.readerScrollBound = true;
     let ticking = false;
@@ -672,7 +682,8 @@ function installFooter() {
   page.append(footer);
   const updateClock = () => {
     const node = footer.querySelector('.live-clock');
-    if (node) node.textContent = formatLongClock();
+    const value = formatLongClock();
+    if (node && node.textContent !== value) node.textContent = value;
   };
   updateClock();
   setInterval(updateClock, 60_000);
