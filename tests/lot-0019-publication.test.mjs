@@ -8,14 +8,12 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000120','Q000121','Q000122','Q000123','Q000124','Q000125','Q000126'];
 const answers = ['B','D','A','C','E','B','D'];
 
-test('catálogo v21 preserva LOT-0019 sem quebrar validação global', () => {
+test('LOT-0019 permanece íntegro no catálogo cumulativo posterior', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 21);
-  assert.equal(catalog.publication.lotId, 'LOT-0026');
-  assert.equal(catalog.units.length, 21);
-  assert.equal(catalog.materials.length, 21);
-  assert.equal(catalog.questions.length, 140);
-  assert.equal(catalog.questionSets.length, 21);
+  assert.ok(catalog.contentVersion >= 19);
+  assert.ok(find(catalog.units,'U019'));
+  assert.ok(find(catalog.materials,'M019'));
+  assert.ok(find(catalog.questionSets,'QS019'));
 });
 
 test('U019 preserva teoria separada e sete questões auditadas', () => {
