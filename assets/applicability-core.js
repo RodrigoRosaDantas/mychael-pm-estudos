@@ -39,8 +39,26 @@ function percent(part, whole) {
   return Math.round((part / whole) * 100);
 }
 
-function buildScope({ id, label, units, completedIds, studyByUnit, questionIds, latestAttempts }) {
-  const completed = units.filter((unit) => completedIds.has(unit.id)).length;
+function questionUnitMap(catalog) {
+  return new Map((catalog?.questions ?? [])
+    .filter((question) => question?.id && question?.unitId)
+    .map((question) => [question.id, question.unitId]));
+}
+
+function openErrorsByUnit(catalog, openErrorQuestionIds = []) {
+  const byQuestion = questionUnitMap(catalog);
+  const result = new Map();
+  for (const questionId of new Set(openErrorQuestionIds ?? [])) {
+    const unitId = byQuestion.get(questionId);
+    if (!unitId) continue;
+    if (!result.has(unitId)) result.set(unitId, []);
+    result.get(unitId).push(questionId);
+  }
+  return result;
+}
+
+function buildScope({ id, label, units, completedIds, blockedUnitIds, studyByUnit, questionIds, latestAttempts }) {
+  const completed = units.filter((unit) => completedIds.has(unit.id) && !blockedUnitIds.has(unit.id)).length;
   const studiedRows = units.map((unit) => studyByUnit.get(unit.id)).filter(Boolean);
   const masteryValues = studiedRows
     .map((row) => Number(row.mastery_percent))
@@ -62,13 +80,14 @@ function buildScope({ id, label, units, completedIds, studyByUnit, questionIds, 
   };
 }
 
-export function computeCompetitionProgress({ catalog, applicability, studyUnits = [], attempts = [] }) {
+export function computeCompetitionProgress({ catalog, applicability, studyUnits = [], attempts = [], openErrorQuestionIds = [] }) {
   const units = [...(catalog?.units ?? [])];
   const questions = [...(catalog?.questions ?? [])];
   const rules = unitRuleMap(applicability);
   const completedIds = new Set(studyUnits.filter((row) => row.status === 'completed').map((row) => row.unit_id));
   const studyByUnit = new Map(studyUnits.map((row) => [row.unit_id, row]));
   const latestAttempts = latestAttemptsByQuestion(attempts);
+  const blockedUnitIds = new Set(openErrorsByUnit(catalog, openErrorQuestionIds).keys());
   const questionsByUnit = new Map();
   for (const question of questions) {
     if (!question?.unitId || !question?.id) continue;
@@ -89,6 +108,7 @@ export function computeCompetitionProgress({ catalog, applicability, studyUnits 
       label: 'Núcleo comum',
       units: commonUnits,
       completedIds,
+      blockedUnitIds,
       studyByUnit,
       questionIds: questionsForUnits(commonUnits),
       latestAttempts
@@ -100,6 +120,7 @@ export function computeCompetitionProgress({ catalog, applicability, studyUnits 
         label: competition,
         units: scopeUnits,
         completedIds,
+        blockedUnitIds,
         studyByUnit,
         questionIds: questionsForUnits(scopeUnits),
         latestAttempts
@@ -111,14 +132,28 @@ export function computeCompetitionProgress({ catalog, applicability, studyUnits 
     scopes,
     publishedUnits: units.length,
     explicitlyClassifiedUnits: units.filter((unit) => rules.has(unit.id)).length,
-    pendingClassificationUnits: units.filter((unit) => !rules.has(unit.id)).map((unit) => unit.id)
+    pendingClassificationUnits: units.filter((unit) => !rules.has(unit.id)).map((unit) => unit.id),
+    blockedUnitIds: [...blockedUnitIds]
   };
 }
 
-export function nextGuidedStep({ catalog, applicability, studyUnits = [] }) {
+export function nextGuidedStep({ catalog, applicability, studyUnits = [], openErrorQuestionIds = [] }) {
   const units = [...(catalog?.units ?? [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   const completedIds = new Set(studyUnits.filter((row) => row.status === 'completed').map((row) => row.unit_id));
   const rules = unitRuleMap(applicability);
+  const errorsByUnit = openErrorsByUnit(catalog, openErrorQuestionIds);
+
+  const correctionUnit = units.find((unit) => errorsByUnit.has(unit.id));
+  if (correctionUnit) {
+    const pendingErrors = errorsByUnit.get(correctionUnit.id).length;
+    return {
+      phase: 'correction',
+      phaseLabel: 'Corrigir antes de avançar',
+      unit: correctionUnit,
+      pendingErrors,
+      message: `${pendingErrors} questão(ões) ainda precisam de correção nesta unidade. Resolva as pendências antes de abrir conteúdo novo.`
+    };
+  }
 
   const firstIncomplete = (classification) => units.find((unit) => {
     const rule = rules.get(unit.id);
