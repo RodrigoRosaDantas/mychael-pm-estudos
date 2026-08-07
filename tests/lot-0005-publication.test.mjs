@@ -4,9 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { validateCatalog } from '../scripts/content-rules.mjs';
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
-test('LOT-0005 permanece íntegro no catálogo cumulativo v12', () => {
-  assert.deepEqual(validateCatalog(catalog), []); assert.equal(catalog.contentVersion, 12); assert.equal(catalog.publication.lotId, 'LOT-0016');
-  assert.equal(catalog.units.length, 12); assert.equal(catalog.materials.length, 12); assert.equal(catalog.questions.length, 77); assert.equal(catalog.questionSets.length, 12);
+test('LOT-0005 permanece íntegro no catálogo cumulativo v13', () => {
+  assert.deepEqual(validateCatalog(catalog), []); assert.equal(catalog.contentVersion, 13); assert.equal(catalog.publication.lotId, 'LOT-0017');
+  assert.equal(catalog.units.length, 13); assert.equal(catalog.materials.length, 13); assert.equal(catalog.questions.length, 84); assert.equal(catalog.questionSets.length, 13);
 });
 test('U005 referencia taxonomia, fontes e componentes auditados', () => {
   const unit = findById(catalog.units, 'U005'); assert.ok(unit);

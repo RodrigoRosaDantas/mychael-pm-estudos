@@ -11,10 +11,10 @@ function collectKeys(value, keys = []) {
   return keys;
 }
 
-test('catálogo cumulativo autorizado permanece válido até o LOT-0016', () => {
-  assert.equal(catalog.contentVersion, 12);
+test('catálogo cumulativo autorizado permanece válido até o LOT-0017', () => {
+  assert.equal(catalog.contentVersion, 13);
   assert.equal(catalog.publicationStatus, 'published');
-  assert.equal(catalog.publication.lotId, 'LOT-0016');
+  assert.equal(catalog.publication.lotId, 'LOT-0017');
   assert.equal(catalog.publication.authorized, true);
   assert.deepEqual(validateCatalog(catalog), []);
 });

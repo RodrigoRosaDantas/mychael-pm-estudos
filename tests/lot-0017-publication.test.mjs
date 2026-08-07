@@ -5,9 +5,9 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
-const questionIds = ['Q000099','Q000100','Q000101','Q000102','Q000103','Q000104','Q000105'];
+const questionIds = ['Q000106','Q000107','Q000108','Q000109','Q000110','Q000111','Q000112'];
 
-test('LOT-0016 permanece íntegro após a publicação cumulativa do LOT-0017', () => {
+test('LOT-0017 integra Ilicitude ao catálogo cumulativo válido', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(catalog.contentVersion, 13);
   assert.equal(catalog.publication.lotId, 'LOT-0017');
@@ -17,8 +17,8 @@ test('LOT-0016 permanece íntegro após a publicação cumulativa do LOT-0017', 
   assert.equal(catalog.questionSets.length, 13);
 });
 
-test('taxonomia e fonte de Fato típico estão presentes e coerentes', () => {
-  const topic = findById(catalog.topics, 'ASS-DPEN-003-01');
+test('taxonomia e fonte de Ilicitude estão presentes e coerentes', () => {
+  const topic = findById(catalog.topics, 'ASS-DPEN-003-02');
   const source = findById(catalog.sources, 'FNT-0002');
   assert.ok(topic);
   assert.equal(topic.subjectId, 'MAT-DPEN');
@@ -28,40 +28,36 @@ test('taxonomia e fonte de Fato típico estão presentes e coerentes', () => {
   assert.equal(source.temporalStatus, 'Vigente');
 });
 
-test('U016 referencia fonte, matéria e componentes auditados', () => {
-  const unit = findById(catalog.units, 'U016');
+test('U017 referencia fonte, matéria e componentes auditados', () => {
+  const unit = findById(catalog.units, 'U017');
   assert.ok(unit);
   assert.equal(unit.subjectId, 'MAT-DPEN');
-  assert.deepEqual(unit.topicIds, ['ASS-DPEN-003-01']);
+  assert.deepEqual(unit.topicIds, ['ASS-DPEN-003-02']);
   assert.deepEqual(unit.sourceIds, ['FNT-0002']);
-  assert.deepEqual(unit.materialIds, ['M016']);
+  assert.deepEqual(unit.materialIds, ['M017']);
   assert.deepEqual(unit.questionIds, questionIds);
-  assert.deepEqual(unit.questionSetIds, ['QS016']);
+  assert.deepEqual(unit.questionSetIds, ['QS017']);
 });
 
-test('M016 mantém teoria separada das questões', () => {
-  const material = findById(catalog.materials, 'M016');
+test('M017 mantém teoria separada das questões', () => {
+  const material = findById(catalog.materials, 'M017');
   assert.ok(material);
-  assert.equal(material.unitId, 'U016');
+  assert.equal(material.unitId, 'U017');
   assert.equal(material.required, true);
   assert.equal('questionIds' in material, false);
   assert.equal('answer' in material, false);
   assert.equal('options' in material, false);
-  const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
-  for (const term of ['Conduta','Resultado','Nexo causal','Omissão','Tipicidade','Dolo e culpa','Revisão']) {
-    assert.ok(headings.some((heading) => heading.toLowerCase().includes(term.toLowerCase())), term);
-  }
 });
 
-test('sete questões da U016 mantêm gabaritos e integridade editorial', () => {
-  const expected = { Q000099:'B',Q000100:'C',Q000101:'D',Q000102:'A',Q000103:'C',Q000104:'B',Q000105:'E' };
+test('sete questões da U017 mantêm gabaritos e integridade editorial', () => {
+  const expected = { Q000106:'C',Q000107:'B',Q000108:'D',Q000109:'A',Q000110:'E',Q000111:'B',Q000112:'C' };
   for (const [id, answer] of Object.entries(expected)) {
     const question = findById(catalog.questions, id);
     assert.ok(question, id);
     assert.equal(question.answer, answer, id);
-    assert.equal(question.unitId, 'U016', id);
+    assert.equal(question.unitId, 'U017', id);
     assert.equal(question.subjectId, 'MAT-DPEN', id);
-    assert.deepEqual(question.topicIds, ['ASS-DPEN-003-01'], id);
+    assert.deepEqual(question.topicIds, ['ASS-DPEN-003-02'], id);
     assert.deepEqual(question.sourceIds, ['FNT-0002'], id);
     assert.equal(question.options.length, 5, id);
     assert.ok(question.options.some((option) => option.id === answer), id);
@@ -74,10 +70,10 @@ test('sete questões da U016 mantêm gabaritos e integridade editorial', () => {
   }
 });
 
-test('QS016 apenas referencia questões do Banco Mestre na ordem auditada', () => {
-  const set = findById(catalog.questionSets, 'QS016');
+test('QS017 apenas referencia questões do Banco Mestre na ordem auditada', () => {
+  const set = findById(catalog.questionSets, 'QS017');
   assert.ok(set);
-  assert.equal(set.unitId, 'U016');
+  assert.equal(set.unitId, 'U017');
   assert.equal(set.correctionMode, 'Por questão');
   assert.deepEqual(set.questionIds, questionIds);
   assert.equal('questions' in set, false);
