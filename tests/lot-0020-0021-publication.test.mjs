@@ -24,14 +24,14 @@ function assertQuestion(id, unitId, answer, topicIds, sourceIds) {
   assert.equal(q.valid, true, id);
 }
 
-test('catálogo v19 preserva LOT-0020 e LOT-0021 sem quebrar validação global', () => {
+test('catálogo v20 preserva LOT-0020 e LOT-0021 sem quebrar validação global', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 19);
-  assert.equal(catalog.publication.lotId, 'LOT-0019');
-  assert.equal(catalog.units.length, 19);
-  assert.equal(catalog.materials.length, 19);
-  assert.equal(catalog.questions.length, 126);
-  assert.equal(catalog.questionSets.length, 19);
+  assert.equal(catalog.contentVersion, 20);
+  assert.equal(catalog.publication.lotId, 'LOT-0024');
+  assert.equal(catalog.units.length, 20);
+  assert.equal(catalog.materials.length, 20);
+  assert.equal(catalog.questions.length, 133);
+  assert.equal(catalog.questionSets.length, 20);
 });
 
 test('U020 preserva teoria separada e sete questões auditadas', () => {
