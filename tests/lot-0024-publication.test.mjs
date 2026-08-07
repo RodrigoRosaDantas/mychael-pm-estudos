@@ -8,14 +8,14 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000155','Q000156','Q000157','Q000158','Q000159','Q000160','Q000161'];
 const answers = ['C','A','D','B','E','C','A'];
 
-test('catálogo v20 integra LOT-0024 sem quebrar validação global', () => {
+test('catálogo v21 preserva LOT-0024 sem quebrar validação global', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 20);
-  assert.equal(catalog.publication.lotId, 'LOT-0024');
-  assert.equal(catalog.units.length, 20);
-  assert.equal(catalog.materials.length, 20);
-  assert.equal(catalog.questions.length, 133);
-  assert.equal(catalog.questionSets.length, 20);
+  assert.equal(catalog.contentVersion, 21);
+  assert.equal(catalog.publication.lotId, 'LOT-0026');
+  assert.equal(catalog.units.length, 21);
+  assert.equal(catalog.materials.length, 21);
+  assert.equal(catalog.questions.length, 140);
+  assert.equal(catalog.questionSets.length, 21);
 });
 
 test('U024 preserva teoria separada e sete questões auditadas', () => {
