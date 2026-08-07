@@ -7,14 +7,14 @@ const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', imp
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 const questionIds = ['Q000113','Q000114','Q000115','Q000116','Q000117','Q000118','Q000119'];
 
-test('LOT-0018 permanece íntegro no catálogo cumulativo v16', () => {
+test('LOT-0018 permanece íntegro no catálogo cumulativo v18', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 16);
-  assert.equal(catalog.publication.lotId, 'LOT-0021');
-  assert.equal(catalog.units.length, 16);
-  assert.equal(catalog.materials.length, 16);
-  assert.equal(catalog.questions.length, 105);
-  assert.equal(catalog.questionSets.length, 16);
+  assert.equal(catalog.contentVersion, 18);
+  assert.equal(catalog.publication.lotId, 'LOT-0023');
+  assert.equal(catalog.units.length, 18);
+  assert.equal(catalog.materials.length, 18);
+  assert.equal(catalog.questions.length, 119);
+  assert.equal(catalog.questionSets.length, 18);
 });
 
 test('taxonomia e fonte de Culpabilidade estão presentes e coerentes', () => {
