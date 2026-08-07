@@ -1,0 +1,37 @@
+.competition-progress-panel,.guided-cycle-progress{display:grid;gap:1rem;border-left:5px solid var(--enh-accent)}
+.competition-progress-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.competition-progress-heading h2,.guided-step-copy h2{margin:.12rem 0 .4rem}
+.competition-progress-heading p:last-child,.guided-step-copy p:last-of-type{margin:0;color:var(--muted)}
+.competition-progress-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
+.competition-progress-card{padding:1rem;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);display:grid;gap:.6rem}
+.competition-progress-card__head{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.competition-progress-card__head strong{font-size:.92rem}
+.competition-progress-card__head>span{font-weight:900;color:var(--accent-dark)}
+.competition-progress-track{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.competition-progress-track>span{display:block;height:100%;border-radius:999px;background:var(--enh-accent)}
+.competition-progress-card p{margin:0;color:var(--muted);font-size:.82rem;line-height:1.45}
+.competition-progress-meta{display:grid;gap:.18rem;font-size:.74rem;color:var(--muted)}
+.competition-progress-meta strong{color:var(--ink)}
+.competition-progress-disclaimer{padding:.85rem 1rem;border-radius:13px;background:var(--surface-2);border:1px solid var(--line)}
+.competition-progress-disclaimer strong{display:block;margin-bottom:.22rem}
+.competition-progress-disclaimer p{margin:0;color:var(--muted);font-size:.84rem;line-height:1.55}
+.guided-cycle-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,.6fr);gap:1rem;align-items:stretch}
+.guided-step-copy{padding:1rem;border-radius:15px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 25%,var(--line))}
+.guided-step-actions{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1rem}
+.guided-cycle-status{display:grid;gap:.45rem;padding:1rem;border:1px solid var(--line);border-radius:15px;background:var(--surface-2);align-content:start}
+.guided-cycle-status strong{margin-bottom:.15rem}
+.guided-cycle-status span{font-size:.82rem;color:var(--muted)}
+.unit-applicability-strip{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:.85rem 1rem;margin-top:1rem;border:1px solid var(--line);border-radius:13px;background:var(--surface-2)}
+.unit-applicability-strip>div:first-child{display:grid;gap:.18rem}
+.unit-applicability-strip>div:first-child>strong{font-size:.88rem}
+.unit-applicability-strip>div:first-child>span{color:var(--muted);font-size:.78rem;line-height:1.4}
+.coverage-badges,.unit-coverage-badges{display:flex;gap:.3rem;flex-wrap:wrap;align-items:center}
+.unit-coverage-badges{margin-top:.45rem}
+.coverage-badge{display:inline-flex;align-items:center;min-height:24px;padding:.18rem .48rem;border-radius:999px;font-size:.68rem;font-weight:850;border:1px solid var(--line)}
+.coverage-badge.active{background:var(--success-soft);color:var(--success);border-color:color-mix(in srgb,var(--success) 35%,var(--line))}
+.coverage-badge.pending{background:var(--warning-soft);color:var(--warning);border-color:color-mix(in srgb,var(--warning) 35%,var(--line))}
+.coverage-badge.inactive{background:var(--surface);color:var(--muted);opacity:.7}
+.unit-link .unit-coverage-badges{grid-column:1/-1}
+@media(max-width:1050px){.competition-progress-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.competition-progress-heading{display:grid}.guided-cycle-layout{grid-template-columns:1fr}.unit-applicability-strip{display:grid}.coverage-badges{justify-content:flex-start}}
+@media(max-width:560px){.competition-progress-grid{grid-template-columns:1fr}.competition-progress-card{padding:.85rem}.guided-step-actions{display:grid}.guided-step-actions a{text-align:center}}
