@@ -2,7 +2,7 @@
 
 Plataforma estática, responsiva e guiada para preparação aos concursos de Soldado da PMDF, PMGO e PMMG.
 
-A integração curricular da PMMG está em preparação editorial. A interface, a navegação e o modelo de cronograma já estão preparados para os três concursos, mas o site não deve tratar conteúdo como aplicável à PMMG sem validação específica da matriz curricular e das fontes correspondentes.
+A integração curricular da PMMG faz parte oficialmente da governança do projeto desde a Fonte Principal v1.2. A interface, a navegação, a matriz curricular, a aplicabilidade por unidade, o cronograma por ciclos e o monitoramento público estão preparados para os três concursos. Conteúdo só pode ser atribuído à PMMG quando houver validação específica por matéria, assunto ou tópico e rastreabilidade de fonte.
 
 ## Arquitetura
 
@@ -18,17 +18,32 @@ A integração curricular da PMMG está em preparação editorial. A interface, 
 
 ## Princípio pedagógico
 
-A plataforma é voltada a um estudante iniciante e continua priorizando orientação em vez de excesso de opções.
+A plataforma é voltada a um estudante iniciante absoluto e prioriza orientação em vez de excesso de escolhas.
 
-O percurso planejado é:
+O percurso é:
 
-1. construir primeiro a base comum entre os concursos;
-2. estudar cada unidade no fluxo `teoria → questões → revisão`;
+1. construir primeiro o núcleo realmente comum aos três concursos;
+2. estudar cada unidade no fluxo `Aprender → Praticar → Corrigir → Revisar → Consolidar`;
 3. usar erros e revisões para controlar o avanço;
-4. depois da consolidação da base, alternar conteúdos específicos em rotação `PMDF → PMGO → PMMG`;
-5. retomar o ciclo sempre do ponto em que foi interrompido, sem calendário semanal obrigatório.
+4. depois do núcleo comum, avançar pelos conteúdos compartilhados por dois concursos;
+5. somente com cobertura editorial mínima dos três, alternar conteúdos específicos na rotação `PMDF → PMGO → PMMG`;
+6. retomar o ciclo sempre do ponto em que foi interrompido, sem calendário semanal obrigatório;
+7. usar simulados quando a base pedagógica permitir.
 
-O cronograma definitivo só deve receber pesos e distribuição finais depois que a matriz curricular PMDF × PMGO × PMMG estiver completa e houver acervo suficiente para calibrar volume e dificuldade. Não é necessário esperar a última questão do banco para começar a usar a estrutura de ciclos.
+O cronograma definitivo não recebe pesos finais enquanto o acervo ainda não for representativo para calibrar volume, dificuldade, questões e revisões. A estrutura de ciclos pode ser usada antes disso.
+
+## Matriz multi-concurso
+
+A classificação editorial utiliza quatro estados:
+
+- `Comum aos 3`: sobreposição comprovada para PMDF, PMGO e PMMG;
+- `Compartilhado por 2`: aplicável a dois concursos;
+- `Específico`: aplicável a uma corporação;
+- `Pendente de validação`: existe possível sobreposição, mas falta validação temática suficiente.
+
+Uma matéria comum não torna automaticamente todos os seus assuntos comuns. A classificação deve ocorrer no menor nível necessário. Questões herdam a aplicabilidade da unidade e não são duplicadas por concurso.
+
+A rotação específica definitiva permanece desativada enquanto não existir cobertura editorial mínima e validada dos três concursos.
 
 ## Experiência do estudante
 
@@ -57,31 +72,41 @@ A camada de experiência inclui:
 - indicador e retomada do progresso de leitura no dispositivo;
 - acesso a questões no fim da aula e seleção guiada por matéria;
 - cronograma por ciclos, sem associação obrigatória a datas;
+- progresso no acervo publicado separado por núcleo comum, PMDF, PMGO e PMMG;
 - data e hora locais no rodapé;
 - informação de última sincronização baseada em metadados reais do deploy.
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado chegou à versão 12 com o `LOT-0016`:
+O catálogo cumulativo publicado está na versão 14 com o `LOT-0018`:
 
-- 12 unidades;
-- 12 materiais;
-- 77 questões;
-- 12 conjuntos de questões.
+- 14 unidades;
+- 14 materiais;
+- 91 questões;
+- 14 conjuntos de questões.
 
-O conteúdo cumulativo preserva os lotes publicados anteriormente. A montagem é idempotente e ocorre antes das validações e do deploy.
+Na camada atual de aplicabilidade:
 
-## Sincronização pública
+- PMDF: 14 unidades / 91 questões aplicáveis;
+- PMGO: 14 unidades / 91 questões aplicáveis;
+- PMMG: 7 unidades / 44 questões aplicáveis;
+- núcleo comum aos três: 7 unidades / 44 questões;
+- U006 e U013 permanecem com revisão temática da PMMG pendente.
 
-Durante o build do GitHub Pages é gerado `content/deployment.json` no artefato público contendo:
+Essas contagens representam o acervo físico publicado e seus vínculos de aplicabilidade. Não significam percentual do edital completo nem quantidade de questões produzidas especificamente para cada corporação.
+
+## Sincronização e monitoramento
+
+Durante o build do GitHub Pages é gerado `content/deployment.json` contendo:
 
 - data e hora do build publicado;
 - SHA do commit;
 - ID da execução;
 - versão do conteúdo;
-- lote editorial mais recente.
+- lote editorial mais recente;
+- cobertura multi-concurso e pendências de classificação.
 
-A interface usa esses metadados para informar a última sincronização do site. Se o arquivo ainda não existir, a página apresenta um estado de contingência em vez de inventar uma confirmação de deploy.
+O CI executa um gate de cobertura: unidade publicada sem regra explícita de aplicabilidade bloqueia a validação. PMMG não pode ser atribuída sem evidência temática verificada. O `pages-smoke` verifica as 12 páginas, catálogo, manifesto, matriz curricular e módulos de aplicabilidade/progresso antes de confirmar o deploy público.
 
 ## Testes
 
@@ -89,7 +114,7 @@ A interface usa esses metadados para informar a última sincronização do site.
 npm run check
 ```
 
-A suíte monta e valida o catálogo cumulativo, confere relações editoriais, estrutura multipágina, segurança do Supabase, experiência progressiva e testes unitários/estáticos.
+A suíte monta e valida o catálogo cumulativo, confere relações editoriais, cobertura PMDF/PMGO/PMMG, estrutura multipágina, segurança do Supabase, experiência progressiva e testes unitários/estáticos.
 
 Os testes de navegador usam Chromium real com perfis de computador e celular:
 
@@ -106,6 +131,7 @@ No GitHub Actions, o Chromium e as dependências do sistema são instalados auto
 ```bash
 npm run assemble
 npm run manifest
+npm run coverage:check
 npm run deployment:check -- https://rodrigorosadantas.github.io/mychael-pm-estudos/
 npm run supabase:check
 ```
