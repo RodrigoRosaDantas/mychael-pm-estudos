@@ -42,6 +42,7 @@
     {"unitId":"U022","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Sintaxe básica e termos essenciais da oração integram o núcleo de Língua Portuguesa verificado para os três concursos."},
     {"unitId":"U023","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Concordância verbal básica integra o núcleo de Língua Portuguesa verificado para os três concursos."},
     {"unitId":"U024","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Concordância nominal básica integra o núcleo de Língua Portuguesa verificado para os três concursos."},
-    {"unitId":"U026","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Complementos verbais integram o núcleo sintático de Língua Portuguesa verificado para os três concursos e funcionam como ponte pedagógica para regência."}
+    {"unitId":"U026","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Complementos verbais integram o núcleo sintático de Língua Portuguesa verificado para os três concursos e funcionam como ponte pedagógica para regência."},
+    {"unitId":"U027","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Regência verbal e nominal integra o núcleo de Língua Portuguesa verificado para os três concursos. O recorte introdutório prepara a compreensão de crase sem antecipar casos avançados."}
   ]
 }
