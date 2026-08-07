@@ -1,6 +1,8 @@
 # Mychael PM
 
-Plataforma estática, responsiva e guiada para preparação aos concursos de Soldado da PMGO e da PMDF.
+Plataforma estática, responsiva e guiada para preparação aos concursos de Soldado da PMDF, PMGO e PMMG.
+
+A integração curricular da PMMG está em preparação editorial. A interface, a navegação e o modelo de cronograma já estão preparados para os três concursos, mas o site não deve tratar conteúdo como aplicável à PMMG sem validação específica da matriz curricular e das fontes correspondentes.
 
 ## Arquitetura
 
@@ -14,13 +16,28 @@ Plataforma estática, responsiva e guiada para preparação aos concursos de Sol
 - TAF integra o MVP com acompanhamento privado de treinos, sem apresentar índice oficial vigente enquanto não houver exportação editorial validada.
 - Nenhum serviço pago faz parte da implementação atual.
 
-## Estado do catálogo
+## Princípio pedagógico
 
-A plataforma possui 11 páginas:
+A plataforma é voltada a um estudante iniciante e continua priorizando orientação em vez de excesso de opções.
+
+O percurso planejado é:
+
+1. construir primeiro a base comum entre os concursos;
+2. estudar cada unidade no fluxo `teoria → questões → revisão`;
+3. usar erros e revisões para controlar o avanço;
+4. depois da consolidação da base, alternar conteúdos específicos em rotação `PMDF → PMGO → PMMG`;
+5. retomar o ciclo sempre do ponto em que foi interrompido, sem calendário semanal obrigatório.
+
+O cronograma definitivo só deve receber pesos e distribuição finais depois que a matriz curricular PMDF × PMGO × PMMG estiver completa e houver acervo suficiente para calibrar volume e dificuldade. Não é necessário esperar a última questão do banco para começar a usar a estrutura de ciclos.
+
+## Experiência do estudante
+
+A plataforma possui 12 páginas:
 
 - Início;
 - Estudo de hoje;
 - Matérias;
+- Cronograma;
 - Questões;
 - Revisões;
 - Caderno de erros;
@@ -30,20 +47,41 @@ A plataforma possui 11 páginas:
 - Desempenho;
 - Configurações.
 
-O catálogo cumulativo v4 reúne:
+A camada de experiência inclui:
 
-- `U001`, `M001`, `Q000001` a `Q000005` e `QS001` — informações explícitas e implícitas;
-- `U002`, `M002`, `Q000006` a `Q000011` e `QS002` — inferência, pressupostos e subentendidos;
-- `U003`, `M003`, `Q000012` a `Q000017` e `QS003` — substantivo, adjetivo e artigo;
-- `U004`, `M004`, `Q000018` a `Q000023` e `QS004` — pronomes e referenciação.
+- navegação lateral agrupada por finalidade;
+- barra inferior simplificada no celular;
+- busca global de matérias, aulas e questões;
+- temas claro, escuro e conforto;
+- controles de tamanho de fonte, espaçamento, largura de leitura e modo foco;
+- indicador e retomada do progresso de leitura no dispositivo;
+- acesso a questões no fim da aula e seleção guiada por matéria;
+- cronograma por ciclos, sem associação obrigatória a datas;
+- data e hora locais no rodapé;
+- informação de última sincronização baseada em metadados reais do deploy.
 
-No total, são quatro unidades, quatro materiais, 23 questões e quatro conjuntos de fixação. O fluxo de questões salva tentativas no Supabase, encaminha erros para revisão e oferece refação individual ou conjunta. A refação limpa não mostra alternativa anterior, comentário ou gabarito antes da nova resposta.
+## Estado do catálogo
 
-Os LOT-0003 e LOT-0004 são mantidos como exportações editoriais estruturadas em `content/lots/`. O script `scripts/assemble-published-catalog.mjs` monta o catálogo cumulativo de forma idempotente, preserva as unidades já publicadas e recalcula o manifesto antes das validações.
+O catálogo cumulativo publicado chegou à versão 12 com o `LOT-0016`:
 
-O módulo TAF permite registrar sessões físicas, consultar o histórico privado e informar avaliação médica ou supervisão profissional. Os registros usam `taf_attempts`, permanecem vinculados ao perfil `STU-MYCHAEL` e não entram no GitHub ou no Notion editorial. O módulo não apresenta índice numérico oficial vigente; índices históricos e futuros índices vigentes dependem de exportação editorial própria e fonte oficial validada.
+- 12 unidades;
+- 12 materiais;
+- 77 questões;
+- 12 conjuntos de questões.
 
-Provas Anteriores e Simulados ainda dependem de conteúdo editorial autorizado para se tornarem atividades completas. O IndexedDB previsto para contingência offline ainda não foi implementado.
+O conteúdo cumulativo preserva os lotes publicados anteriormente. A montagem é idempotente e ocorre antes das validações e do deploy.
+
+## Sincronização pública
+
+Durante o build do GitHub Pages é gerado `content/deployment.json` no artefato público contendo:
+
+- data e hora do build publicado;
+- SHA do commit;
+- ID da execução;
+- versão do conteúdo;
+- lote editorial mais recente.
+
+A interface usa esses metadados para informar a última sincronização do site. Se o arquivo ainda não existir, a página apresenta um estado de contingência em vez de inventar uma confirmação de deploy.
 
 ## Testes
 
@@ -51,7 +89,7 @@ Provas Anteriores e Simulados ainda dependem de conteúdo editorial autorizado p
 npm run check
 ```
 
-A suíte acima monta e valida o catálogo cumulativo, confere relações editoriais, estrutura multipágina, segurança do Supabase e testes unitários/estáticos.
+A suíte monta e valida o catálogo cumulativo, confere relações editoriais, estrutura multipágina, segurança do Supabase, experiência progressiva e testes unitários/estáticos.
 
 Os testes de navegador usam Chromium real com perfis de computador e celular:
 
