@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-07",
+  "purpose": "Camada de aplicabilidade por unidade para orientar o ciclo multi-concurso sem alterar, duplicar ou reclassificar automaticamente o Banco Mestre editorial.",
+  "guardrails": {
+    "separateFromEditorialCatalog": true,
+    "questionApplicabilityInheritsFromUnit": true,
+    "pmmgRequiresExplicitTopicVerification": true,
+    "unknownFutureUnitsDefaultToNoPmmg": true,
+    "progressMeansPublishedApplicableContentOnly": true,
+    "doesNotRepresentPercentOfFullNotice": true
+  },
+  "competitions": ["PMDF", "PMGO", "PMMG"],
+  "cyclePhases": [
+    {
+      "id": "common-3",
+      "label": "Núcleo comum aos três",
+      "order": 1,
+      "description": "Conteúdos cuja sobreposição foi verificada para PMDF, PMGO e PMMG."
+    },
+    {
+      "id": "shared-2",
+      "label": "Convergência entre dois concursos",
+      "order": 2,
+      "description": "Conteúdos aproveitáveis por dois concursos, estudados depois do núcleo comum aos três."
+    },
+    {
+      "id": "specific-rotation",
+      "label": "Específicas em rotação",
+      "order": 3,
+      "description": "Conteúdos exclusivos alternados por PMDF → PMGO → PMMG quando houver cobertura editorial mínima dos três."
+    }
+  ],
+  "specificRotation": {
+    "enabled": false,
+    "reason": "A estrutura está pronta, mas a rotação específica definitiva permanece desativada até existir cobertura editorial mínima e validada das três corporações, especialmente PMMG.",
+    "plannedOrder": ["PMDF", "PMGO", "PMMG"]
+  },
+  "unitApplicability": [
+    {
+      "unitId": "U001",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-PORT-CORE"],
+      "note": "Interpretação de textos integra o núcleo comum verificado."
+    },
+    {
+      "unitId": "U002",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-PORT-CORE"],
+      "note": "Inferência e compreensão textual integram o núcleo comum verificado de interpretação."
+    },
+    {
+      "unitId": "U003",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-PORT-CORE"],
+      "note": "Classes de palavras integram o núcleo comum verificado."
+    },
+    {
+      "unitId": "U004",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-PORT-CORE"],
+      "note": "Pronomes integram classes de palavras e referenciação textual do núcleo comum."
+    },
+    {
+      "unitId": "U005",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-PORT-CORE"],
+      "note": "Verbos integram classes de palavras do núcleo comum verificado."
+    },
+    {
+      "unitId": "U006",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "pmmg-topic-review-needed",
+      "evidenceIds": [],
+      "note": "Semântica e relações de sentido ainda não foram promovidas para PMMG nesta camada porque a sobreposição específica não está registrada entre os tópicos verificados da matriz."
+    },
+    {
+      "unitId": "U007",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified-not-pmmg",
+      "evidenceIds": [],
+      "note": "Conceito e classificação da Constituição não constam como sobreposição temática verificada para PMMG na matriz atual."
+    },
+    {
+      "unitId": "U008",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-CONST-FUND"],
+      "note": "Princípios fundamentais integram a sobreposição constitucional verificada."
+    },
+    {
+      "unitId": "U009",
+      "classification": "common-3",
+      "competitions": ["PMDF", "PMGO", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["TOP-CONST-FUND"],
+      "note": "Direitos e garantias fundamentais integram a sobreposição constitucional verificada."
+    },
+    {
+      "unitId": "U013",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "pmmg-topic-review-needed",
+      "evidenceIds": [],
+      "note": "Remédios constitucionais permanecem fora da PMMG até verificação explícita desse recorte no programa de referência."
+    },
+    {
+      "unitId": "U015",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified-not-pmmg",
+      "evidenceIds": [],
+      "note": "Direito Penal é disciplina aplicável a PMDF e PMGO e não é herdada pela PMMG."
+    },
+    {
+      "unitId": "U016",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified-not-pmmg",
+      "evidenceIds": [],
+      "note": "Fato típico permanece no eixo de Direito Penal aplicável a PMDF e PMGO."
+    },
+    {
+      "unitId": "U017",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified-not-pmmg",
+      "evidenceIds": [],
+      "note": "Ilicitude permanece no eixo de Direito Penal aplicável a PMDF e PMGO."
+    }
+  ]
+}
