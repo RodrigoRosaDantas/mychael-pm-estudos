@@ -2,9 +2,10 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { buildCoverageSummary } from './check-competition-coverage.mjs';
 
 export const PAGE_PATHS = Object.freeze([
-  'index.html', 'estudar.html', 'materias.html', 'questoes.html', 'revisoes.html',
+  'index.html', 'estudar.html', 'materias.html', 'cronograma.html', 'questoes.html', 'revisoes.html',
   'erros.html', 'provas.html', 'simulados.html', 'taf.html', 'desempenho.html',
   'configuracoes.html'
 ]);
@@ -12,10 +13,19 @@ export const REQUIRED_DEPLOYMENT_PATHS = Object.freeze([
   ...PAGE_PATHS,
   'assets/site.js',
   'assets/styles.css',
+  'assets/enhancements.js',
+  'assets/enhancements.css',
+  'assets/curriculum-matrix.js',
+  'assets/curriculum-matrix.css',
+  'assets/applicability-core.js',
+  'assets/competition-progress.js',
+  'assets/competition-progress.css',
   'assets/supabase-client.js',
   'assets/supabase-config.js',
   'content/catalog.json',
-  'content/manifest.json'
+  'content/manifest.json',
+  'content/curriculum-matrix.json',
+  'content/content-applicability.json'
 ]);
 
 function assert(condition, message) {
@@ -42,14 +52,27 @@ export function validatePublicationFiles(files) {
   const site = toBuffer(files.get('assets/site.js')).toString('utf8');
   const client = toBuffer(files.get('assets/supabase-client.js')).toString('utf8');
   const styles = toBuffer(files.get('assets/styles.css')).toString('utf8');
+  const enhancements = toBuffer(files.get('assets/enhancements.js')).toString('utf8');
+  const competitionProgress = toBuffer(files.get('assets/competition-progress.js')).toString('utf8');
+  const curriculumMatrix = toBuffer(files.get('assets/curriculum-matrix.js')).toString('utf8');
   for (const page of PAGE_PATHS) {
     const html = toBuffer(files.get(page)).toString('utf8');
     assert(html.includes('id="app"'), `${page}: raiz da aplicação ausente.`);
     assert(html.includes('./assets/site.js'), `${page}: módulo compartilhado ausente.`);
+    assert(html.includes('./assets/enhancements.js'), `${page}: camada de experiência ausente.`);
   }
+  for (const page of ['estudar.html', 'materias.html', 'cronograma.html', 'desempenho.html']) {
+    const html = toBuffer(files.get(page)).toString('utf8');
+    assert(html.includes('./assets/competition-progress.js'), `${page}: camada multi-concurso ausente.`);
+  }
+  const schedule = toBuffer(files.get('cronograma.html')).toString('utf8');
+  assert(schedule.includes('./assets/curriculum-matrix.js'), 'Cronograma sem matriz curricular.');
   for (const page of ['estudar.html', 'questoes.html', 'revisoes.html', 'erros.html', 'desempenho.html']) {
     assert(site.includes(`'${page}'`), `Navegação pública sem ${page}.`);
   }
+  assert(enhancements.includes('cronograma.html'), 'Navegação progressiva sem Cronograma.');
+  assert(curriculumMatrix.includes('content/curriculum-matrix.json'), 'Matriz curricular pública não carrega sua fonte.');
+  assert(competitionProgress.includes('content/content-applicability.json'), 'Progresso por concurso não carrega aplicabilidade.');
   assert(site.includes("from('error_items')"), 'O caderno de erros não consulta dados privados.');
   assert(site.includes('loadOpenErrorQuestionIds'), 'A opção de refazer erros está ausente.');
   assert(site.includes('questionScope'), 'A refação global entre unidades está ausente.');
@@ -57,14 +80,16 @@ export function validatePublicationFiles(files) {
   assert(site.includes('resolveError'), 'A resolução de erros está ausente.');
   assert(site.includes("import { createClient } from './supabase-client.js'"), 'O cliente Supabase não está isolado.');
   assert(client.includes('@supabase/supabase-js@2'), 'Wrapper público do Supabase inválido.');
-  assert(!/signUp\s*\(|service_role|sb_secret_/i.test(site + client), 'O módulo público contém cadastro ou segredo elevado.');
+  assert(!/signUp\s*\(|service_role|sb_secret_/i.test(site + client + competitionProgress), 'O módulo público contém cadastro ou segredo elevado.');
   assert(styles.includes('@media(max-width:860px)'), 'O CSS não contém visualização móvel.');
   assert(styles.includes('.app-shell{min-height:100vh;display:grid'), 'O CSS não contém visualização para computador.');
 
   const catalogBuffer = toBuffer(files.get('content/catalog.json'));
   const manifestBuffer = toBuffer(files.get('content/manifest.json'));
+  const applicabilityBuffer = toBuffer(files.get('content/content-applicability.json'));
   const catalog = JSON.parse(catalogBuffer.toString('utf8'));
   const manifest = JSON.parse(manifestBuffer.toString('utf8'));
+  const applicability = JSON.parse(applicabilityBuffer.toString('utf8'));
   const catalogEntry = manifest.files?.find(({ path }) => path === 'content/catalog.json');
   assert(catalogEntry, 'O manifesto não referencia content/catalog.json.');
   assert(manifest.contentVersion === catalog.contentVersion, 'Versões do catálogo e do manifesto divergem.');
@@ -72,13 +97,15 @@ export function validatePublicationFiles(files) {
   assert(catalogEntry.bytes === catalogBuffer.byteLength, 'O tamanho do catálogo não confere com o manifesto.');
   assert(Array.isArray(catalog.units), 'O catálogo não possui unidades.');
   assert(Array.isArray(catalog.questions), 'O catálogo não possui questões.');
+  const coverage = buildCoverageSummary(catalog, applicability);
   return {
     contentVersion: catalog.contentVersion,
     publicationStatus: catalog.publicationStatus,
     pages: PAGE_PATHS.length,
     units: catalog.units.length,
     questions: catalog.questions.length,
-    catalogSha256: catalogEntry.sha256
+    catalogSha256: catalogEntry.sha256,
+    coverage
   };
 }
 
