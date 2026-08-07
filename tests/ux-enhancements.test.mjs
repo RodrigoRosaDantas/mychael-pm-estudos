@@ -24,6 +24,12 @@ test('experiência oferece temas de leitura e navegação móvel', () => {
   assert.match(css, /\.mobile-bottom-nav/);
 });
 
+test('camada progressiva observa somente a raiz de conteúdo', () => {
+  assert.match(js, /document\.querySelector\('#pageContent'\)/);
+  assert.match(js, /observer\.observe\(content, \{ childList: true \}\)/);
+  assert.doesNotMatch(js, /observer\.observe\(document\.documentElement, \{ childList: true, subtree: true \}\)/);
+});
+
 test('questões por matéria preservam sequência pedagógica', () => {
   assert.match(js, /Escolha a matéria que quer treinar/);
   assert.match(js, /sem pular a sequência pedagógica/);
