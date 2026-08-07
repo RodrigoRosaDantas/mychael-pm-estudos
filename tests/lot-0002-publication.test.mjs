@@ -9,20 +9,19 @@ const catalog = JSON.parse(catalogBytes.toString('utf8'));
 const manifest = JSON.parse(await readFile(new URL('../content/manifest.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0002 permanece íntegro no catálogo cumulativo após LOT-0018', () => {
+test('LOT-0002 permanece íntegro no catálogo cumulativo após LOT-0021', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 14);
-  assert.equal(catalog.units.length, 14);
-  assert.equal(catalog.materials.length, 14);
-  assert.equal(catalog.questions.length, 91);
-  assert.equal(catalog.questionSets.length, 14);
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017','U018']);
+  assert.equal(catalog.contentVersion, 16);
+  assert.equal(catalog.units.length, 16);
+  assert.equal(catalog.materials.length, 16);
+  assert.equal(catalog.questions.length, 105);
+  assert.equal(catalog.questionSets.length, 16);
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017','U018','U020','U021']);
 });
 
 test('U002 permanece referenciando exatamente M002, Q000006 a Q000011 e QS002', () => {
   const unit = findById(catalog.units, 'U002');
-  assert.ok(unit);
-  assert.equal(unit.subjectId, 'MAT-PORT');
+  assert.ok(unit); assert.equal(unit.subjectId, 'MAT-PORT');
   assert.deepEqual(unit.topicIds, ['ASS-PORT-001', 'ASS-PORT-001-02']);
   assert.deepEqual(unit.sourceIds, ['FNT-0009', 'FNT-0010', 'FNT-0013']);
   assert.deepEqual(unit.materialIds, ['M002']);
@@ -32,12 +31,8 @@ test('U002 permanece referenciando exatamente M002, Q000006 a Q000011 e QS002', 
 
 test('M002 mantém teoria separada das questões e sequência pedagógica completa', () => {
   const material = findById(catalog.materials, 'M002');
-  assert.ok(material);
-  assert.equal(material.unitId, 'U002');
-  assert.equal(material.required, true);
-  assert.equal('questionIds' in material, false);
-  assert.equal('answer' in material, false);
-  assert.equal('options' in material, false);
+  assert.ok(material); assert.equal(material.unitId, 'U002'); assert.equal(material.required, true);
+  assert.equal('questionIds' in material, false); assert.equal('answer' in material, false); assert.equal('options' in material, false);
   const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
   assert.deepEqual(headings, ['1. Comece por uma ideia simples','2. O que é inferência','3. O que é pressuposto','4. O que é subentendido','5. Diferença prática','6. Método em três passos','7. Exemplos comentados','8. Explicação técnica','9. Erros comuns','10. Resumo da aula','11. Orientação de revisão','12. Fontes editoriais']);
 });
@@ -67,7 +62,7 @@ test('fonte FNT-0013 e manifesto público correspondem ao catálogo exportado', 
   assert.equal(source.organization, 'Fundação Cecierj / Consórcio Cederj / Diretoria de Extensão');
   assert.equal(source.url, 'https://canal.cecierj.edu.br/recurso/12020');
   const digest = createHash('sha256').update(catalogBytes).digest('hex');
-  assert.equal(manifest.schemaVersion, 1); assert.equal(manifest.contentVersion, 14);
+  assert.equal(manifest.schemaVersion, 1); assert.equal(manifest.contentVersion, 16);
   assert.equal(manifest.files.length, 1); assert.equal(manifest.files[0].path, 'content/catalog.json');
   assert.equal(manifest.files[0].sha256, digest); assert.equal(manifest.files[0].bytes, catalogBytes.length);
 });
