@@ -43,9 +43,10 @@ test('CI executa navegador real em Chromium para computador e celular', () => {
 });
 
 test('documentação representa o estado atual e código legado foi retirado', async () => {
-  assert.match(readme, /11 páginas/);
+  assert.match(readme, /12 páginas/);
   assert.match(readme, /Supabase/);
-  assert.match(readme, /refação limpa/);
+  assert.match(readme, /cronograma por ciclos/i);
+  assert.match(readme, /PMDF → PMGO → PMMG/);
   assert.doesNotMatch(readme, /estrutura técnica vazia|ainda não foi aplicada a um projeto remoto/i);
   await assert.rejects(access(new URL('../assets/app.js', import.meta.url)));
 });
