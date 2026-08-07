@@ -140,6 +140,14 @@
       "status": "verified-not-pmmg",
       "evidenceIds": [],
       "note": "Ilicitude permanece no eixo de Direito Penal aplicável a PMDF e PMGO."
+    },
+    {
+      "unitId": "U018",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified-not-pmmg",
+      "evidenceIds": [],
+      "note": "Culpabilidade permanece no eixo de Direito Penal aplicável a PMDF e PMGO."
     }
   ]
 }
