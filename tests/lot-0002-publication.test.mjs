@@ -9,14 +9,14 @@ const catalog = JSON.parse(catalogBytes.toString('utf8'));
 const manifest = JSON.parse(await readFile(new URL('../content/manifest.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 
-test('LOT-0015 permanece íntegro no catálogo cumulativo após LOT-0017', () => {
+test('LOT-0002 permanece íntegro no catálogo cumulativo após LOT-0018', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 13);
-  assert.equal(catalog.units.length, 13);
-  assert.equal(catalog.materials.length, 13);
-  assert.equal(catalog.questions.length, 84);
-  assert.equal(catalog.questionSets.length, 13);
-  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017']);
+  assert.equal(catalog.contentVersion, 14);
+  assert.equal(catalog.units.length, 14);
+  assert.equal(catalog.materials.length, 14);
+  assert.equal(catalog.questions.length, 91);
+  assert.equal(catalog.questionSets.length, 14);
+  assert.deepEqual(catalog.units.map(({ id }) => id), ['U001','U002','U003','U004','U005','U006','U007','U008','U009','U013','U015','U016','U017','U018']);
 });
 
 test('U002 permanece referenciando exatamente M002, Q000006 a Q000011 e QS002', () => {
@@ -67,7 +67,7 @@ test('fonte FNT-0013 e manifesto público correspondem ao catálogo exportado', 
   assert.equal(source.organization, 'Fundação Cecierj / Consórcio Cederj / Diretoria de Extensão');
   assert.equal(source.url, 'https://canal.cecierj.edu.br/recurso/12020');
   const digest = createHash('sha256').update(catalogBytes).digest('hex');
-  assert.equal(manifest.schemaVersion, 1); assert.equal(manifest.contentVersion, 13);
+  assert.equal(manifest.schemaVersion, 1); assert.equal(manifest.contentVersion, 14);
   assert.equal(manifest.files.length, 1); assert.equal(manifest.files[0].path, 'content/catalog.json');
   assert.equal(manifest.files[0].sha256, digest); assert.equal(manifest.files[0].bytes, catalogBytes.length);
 });
