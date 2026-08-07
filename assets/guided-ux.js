@@ -39,7 +39,7 @@ function publicData() {
 async function privateSnapshot({ attempts = false } = {}) {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   if (sessionError || !sessionData.session?.user) {
-    return { authenticated: false, studyUnits: [], attempts: [] };
+    return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [] };
   }
 
   const { data: profile, error: profileError } = await supabase
@@ -48,32 +48,46 @@ async function privateSnapshot({ attempts = false } = {}) {
     .eq('id', supabaseConfig.profileId)
     .maybeSingle();
   if (profileError || profile?.status !== 'active') {
-    return { authenticated: false, studyUnits: [], attempts: [] };
+    return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [] };
   }
 
   const studyRequest = supabase
     .from('study_units')
     .select('unit_id, status, mastery_percent, last_activity_at')
     .eq('profile_id', supabaseConfig.profileId);
+  const errorsRequest = supabase
+    .from('error_items')
+    .select('question_id, status')
+    .eq('profile_id', supabaseConfig.profileId)
+    .in('status', ['open', 'reviewing']);
 
   if (!attempts) {
-    const studyResult = await studyRequest;
-    if (studyResult.error) throw studyResult.error;
-    return { authenticated: true, studyUnits: studyResult.data ?? [], attempts: [] };
+    const [studyResult, errorsResult] = await Promise.all([studyRequest, errorsRequest]);
+    if (studyResult.error || errorsResult.error) throw studyResult.error || errorsResult.error;
+    return {
+      authenticated: true,
+      studyUnits: studyResult.data ?? [],
+      attempts: [],
+      openErrorQuestionIds: [...new Set((errorsResult.data ?? []).map((row) => row.question_id).filter(Boolean))]
+    };
   }
 
-  const [studyResult, attemptsResult] = await Promise.all([
+  const [studyResult, errorsResult, attemptsResult] = await Promise.all([
     studyRequest,
+    errorsRequest,
     supabase
       .from('question_attempts')
       .select('question_id, is_correct, answered_at')
       .eq('profile_id', supabaseConfig.profileId)
   ]);
-  if (studyResult.error || attemptsResult.error) throw studyResult.error || attemptsResult.error;
+  if (studyResult.error || errorsResult.error || attemptsResult.error) {
+    throw studyResult.error || errorsResult.error || attemptsResult.error;
+  }
   return {
     authenticated: true,
     studyUnits: studyResult.data ?? [],
-    attempts: attemptsResult.data ?? []
+    attempts: attemptsResult.data ?? [],
+    openErrorQuestionIds: [...new Set((errorsResult.data ?? []).map((row) => row.question_id).filter(Boolean))]
   };
 }
 
@@ -114,9 +128,10 @@ async function alignHomeWithCycle() {
   const step = nextGuidedStep({
     catalog,
     applicability,
-    studyUnits: privateProgress.studyUnits
+    studyUnits: privateProgress.studyUnits,
+    openErrorQuestionIds: privateProgress.openErrorQuestionIds
   });
-  const signature = `${step.phase}:${step.unit?.id ?? 'none'}`;
+  const signature = `${step.phase}:${step.unit?.id ?? 'none'}:${step.pendingErrors ?? 0}`;
   if (hero.dataset.guidedCycle === signature) return;
   hero.dataset.guidedCycle = signature;
 
@@ -124,6 +139,20 @@ async function alignHomeWithCycle() {
   const primary = actions?.querySelector('a.primary-link');
   const questionLink = [...(actions?.querySelectorAll('a') ?? [])]
     .find((link) => link.getAttribute('href')?.includes('questoes.html'));
+
+  if (step.phase === 'correction' && step.unit) {
+    nextCopy.textContent = `${step.phaseLabel}: ${step.unit.title}. ${step.message}`;
+    if (primary) {
+      primary.href = `questoes.html?unit=${encodeURIComponent(step.unit.id)}&mode=errors`;
+      primary.textContent = 'Corrigir erros pendentes';
+    }
+    if (questionLink) {
+      questionLink.href = `estudar.html?unit=${encodeURIComponent(step.unit.id)}`;
+      questionLink.textContent = 'Rever teoria';
+      questionLink.hidden = false;
+    }
+    return;
+  }
 
   if (step.unit) {
     nextCopy.textContent = `Próximo passo do seu ciclo: ${step.unit.title}. ${step.message}`;
