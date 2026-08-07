@@ -42,6 +42,22 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Assemble cumulative catalog
         run: npm run assemble
+      - name: Generate deployment metadata
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const catalog = JSON.parse(await readFile('content/catalog.json', 'utf8'));
+          const metadata = {
+            schemaVersion: 1,
+            deployedAt: new Date().toISOString(),
+            commitSha: process.env.GITHUB_SHA,
+            runId: process.env.GITHUB_RUN_ID,
+            contentVersion: catalog.contentVersion,
+            lotId: catalog.publication?.lotId ?? null,
+            status: 'published'
+          };
+          await writeFile('content/deployment.json', `${JSON.stringify(metadata, null, 2)}\n`);
+          NODE
       - name: Assemble static site
         run: |
           mkdir -p _site
