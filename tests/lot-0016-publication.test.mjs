@@ -7,14 +7,14 @@ const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', imp
 function findById(collection, id) { return collection.find((item) => item.id === id); }
 const questionIds = ['Q000099','Q000100','Q000101','Q000102','Q000103','Q000104','Q000105'];
 
-test('LOT-0016 integra Fato típico ao catálogo cumulativo válido', () => {
+test('LOT-0016 permanece íntegro após a publicação cumulativa do LOT-0017', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 12);
-  assert.equal(catalog.publication.lotId, 'LOT-0016');
-  assert.equal(catalog.units.length, 12);
-  assert.equal(catalog.materials.length, 12);
-  assert.equal(catalog.questions.length, 77);
-  assert.equal(catalog.questionSets.length, 12);
+  assert.equal(catalog.contentVersion, 13);
+  assert.equal(catalog.publication.lotId, 'LOT-0017');
+  assert.equal(catalog.units.length, 13);
+  assert.equal(catalog.materials.length, 13);
+  assert.equal(catalog.questions.length, 84);
+  assert.equal(catalog.questionSets.length, 13);
 });
 
 test('taxonomia e fonte de Fato típico estão presentes e coerentes', () => {
