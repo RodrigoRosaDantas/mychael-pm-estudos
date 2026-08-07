@@ -31,7 +31,7 @@ test('camada de aplicabilidade preserva guardrails e não infere PMMG', () => {
     ['U001', 'U002', 'U003', 'U004', 'U005', 'U008', 'U009']
   );
 
-  for (const id of ['U006', 'U007', 'U013', 'U015', 'U016', 'U017']) {
+  for (const id of ['U006', 'U007', 'U013', 'U015', 'U016', 'U017', 'U018']) {
     const rule = applicability.unitApplicability.find((item) => item.unitId === id);
     assert.ok(rule, `regra ausente para ${id}`);
     assert.equal(rule.competitions.includes('PMMG'), false, `${id} não pode herdar PMMG automaticamente`);
