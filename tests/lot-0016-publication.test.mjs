@@ -5,9 +5,9 @@ import { validateCatalog } from '../scripts/content-rules.mjs';
 
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 function findById(collection, id) { return collection.find((item) => item.id === id); }
-const questionIds = ['Q000092','Q000093','Q000094','Q000095','Q000096','Q000097','Q000098'];
+const questionIds = ['Q000099','Q000100','Q000101','Q000102','Q000103','Q000104','Q000105'];
 
-test('LOT-0015 permanece íntegro após a publicação cumulativa do LOT-0016', () => {
+test('LOT-0016 integra Fato típico ao catálogo cumulativo válido', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(catalog.contentVersion, 12);
   assert.equal(catalog.publication.lotId, 'LOT-0016');
@@ -17,53 +17,51 @@ test('LOT-0015 permanece íntegro após a publicação cumulativa do LOT-0016', 
   assert.equal(catalog.questionSets.length, 12);
 });
 
-test('taxonomia e fonte de Direito Penal estão presentes e coerentes', () => {
-  const subject = findById(catalog.subjects, 'MAT-DPEN');
-  const topic = findById(catalog.topics, 'ASS-DPEN-003');
+test('taxonomia e fonte de Fato típico estão presentes e coerentes', () => {
+  const topic = findById(catalog.topics, 'ASS-DPEN-003-01');
   const source = findById(catalog.sources, 'FNT-0002');
-  assert.ok(subject);
-  assert.equal(subject.name, 'Direito Penal');
   assert.ok(topic);
   assert.equal(topic.subjectId, 'MAT-DPEN');
+  assert.equal(topic.parentId, 'ASS-DPEN-003');
   assert.ok(source);
   assert.equal(source.official, true);
   assert.equal(source.temporalStatus, 'Vigente');
 });
 
-test('U015 referencia fonte, matéria e componentes auditados', () => {
-  const unit = findById(catalog.units, 'U015');
+test('U016 referencia fonte, matéria e componentes auditados', () => {
+  const unit = findById(catalog.units, 'U016');
   assert.ok(unit);
   assert.equal(unit.subjectId, 'MAT-DPEN');
-  assert.deepEqual(unit.topicIds, ['ASS-DPEN-003']);
+  assert.deepEqual(unit.topicIds, ['ASS-DPEN-003-01']);
   assert.deepEqual(unit.sourceIds, ['FNT-0002']);
-  assert.deepEqual(unit.materialIds, ['M015']);
+  assert.deepEqual(unit.materialIds, ['M016']);
   assert.deepEqual(unit.questionIds, questionIds);
-  assert.deepEqual(unit.questionSetIds, ['QS015']);
+  assert.deepEqual(unit.questionSetIds, ['QS016']);
 });
 
-test('M015 mantém teoria separada das questões', () => {
-  const material = findById(catalog.materials, 'M015');
+test('M016 mantém teoria separada das questões', () => {
+  const material = findById(catalog.materials, 'M016');
   assert.ok(material);
-  assert.equal(material.unitId, 'U015');
+  assert.equal(material.unitId, 'U016');
   assert.equal(material.required, true);
   assert.equal('questionIds' in material, false);
   assert.equal('answer' in material, false);
   assert.equal('options' in material, false);
   const headings = material.blocks.filter(({ type }) => type === 'heading').map(({ text }) => text);
-  for (const term of ['fato típico','ilicitude','culpabilidade','sequência','Revisão']) {
+  for (const term of ['Conduta','Resultado','Nexo causal','Omissão','Tipicidade','Dolo e culpa','Revisão']) {
     assert.ok(headings.some((heading) => heading.toLowerCase().includes(term.toLowerCase())), term);
   }
 });
 
-test('sete questões da U015 mantêm gabaritos e integridade editorial', () => {
-  const expected = { Q000092:'B',Q000093:'C',Q000094:'A',Q000095:'D',Q000096:'E',Q000097:'B',Q000098:'C' };
+test('sete questões da U016 mantêm gabaritos e integridade editorial', () => {
+  const expected = { Q000099:'B',Q000100:'C',Q000101:'D',Q000102:'A',Q000103:'C',Q000104:'B',Q000105:'E' };
   for (const [id, answer] of Object.entries(expected)) {
     const question = findById(catalog.questions, id);
     assert.ok(question, id);
     assert.equal(question.answer, answer, id);
-    assert.equal(question.unitId, 'U015', id);
+    assert.equal(question.unitId, 'U016', id);
     assert.equal(question.subjectId, 'MAT-DPEN', id);
-    assert.deepEqual(question.topicIds, ['ASS-DPEN-003'], id);
+    assert.deepEqual(question.topicIds, ['ASS-DPEN-003-01'], id);
     assert.deepEqual(question.sourceIds, ['FNT-0002'], id);
     assert.equal(question.options.length, 5, id);
     assert.ok(question.options.some((option) => option.id === answer), id);
@@ -76,10 +74,10 @@ test('sete questões da U015 mantêm gabaritos e integridade editorial', () => {
   }
 });
 
-test('QS015 apenas referencia questões do Banco Mestre na ordem auditada', () => {
-  const set = findById(catalog.questionSets, 'QS015');
+test('QS016 apenas referencia questões do Banco Mestre na ordem auditada', () => {
+  const set = findById(catalog.questionSets, 'QS016');
   assert.ok(set);
-  assert.equal(set.unitId, 'U015');
+  assert.equal(set.unitId, 'U016');
   assert.equal(set.correctionMode, 'Por questão');
   assert.deepEqual(set.questionIds, questionIds);
   assert.equal('questions' in set, false);
