@@ -9,16 +9,16 @@ test('normaliza a URL pública sem perder o caminho do projeto', () => {
 });
 test('arquivos locais formam uma publicação íntegra e multi-concurso', () => {
   const result = validatePublicationFiles(expectedFiles);
-  assert.equal(result.contentVersion, 20);
+  assert.equal(result.contentVersion, 21);
   assert.equal(result.publicationStatus, 'published');
   assert.equal(result.pages, 12);
-  assert.equal(result.units, 20);
-  assert.equal(result.questions, 133);
-  assert.equal(result.coverage.unitCounts.PMDF, 20);
-  assert.equal(result.coverage.unitCounts.PMGO, 20);
-  assert.equal(result.coverage.unitCounts.PMMG, 14);
-  assert.equal(result.coverage.questionCounts.PMMG, 92);
-  assert.equal(result.coverage.commonUnits, 14);
+  assert.equal(result.units, 21);
+  assert.equal(result.questions, 140);
+  assert.equal(result.coverage.unitCounts.PMDF, 21);
+  assert.equal(result.coverage.unitCounts.PMGO, 21);
+  assert.equal(result.coverage.unitCounts.PMMG, 15);
+  assert.equal(result.coverage.questionCounts.PMMG, 99);
+  assert.equal(result.coverage.commonUnits, 15);
   assert.equal(result.coverage.pmmgTopicReviewPending, 0);
   assert.deepEqual(result.coverage.unclassifiedUnits, []);
 });
@@ -42,9 +42,9 @@ test('validação remota compara o deploy completo com o commit atual', async ()
   const result = await checkPublicDeployment('https://example.test/mychael-pm-estudos', { expectedFiles, fetchImpl, attempts: 1, delayMs: 0 });
   assert.equal(result.attempt, 1);
   assert.equal(result.pages, 12);
-  assert.equal(result.units, 20);
-  assert.equal(result.questions, 133);
-  assert.equal(result.coverage.questionCounts.PMMG, 92);
+  assert.equal(result.units, 21);
+  assert.equal(result.questions, 140);
+  assert.equal(result.coverage.questionCounts.PMMG, 99);
 });
 test('validação remota falha quando o site não responde', async () => {
   const fetchImpl = async () => new Response('indisponível', { status: 503 });
