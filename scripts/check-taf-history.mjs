@@ -59,5 +59,8 @@ if (!moduleSource.includes('./content/taf-pmmg-historical.json')) {
 if (!moduleSource.includes('Não são índices vigentes') || !moduleSource.includes('cópia integral secundária auditada')) {
   throw new Error('TAF PMMG: alertas de vigência e origem da fonte ausentes.');
 }
+if (!moduleSource.includes("className: 'taf-reference-item'") || moduleSource.includes("className: 'taf-history-item'")) {
+  throw new Error('TAF PMMG: referência pública deve usar seletor separado do histórico privado de treinos.');
+}
 
-console.log('TAF PMMG histórico válido: 7 registros, fonte secundária sinalizada e zero autoaplicação futura.');
+console.log('TAF PMMG histórico válido: 7 registros, fonte secundária sinalizada, seletor isolado e zero autoaplicação futura.');
