@@ -9,14 +9,12 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000246','Q000247','Q000248','Q000249','Q000250','Q000251','Q000252'];
 const answers = ['B','D','A','C','E','B','A'];
 
-test('catálogo v34 integra LOT-0037 sem quebrar validação global', () => {
+test('LOT-0037 permanece íntegro no catálogo cumulativo posterior', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 34);
-  assert.equal(catalog.publication.lotId, 'LOT-0037');
-  assert.equal(catalog.units.length, 34);
-  assert.equal(catalog.materials.length, 34);
-  assert.equal(catalog.questions.length, 231);
-  assert.equal(catalog.questionSets.length, 34);
+  assert.ok(find(catalog.units, 'U037'));
+  assert.ok(find(catalog.materials, 'M037'));
+  assert.ok(find(catalog.questionSets, 'QS037'));
+  ids.forEach((id) => assert.ok(find(catalog.questions, id), id));
 });
 
 test('U037 preserva RIDE vigente, especificidade PMDF e rotação ainda desativada', () => {
