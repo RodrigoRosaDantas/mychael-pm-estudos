@@ -12,12 +12,12 @@ const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
 
 test('monitoramento consolida contagem física e vínculos por concurso', () => {
   const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 27);
-  assert.equal(summary.catalogLotId, 'LOT-0031');
-  assert.equal(summary.physicalUnits, 27);
-  assert.equal(summary.physicalQuestions, 182);
-  assert.deepEqual(summary.unitCounts, { PMDF: 27, PMGO: 25, PMMG: 21 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 182, PMGO: 168, PMMG: 141 });
+  assert.equal(summary.catalogContentVersion, 28);
+  assert.equal(summary.catalogLotId, 'LOT-0032');
+  assert.equal(summary.physicalUnits, 28);
+  assert.equal(summary.physicalQuestions, 189);
+  assert.deepEqual(summary.unitCounts, { PMDF: 28, PMGO: 25, PMMG: 22 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 189, PMGO: 168, PMMG: 148 });
   assert.equal(summary.commonUnits, 19);
   assert.equal(summary.commonQuestions, 127);
   assert.equal(summary.pmmgTopicReviewPending, 0);
