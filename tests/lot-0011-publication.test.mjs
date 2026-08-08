@@ -8,14 +8,12 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000064','Q000065','Q000066','Q000067','Q000068','Q000069','Q000070'];
 const answers = ['B','D','A','C','E','B','D'];
 
-test('catálogo v31 integra LOT-0011 sem quebrar validação global', () => {
+test('LOT-0011 permanece íntegro no catálogo cumulativo posterior', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 31);
-  assert.equal(catalog.publication.lotId, 'LOT-0011');
-  assert.equal(catalog.units.length, 31);
-  assert.equal(catalog.materials.length, 31);
-  assert.equal(catalog.questions.length, 210);
-  assert.equal(catalog.questionSets.length, 31);
+  assert.ok(find(catalog.units, 'U010'));
+  assert.ok(find(catalog.materials, 'M010'));
+  assert.ok(find(catalog.questionSets, 'QS010'));
+  ids.forEach((id) => assert.ok(find(catalog.questions, id), id));
 });
 
 test('U010 preserva princípios administrativos, teoria separada e sete questões auditadas', () => {
