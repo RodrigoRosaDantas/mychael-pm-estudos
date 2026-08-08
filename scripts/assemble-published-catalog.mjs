@@ -28,7 +28,8 @@ const fragmentUrls = [
   new URL('content/lots/lot-0024.json', root),
   new URL('content/lots/lot-0026.json', root),
   new URL('content/lots/lot-0027.json', root),
-  new URL('content/lots/lot-0028.json', root)
+  new URL('content/lots/lot-0028.json', root),
+  new URL('content/lots/lot-0029.json', root)
 ];
 const collections = ['subjects', 'topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
 
@@ -56,13 +57,13 @@ export function assembleCatalog(baseCatalog, fragments) {
       ...additions
     ];
   }
-  catalog.contentVersion = 23;
-  catalog.generatedAt = '2026-08-07T23:20:00Z';
+  catalog.contentVersion = 24;
+  catalog.generatedAt = '2026-08-07T22:56:00Z';
   catalog.publicationStatus = 'published';
   catalog.publication = {
     authorized: true,
     authorizedAt: '2026-08-07',
-    lotId: 'LOT-0028',
+    lotId: 'LOT-0029',
     lotVersion: 1,
     source: 'Notion privado'
   };
