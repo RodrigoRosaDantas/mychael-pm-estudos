@@ -8,14 +8,12 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000218','Q000219','Q000220','Q000221','Q000222','Q000223','Q000224'];
 const answers = ['C','A','D','B','E','C','A'];
 
-test('catálogo v29 integra LOT-0033 sem quebrar validação global', () => {
+test('LOT-0033 permanece íntegro no catálogo cumulativo posterior', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 29);
-  assert.equal(catalog.publication.lotId, 'LOT-0033');
-  assert.equal(catalog.units.length, 29);
-  assert.equal(catalog.materials.length, 29);
-  assert.equal(catalog.questions.length, 196);
-  assert.equal(catalog.questionSets.length, 29);
+  assert.ok(find(catalog.units, 'U033'));
+  assert.ok(find(catalog.materials, 'M033'));
+  assert.ok(find(catalog.questionSets, 'QS033'));
+  for (const id of ids) assert.ok(find(catalog.questions, id), id);
 });
 
 test('U033 preserva taxonomia compartilhada, teoria separada e sete microtextos autorais', () => {
