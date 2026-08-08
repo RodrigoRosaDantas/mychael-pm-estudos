@@ -8,14 +8,12 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000190','Q000191','Q000192','Q000193','Q000194','Q000195','Q000196'];
 const answers = ['B','D','A','C','E','B','D'];
 
-test('catálogo v24 integra LOT-0029 sem quebrar validação global', () => {
+test('LOT-0029 permanece íntegro no catálogo cumulativo posterior', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 24);
-  assert.equal(catalog.publication.lotId, 'LOT-0029');
-  assert.equal(catalog.units.length, 24);
-  assert.equal(catalog.materials.length, 24);
-  assert.equal(catalog.questions.length, 161);
-  assert.equal(catalog.questionSets.length, 24);
+  assert.ok(find(catalog.units, 'U029'));
+  assert.ok(find(catalog.materials, 'M029'));
+  assert.ok(find(catalog.questionSets, 'QS029'));
+  for (const id of ids) assert.ok(find(catalog.questions, id), id);
 });
 
 test('U029 preserva taxonomia constitucional, teoria separada e sete questões auditadas', () => {
