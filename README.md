@@ -13,7 +13,7 @@ A integração curricular da PMMG faz parte oficialmente da governança do proje
 - O GitHub Pages é a interface usada pelo estudante.
 - Respostas, tentativas, erros, revisões, desempenho e registros pessoais de treino permanecem no Supabase, com autenticação individual e RLS.
 - Redação está modelada, mas desativada no MVP.
-- TAF integra o MVP com acompanhamento privado de treinos, sem apresentar índice oficial vigente enquanto não houver exportação editorial validada. O banco editorial de TAF está estruturalmente preparado para PMGO, PMDF e PMMG; nenhum índice ou regra PMMG é criado sem fonte adequada.
+- TAF integra o MVP com acompanhamento privado de treinos e referências históricas claramente separadas de índices vigentes. A publicação histórica PMMG usa fonte secundária auditada, é marcada como histórica e não é autoaplicável a futuro edital.
 - Nenhum serviço pago faz parte da implementação atual.
 
 ## Princípio pedagógico
@@ -96,6 +96,22 @@ Na camada atual de aplicabilidade:
 
 Essas contagens representam o acervo físico publicado e seus vínculos de aplicabilidade. Não significam percentual do edital completo nem quantidade de questões produzidas especificamente para cada corporação.
 
+## TAF histórico PMMG
+
+O `LOT-0040` publica, separadamente do catálogo pedagógico, sete referências históricas de AFM/TCF do CFSd QP-PM/2025:
+
+- regra geral histórica da AFM/TCF;
+- abdominal remador;
+- barra dinâmica masculina;
+- barra isométrica feminina;
+- corrida de 2.400 metros masculina;
+- corrida de 2.400 metros feminina;
+- pista de aptidão física policial militar (PAFPM).
+
+O artefato `content/taf-pmmg-historical.json` declara explicitamente `temporalStatus: Histórico`, `currentIndexAvailable: false` e `autoApplicableNextEdital: false`. A fonte integral usada para os índices é a FNT-0025, cópia secundária auditada do Edital DRH/CRS nº 10/2024, e permanece rotulada como não oficial. O módulo público apresenta essas referências separadamente do histórico privado de treinos no Supabase.
+
+O gate `npm run taf:check` bloqueia regressões de vigência, autoaplicação futura, proveniência, IDs ou mistura entre os seletores de referência pública e histórico privado.
+
 ## Sincronização e monitoramento
 
 Durante o build do GitHub Pages é gerado `content/deployment.json` contendo:
@@ -115,7 +131,7 @@ O CI executa um gate de cobertura: unidade publicada sem regra explícita de apl
 npm run check
 ```
 
-A suíte monta e valida o catálogo cumulativo, confere relações editoriais, cobertura PMDF/PMGO/PMMG, estrutura multipágina, segurança do Supabase, experiência progressiva e testes unitários/estáticos.
+A suíte monta e valida o catálogo cumulativo, confere relações editoriais, cobertura PMDF/PMGO/PMMG, estrutura multipágina, segurança do Supabase, referências históricas de TAF, experiência progressiva e testes unitários/estáticos.
 
 Os testes de navegador usam Chromium real com perfis de computador e celular:
 
@@ -135,4 +151,5 @@ npm run manifest
 npm run coverage:check
 npm run deployment:check -- https://rodrigorosadantas.github.io/mychael-pm-estudos/
 npm run supabase:check
+npm run taf:check
 ```
