@@ -12,17 +12,28 @@ const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
 
 test('monitoramento consolida contagem física e vínculos por concurso', () => {
   const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 33);
-  assert.equal(summary.catalogLotId, 'LOT-0036');
-  assert.equal(summary.physicalUnits, 33);
-  assert.equal(summary.physicalQuestions, 224);
-  assert.deepEqual(summary.unitCounts, { PMDF: 33, PMGO: 29, PMMG: 23 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 224, PMGO: 196, PMMG: 155 });
+  assert.equal(summary.catalogContentVersion, 34);
+  assert.equal(summary.catalogLotId, 'LOT-0037');
+  assert.equal(summary.physicalUnits, 34);
+  assert.equal(summary.physicalQuestions, 231);
+  assert.deepEqual(summary.unitCounts, { PMDF: 34, PMGO: 29, PMMG: 23 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 231, PMGO: 196, PMMG: 155 });
   assert.equal(summary.commonUnits, 19);
   assert.equal(summary.commonQuestions, 127);
   assert.equal(summary.pmmgTopicReviewPending, 0);
   assert.equal(summary.specificRotationEnabled, false);
   assert.deepEqual(summary.unclassifiedUnits, []);
+});
+
+test('primeira unidade específica PMDF não ativa rotação antes de PMGO e PMMG', () => {
+  const rule = applicability.unitApplicability.find((item) => item.unitId === 'U037');
+  assert.ok(rule);
+  assert.equal(rule.classification, 'specific-rotation');
+  assert.deepEqual(rule.competitions, ['PMDF']);
+  assert.equal(rule.status, 'verified');
+  assert.deepEqual(rule.evidenceIds, ['FNT-0015']);
+  assert.equal(applicability.specificRotation.enabled, false);
+  assert.equal(buildCoverageSummary(catalog, applicability).specificRotationEnabled, false);
 });
 
 test('publicação é bloqueada quando surge unidade sem aplicabilidade explícita', () => {
