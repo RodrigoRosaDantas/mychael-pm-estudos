@@ -13,7 +13,7 @@ A integração curricular da PMMG faz parte oficialmente da governança do proje
 - O GitHub Pages é a interface usada pelo estudante.
 - Respostas, tentativas, erros, revisões, desempenho e registros pessoais de treino permanecem no Supabase, com autenticação individual e RLS.
 - Redação está modelada, mas desativada no MVP.
-- TAF integra o MVP com acompanhamento privado de treinos, sem apresentar índice oficial vigente enquanto não houver exportação editorial validada.
+- TAF integra o MVP com acompanhamento privado de treinos, sem apresentar índice oficial vigente enquanto não houver exportação editorial validada. O banco editorial de TAF está estruturalmente preparado para PMGO, PMDF e PMMG; nenhum índice ou regra PMMG é criado sem fonte adequada.
 - Nenhum serviço pago faz parte da implementação atual.
 
 ## Princípio pedagógico
@@ -43,7 +43,7 @@ A classificação editorial utiliza quatro estados:
 
 Uma matéria comum não torna automaticamente todos os seus assuntos comuns. A classificação deve ocorrer no menor nível necessário. Questões herdam a aplicabilidade da unidade e não são duplicadas por concurso.
 
-A rotação específica definitiva permanece desativada enquanto não existir cobertura editorial mínima e validada dos três concursos.
+A primeira cobertura específica de PMDF, PMGO e PMMG já foi publicada. A rotação específica definitiva permanece desativada até a calibração e decisão previstas no O7.
 
 ## Experiência do estudante
 
@@ -78,20 +78,21 @@ A camada de experiência inclui:
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado está na versão 20 com o `LOT-0024`:
+O catálogo cumulativo publicado está na versão 36 com o `LOT-0039`:
 
-- 20 unidades;
-- 20 materiais;
-- 133 questões;
-- 20 conjuntos de questões.
+- 36 unidades;
+- 36 materiais;
+- 245 questões;
+- 36 conjuntos de questões.
 
 Na camada atual de aplicabilidade:
 
-- PMDF: 20 unidades / 133 questões aplicáveis;
-- PMGO: 20 unidades / 133 questões aplicáveis;
-- PMMG: 14 unidades / 92 questões aplicáveis;
-- núcleo comum aos três: 14 unidades / 92 questões;
-- U006 (Semântica) e U013 (remédios constitucionais) foram revalidadas para PMMG em 07/08/2026 com evidência temática explícita do programa de referência.
+- PMDF: 34 unidades / 231 questões aplicáveis;
+- PMGO: 30 unidades / 203 questões aplicáveis;
+- PMMG: 24 unidades / 162 questões aplicáveis;
+- núcleo comum aos três: 19 unidades / 127 questões;
+- U039 — Noções de Direito PMMG — LINDB é a primeira unidade de cobertura específica PMMG publicada;
+- U006 (Semântica) e U013 (remédios constitucionais) permanecem revalidadas para PMMG com evidência temática explícita do programa de referência.
 
 Essas contagens representam o acervo físico publicado e seus vínculos de aplicabilidade. Não significam percentual do edital completo nem quantidade de questões produzidas especificamente para cada corporação.
 
