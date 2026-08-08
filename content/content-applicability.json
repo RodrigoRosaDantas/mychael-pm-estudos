@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-08-07",
+  "reviewedAt": "2026-08-08",
   "purpose": "Camada de aplicabilidade por unidade para orientar o ciclo multi-concurso sem alterar, duplicar ou reclassificar automaticamente o Banco Mestre editorial.",
   "guardrails": {
     "separateFromEditorialCatalog": true,
@@ -47,6 +47,7 @@
     {"unitId":"U027","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Regência verbal e nominal integra o núcleo de Língua Portuguesa verificado para os três concursos. O recorte introdutório prepara a compreensão de crase sem antecipar casos avançados."},
     {"unitId":"U028","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-PORT-CORE"],"note":"Crase integra o núcleo de Língua Portuguesa verificado para os três concursos. U028 limita-se aos fundamentos inequívocos e depende pedagogicamente da regência estudada em U027."},
     {"unitId":"U029","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-CONST-STATE"],"note":"Organização do Estado e Administração Pública em perspectiva constitucional integram a sobreposição temática verificada para os três concursos. U029 restringe-se aos arts. 18 e 37 caput e não duplica as unidades administrativas U010/U011."},
-    {"unitId":"U030","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-CONST-SEC"],"note":"Segurança Pública em perspectiva constitucional integra a sobreposição temática verificada para os três concursos. U030 restringe-se ao art. 144 e não transforma legislação institucional específica das corporações em conteúdo comum."}
+    {"unitId":"U030","classification":"common-3","competitions":["PMDF","PMGO","PMMG"],"status":"verified","evidenceIds":["TOP-CONST-SEC"],"note":"Segurança Pública em perspectiva constitucional integra a sobreposição temática verificada para os três concursos. U030 restringe-se ao art. 144 e não transforma legislação institucional específica das corporações em conteúdo comum."},
+    {"unitId":"U031","classification":"shared-2","competitions":["PMDF","PMMG"],"status":"verified","evidenceIds":["FNT-0031"],"note":"A Convenção Americana sobre Direitos Humanos integra o compartilhamento verificado entre PMDF e PMMG na matriz vigente. U031 limita-se à literalidade introdutória da CADH com fonte oficial FNT-0031 e não presume incidência para PMGO nem antecipa o procedimento completo do Sistema Interamericano."}
   ]
 }
