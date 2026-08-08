@@ -11,10 +11,11 @@
     "deployment:check": "node scripts/check-public-deployment.mjs",
     "coverage:check": "node scripts/check-competition-coverage.mjs",
     "supabase:check": "node scripts/check-supabase.mjs",
+    "taf:check": "node scripts/check-taf-history.mjs",
     "test": "node --test",
     "test:e2e": "playwright test",
     "static": "node scripts/check-static.mjs",
-    "check": "npm run validate && npm run coverage:check && npm run static && npm run supabase:check && npm test"
+    "check": "npm run validate && npm run coverage:check && npm run static && npm run supabase:check && npm run taf:check && npm test"
   },
   "engines": {
     "node": ">=22"
