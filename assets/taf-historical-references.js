@@ -34,7 +34,7 @@ async function loadReferences() {
 }
 
 function referenceCard(record) {
-  const row = el('article', { className: 'taf-history-item' });
+  const row = el('article', { className: 'taf-reference-item' });
   const copy = el('div');
   copy.append(
     el('p', { className: 'eyebrow', text: `${record.sex} · ${record.test}` }),
