@@ -78,20 +78,22 @@ A camada de experiência inclui:
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado está na versão 36 com o `LOT-0039`:
+O catálogo cumulativo publicado está na versão 37 com o `LOT-0041`:
 
-- 36 unidades;
-- 36 materiais;
-- 245 questões;
-- 36 conjuntos de questões.
+- 37 unidades;
+- 37 materiais;
+- 252 questões;
+- 37 conjuntos de questões.
 
 Na camada atual de aplicabilidade:
 
 - PMDF: 34 unidades / 231 questões aplicáveis;
 - PMGO: 30 unidades / 203 questões aplicáveis;
-- PMMG: 24 unidades / 162 questões aplicáveis;
+- PMMG: 25 unidades / 169 questões aplicáveis;
 - núcleo comum aos três: 19 unidades / 127 questões;
-- U039 — Noções de Direito PMMG — LINDB é a primeira unidade de cobertura específica PMMG publicada;
+- U039 — Noções de Direito PMMG — LINDB permanece a primeira unidade de cobertura específica PMMG publicada;
+- U040 — Literatura PMMG — Campo Geral e Vidas Secas acrescenta a primeira cobertura pedagógica publicada da disciplina específica de Literatura;
+- a incidência histórica da prova aplicada em 20/10/2024 é usada como evidência de cobrança, sem ser convertida em peso definitivo de futuro edital;
 - U006 (Semântica) e U013 (remédios constitucionais) permanecem revalidadas para PMMG com evidência temática explícita do programa de referência.
 
 Essas contagens representam o acervo físico publicado e seus vínculos de aplicabilidade. Não significam percentual do edital completo nem quantidade de questões produzidas especificamente para cada corporação.
