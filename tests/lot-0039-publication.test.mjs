@@ -4,19 +4,22 @@ import { readFile } from 'node:fs/promises';
 import { validateCatalog } from '../scripts/content-rules.mjs';
 
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
+const lot0039 = JSON.parse(await readFile(new URL('../content/lots/lot-0039.json', import.meta.url), 'utf8'));
 const applicability = JSON.parse(await readFile(new URL('../content/content-applicability.json', import.meta.url), 'utf8'));
 const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000260','Q000261','Q000262','Q000263','Q000264','Q000265','Q000266'];
 const answers = ['C','A','D','B','E','C','A'];
 
-test('catálogo v36 integra LOT-0039 sem quebrar validação global', () => {
+test('LOT-0039 permanece íntegro após a evolução do catálogo para v37', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 36);
-  assert.equal(catalog.publication.lotId, 'LOT-0039');
-  assert.equal(catalog.units.length, 36);
-  assert.equal(catalog.materials.length, 36);
-  assert.equal(catalog.questions.length, 245);
-  assert.equal(catalog.questionSets.length, 36);
+  assert.equal(lot0039.contentVersion, 36);
+  assert.equal(lot0039.lotId, 'LOT-0039');
+  assert.equal(catalog.contentVersion, 37);
+  assert.equal(catalog.publication.lotId, 'LOT-0041');
+  assert.equal(catalog.units.length, 37);
+  assert.equal(catalog.materials.length, 37);
+  assert.equal(catalog.questions.length, 252);
+  assert.equal(catalog.questionSets.length, 37);
 });
 
 test('U039 preserva LINDB específica PMMG e rotação definitiva desativada', () => {
