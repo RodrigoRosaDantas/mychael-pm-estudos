@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "scope": "PMMG",
+  "competition": "CFSd QP-PM/2025 — Edital DRH/CRS nº 10/2024",
+  "temporalStatus": "Histórico",
+  "currentIndexAvailable": false,
+  "autoApplicableNextEdital": false,
+  "source": {
+    "id": "FNT-0025",
+    "label": "Edital DRH/CRS nº 10/2024 — cópia integral secundária auditada",
+    "official": false,
+    "note": "Referência histórica. Não usar como índice vigente nem como regra automática para futuro edital."
+  },
+  "records": [
+    {
+      "id": "TAF-R003",
+      "kind": "rule",
+      "test": "Regra geral da AFM/TCF",
+      "sex": "Ambos",
+      "criterion": "TCF eliminatório e classificatório, com exigência histórica mínima de 60% em cada modalidade. Índices mínimos: 12 pontos em abdominal, barra e corrida de 2.400 m; 6 pontos na PAFPM.",
+      "scale": "Abdominal remador: até 20 pontos; barra: até 20; corrida de 2.400 m: até 20; PAFPM: até 10; total máximo histórico: 70 pontos. A avaliação médica/controle fisiológico deveria resultar APTO antes do TCF.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    },
+    {
+      "id": "TAF-PMMG-A01",
+      "kind": "index",
+      "test": "Abdominal remador",
+      "sex": "Ambos",
+      "criterion": "Mínimo histórico: 15 repetições em 30 segundos = 12 pontos.",
+      "scale": "20 pts=30 rep.; 19=28–29; 18=26–27; 17=24–25; 16=22–23; 15=20–21; 14=18–19; 13=16–17; 12=15 repetições.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    },
+    {
+      "id": "TAF-PMMG-M01",
+      "kind": "index",
+      "test": "Barra dinâmica",
+      "sex": "Masculino",
+      "criterion": "Mínimo histórico: 2 repetições = 12 pontos.",
+      "scale": "20 pts=10 rep.; 19=9; 18=8; 17=7; 16=6; 15=5; 14=4; 13=3; 12=2 repetições.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    },
+    {
+      "id": "TAF-PMMG-F01",
+      "kind": "index",
+      "test": "Barra isométrica",
+      "sex": "Feminino",
+      "criterion": "Mínimo histórico: de 6,00 a 9,99 segundos = 12 pontos.",
+      "scale": "20 pts=38,00 s ou mais; 19=34,00–37,99; 18=30,00–33,99; 17=26,00–29,99; 16=22,00–25,99; 15=18,00–21,99; 14=14,00–17,99; 13=10,00–13,99; 12=6,00–9,99 segundos.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    },
+    {
+      "id": "TAF-PMMG-M02",
+      "kind": "index",
+      "test": "Corrida de 2.400 metros",
+      "sex": "Masculino",
+      "criterion": "Mínimo histórico: concluir 2.400 m em até 13min00s = 12 pontos.",
+      "scale": "20 pts=até 9:00; 19=9:01–9:30; 18=9:31–10:00; 17=10:01–10:30; 16=10:31–11:00; 15=11:01–11:30; 14=11:31–12:00; 13=12:01–12:30; 12=12:31–13:00.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    },
+    {
+      "id": "TAF-PMMG-F02",
+      "kind": "index",
+      "test": "Corrida de 2.400 metros",
+      "sex": "Feminino",
+      "criterion": "Mínimo histórico: concluir 2.400 m em até 15min00s = 12 pontos.",
+      "scale": "20 pts=até 11:00; 19=11:01–11:30; 18=11:31–12:00; 17=12:01–12:30; 16=12:31–13:00; 15=13:01–13:30; 14=13:31–14:00; 13=14:01–14:30; 12=14:31–15:00.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    },
+    {
+      "id": "TAF-PMMG-A02",
+      "kind": "index",
+      "test": "Pista de aptidão física policial militar (PAFPM)",
+      "sex": "Ambos",
+      "criterion": "Mínimo histórico: concluir em até 2min45s = 6 pontos.",
+      "scale": "10 pts=2:33; 9=2:36; 8=2:39; 7=2:42; 6=2:45.",
+      "temporalStatus": "Histórico",
+      "current": false,
+      "autoApplicableNextEdital": false,
+      "sourceIds": ["FNT-0025"]
+    }
+  ]
+}
