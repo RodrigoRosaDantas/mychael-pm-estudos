@@ -10,16 +10,16 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000260','Q000261','Q000262','Q000263','Q000264','Q000265','Q000266'];
 const answers = ['C','A','D','B','E','C','A'];
 
-test('LOT-0039 permanece íntegro após a evolução do catálogo para v37', () => {
+test('LOT-0039 permanece íntegro após a evolução do catálogo para v38', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(lot0039.contentVersion, 36);
   assert.equal(lot0039.lotId, 'LOT-0039');
-  assert.equal(catalog.contentVersion, 37);
-  assert.equal(catalog.publication.lotId, 'LOT-0041');
-  assert.equal(catalog.units.length, 37);
-  assert.equal(catalog.materials.length, 37);
-  assert.equal(catalog.questions.length, 252);
-  assert.equal(catalog.questionSets.length, 37);
+  assert.equal(catalog.contentVersion, 38);
+  assert.equal(catalog.publication.lotId, 'LOT-0042');
+  assert.equal(catalog.units.length, 38);
+  assert.equal(catalog.materials.length, 38);
+  assert.equal(catalog.questions.length, 259);
+  assert.equal(catalog.questionSets.length, 38);
 });
 
 test('U039 preserva LINDB específica PMMG e rotação definitiva desativada', () => {
