@@ -8,14 +8,12 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000232','Q000233','Q000234','Q000235','Q000236','Q000237','Q000238'];
 const answers = ['C','A','D','B','E','C','A'];
 
-test('catálogo v32 integra LOT-0035 sem quebrar validação global', () => {
+test('LOT-0035 permanece íntegro no catálogo cumulativo posterior', () => {
   assert.deepEqual(validateCatalog(catalog), []);
-  assert.equal(catalog.contentVersion, 32);
-  assert.equal(catalog.publication.lotId, 'LOT-0035');
-  assert.equal(catalog.units.length, 32);
-  assert.equal(catalog.materials.length, 32);
-  assert.equal(catalog.questions.length, 217);
-  assert.equal(catalog.questionSets.length, 32);
+  assert.ok(find(catalog.units, 'U035'));
+  assert.ok(find(catalog.materials, 'M035'));
+  assert.ok(find(catalog.questionSets, 'QS035'));
+  ids.forEach((id) => assert.ok(find(catalog.questions, id), id));
 });
 
 test('U035 preserva CPPM vigente, teoria separada e sete questões auditadas', () => {
