@@ -12,17 +12,27 @@ const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
 
 test('monitoramento consolida contagem física e vínculos por concurso', () => {
   const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 38);
+  assert.equal(summary.catalogContentVersion, 41);
   assert.equal(summary.catalogLotId, 'LOT-0042');
-  assert.equal(summary.physicalUnits, 38);
-  assert.equal(summary.physicalQuestions, 259);
-  assert.deepEqual(summary.unitCounts, { PMDF: 34, PMGO: 30, PMMG: 26 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 231, PMGO: 203, PMMG: 176 });
+  assert.equal(summary.physicalUnits, 41);
+  assert.equal(summary.physicalQuestions, 280);
+  assert.deepEqual(summary.unitCounts, { PMDF: 37, PMGO: 33, PMMG: 26 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 252, PMGO: 224, PMMG: 176 });
   assert.equal(summary.commonUnits, 19);
   assert.equal(summary.commonQuestions, 127);
   assert.equal(summary.pmmgTopicReviewPending, 0);
   assert.equal(summary.specificRotationEnabled, false);
   assert.deepEqual(summary.unclassifiedUnits, []);
+});
+
+test('lotes históricos recuperados têm aplicabilidade explícita PMDF + PMGO', () => {
+  for (const unitId of ['U011','U012','U014']) {
+    const rule = applicability.unitApplicability.find((item) => item.unitId === unitId);
+    assert.ok(rule, `${unitId} sem aplicabilidade`);
+    assert.equal(rule.classification, 'shared-2');
+    assert.deepEqual(rule.competitions, ['PMDF','PMGO']);
+    assert.equal(rule.status, 'verified-not-pmmg');
+  }
 });
 
 test('primeiras específicas PMDF, PMGO e PMMG permanecem com rotação definitiva desativada até O7', () => {
