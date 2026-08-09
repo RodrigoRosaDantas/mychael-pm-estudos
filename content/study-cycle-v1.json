@@ -1,0 +1,72 @@
+{
+  "id": "STUDY-CYCLE-V1",
+  "version": 1,
+  "status": "active",
+  "mode": "adaptation",
+  "label": "Adaptação inicial",
+  "subjectsPerSession": 1,
+  "sessionsPerCycle": 6,
+  "totalCycles": 4,
+  "totalSessions": 24,
+  "sundayRest": true,
+  "checkpointAfterSession": 24,
+  "sourceCatalogVersion": 41,
+  "sourceCommit": "a2d30aca7b109e54a499e2f3fdf4819afda6d23f",
+  "specificRotationIncluded": false,
+  "rules": {
+    "resumeInterruptedUnit": true,
+    "openErrorsBeforeNewContent": true,
+    "dueReviewsBeforeNewContent": true,
+    "futurePublicationsOnlyInFutureCycles": true
+  },
+  "cycles": [
+    {
+      "id": "C1",
+      "number": 1,
+      "sessions": [
+        {"number": 1, "unitId": "U001"},
+        {"number": 2, "unitId": "U007"},
+        {"number": 3, "unitId": "U002"},
+        {"number": 4, "unitId": "U003"},
+        {"number": 5, "unitId": "U008"},
+        {"number": 6, "unitId": "U004"}
+      ]
+    },
+    {
+      "id": "C2",
+      "number": 2,
+      "sessions": [
+        {"number": 7, "unitId": "U005"},
+        {"number": 8, "unitId": "U009"},
+        {"number": 9, "unitId": "U006"},
+        {"number": 10, "unitId": "U020"},
+        {"number": 11, "unitId": "U013"},
+        {"number": 12, "unitId": "U021"}
+      ]
+    },
+    {
+      "id": "C3",
+      "number": 3,
+      "sessions": [
+        {"number": 13, "unitId": "U022"},
+        {"number": 14, "unitId": "U029"},
+        {"number": 15, "unitId": "U023"},
+        {"number": 16, "unitId": "U024"},
+        {"number": 17, "unitId": "U026"},
+        {"number": 18, "unitId": "U030"}
+      ]
+    },
+    {
+      "id": "C4",
+      "number": 4,
+      "sessions": [
+        {"number": 19, "unitId": "U027"},
+        {"number": 20, "unitId": "U028"},
+        {"number": 21, "unitId": "U010"},
+        {"number": 22, "unitId": "U012"},
+        {"number": 23, "unitId": "U011"},
+        {"number": 24, "unitId": "U014"}
+      ]
+    }
+  ]
+}
