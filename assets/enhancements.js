@@ -3,6 +3,7 @@ const STORAGE_PREFIX = 'mychael-pm:';
 const THEME_KEY = `${STORAGE_PREFIX}theme`;
 const READER_KEY = `${STORAGE_PREFIX}reader`;
 const SEARCH_LIMIT = 10;
+const BRASILIA_TIME_ZONE = 'America/Sao_Paulo';
 
 const NAV_GROUPS = [
   ['Estudar', [
@@ -124,7 +125,8 @@ function formatDateTime(value) {
   if (Number.isNaN(date.getTime())) return 'não informada';
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'short',
-    timeStyle: 'short'
+    timeStyle: 'short',
+    timeZone: BRASILIA_TIME_ZONE
   }).format(date);
 }
 
@@ -135,7 +137,8 @@ function formatLongClock(date = new Date()) {
     month: 'long',
     year: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    timeZone: BRASILIA_TIME_ZONE
   }).format(date);
 }
 
@@ -368,7 +371,7 @@ function enhanceHome() {
       <div class="path-steps">
         <article><span>1</span><div><strong>Base comum</strong><p>Português e demais disciplinas compartilhadas entram primeiro, sempre com teoria + questões + revisão.</p></div></article>
         <article><span>2</span><div><strong>Consolidação</strong><p>Erros e revisões determinam o ritmo. O ciclo não avança só porque mudou o dia da semana.</p></div></article>
-        <article><span>3</span><div><strong>Específicas em rotação</strong><p>Quando a base estiver madura: PMDF → PMGO → PMMG, retornando ao início da rotação.</p></div></article>
+        <article><span>3</span><div><strong>Específicas aguardam calibração</strong><p>A rotação PMDF → PMGO → PMMG só será ativada após a decisão de pesos e equilíbrio prevista no O7.</p></div></article>
       </div>`;
     hero.after(card);
   }
@@ -619,15 +622,15 @@ async function renderSchedule() {
   const hero = make('section', 'cycle-hero');
   hero.innerHTML = `
     <p class="status-pill">Estrutura definida · distribuição final em preparação</p>
-    <h2>Primeiro o que é comum. Depois, específicas em rotação.</h2>
-    <p>O ciclo definitivo será fechado quando o mapa curricular e o acervo de teoria + questões estiverem suficientemente completos para definir pesos sem adivinhação. A estrutura, porém, já pode existir agora e orientar o iniciante desde o primeiro conteúdo.</p>`;
+    <h2>Primeiro o que é comum. Específicas só depois da calibração.</h2>
+    <p>A matriz já está estruturada, mas a rotação específica permanece desativada. Ela só será ativada no O7, quando cobertura, desempenho e pesos permitirem uma decisão sem adivinhação.</p>`;
   wrap.append(hero);
 
   const phases = make('section', 'cycle-grid');
   phases.innerHTML = `
     <article class="cycle-card active"><span class="cycle-number">1</span><div><p class="eyebrow">Fase inicial</p><h3>Base comum</h3><p>Priorizar disciplinas compartilhadas. Cada item segue teoria → questões → revisão. O aluno só aumenta a complexidade depois de construir compreensão mínima.</p></div></article>
     <article class="cycle-card"><span class="cycle-number">2</span><div><p class="eyebrow">Consolidação</p><h3>Erros comandam a revisão</h3><p>Caderno de erros e revisões entram no próprio ciclo. Não há “segunda-feira de Português”: há o próximo item ainda não concluído.</p></div></article>
-    <article class="cycle-card"><span class="cycle-number">3</span><div><p class="eyebrow">Depois da base</p><h3>Específicas em rotação</h3><p>PMDF → PMGO → PMMG → repetir. A rotação impede abandonar uma corporação e mantém o projeto focado nos três concursos definidos.</p></div></article>`;
+    <article class="cycle-card"><span class="cycle-number">3</span><div><p class="eyebrow">Depois da calibração</p><h3>Rotação específica ainda desativada</h3><p>A ordem planejada é PMDF → PMGO → PMMG, mas a ativação depende da decisão do O7 sobre pesos, equilíbrio editorial e desempenho real.</p></div></article>`;
   wrap.append(phases);
 
   const beginner = make('section', 'card cycle-rule-card');
@@ -643,7 +646,7 @@ async function renderSchedule() {
 
   if (catalog) {
     const available = make('section', 'card published-cycle-content');
-    available.innerHTML = '<p class="eyebrow">Acervo publicado</p><h2>Conteúdo que já alimenta a construção da base</h2><p>Esta lista é informativa. A classificação final entre “comum” e “específica” será validada quando a matriz PMDF × PMGO × PMMG estiver completa.</p>';
+    available.innerHTML = '<p class="eyebrow">Acervo publicado</p><h2>Conteúdo que já alimenta a construção da base</h2><p>A matriz PMDF × PMGO × PMMG já está estruturada. Esta lista mostra o acervo publicado; pesos finais e rotação específica continuam bloqueados até a calibração do O7.</p>';
     const grid = make('div', 'published-subjects');
     for (const subject of [...(catalog.subjects ?? [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))) {
       const count = (catalog.units ?? []).filter((unit) => unit.subjectId === subject.id).length;

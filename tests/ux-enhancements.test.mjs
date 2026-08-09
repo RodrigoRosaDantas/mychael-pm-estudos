@@ -11,7 +11,8 @@ const [html, js, css, workflow] = await Promise.all([
 
 test('cronograma é orientado por ciclos e preserva foco no iniciante', () => {
   assert.match(html, /data-page="schedule"/);
-  assert.match(js, /Primeiro o que é comum\. Depois, específicas em rotação\./);
+  assert.match(js, /Primeiro o que é comum\. Específicas só depois da calibração\./);
+  assert.match(js, /Rotação específica ainda desativada/);
   assert.match(js, /PMDF → PMGO → PMMG/);
   assert.match(js, /O ciclo acompanha o aprendizado, não o calendário/);
 });

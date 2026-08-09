@@ -26,9 +26,9 @@ O percurso é:
 2. estudar cada unidade no fluxo `Aprender → Praticar → Corrigir → Revisar → Consolidar`;
 3. usar erros e revisões para controlar o avanço;
 4. depois do núcleo comum, avançar pelos conteúdos compartilhados por dois concursos;
-5. somente com cobertura editorial mínima dos três, alternar conteúdos específicos na rotação `PMDF → PMGO → PMMG`;
+5. manter a rotação específica desativada até a calibração de pesos, cobertura e desempenho prevista no O7; a ordem planejada, quando liberada, será `PMDF → PMGO → PMMG`;
 6. retomar o ciclo sempre do ponto em que foi interrompido, sem calendário semanal obrigatório;
-7. usar simulados quando a base pedagógica permitir.
+7. usar simulados quando a base pedagógica e a documentação oficial das provas permitirem.
 
 O cronograma definitivo não recebe pesos finais enquanto o acervo ainda não for representativo para calibrar volume, dificuldade, questões e revisões. A estrutura de ciclos pode ser usada antes disso.
 
@@ -73,26 +73,27 @@ A camada de experiência inclui:
 - acesso a questões no fim da aula e seleção guiada por matéria;
 - cronograma por ciclos, sem associação obrigatória a datas;
 - progresso no acervo publicado separado por núcleo comum, PMDF, PMGO e PMMG;
-- data e hora locais no rodapé;
+- data e hora de Brasília no rodapé;
 - informação de última sincronização baseada em metadados reais do deploy.
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado está na versão 37 com o `LOT-0041`:
+O catálogo cumulativo publicado está na versão 38 com o `LOT-0042`:
 
-- 37 unidades;
-- 37 materiais;
-- 252 questões;
-- 37 conjuntos de questões.
+- 38 unidades;
+- 38 materiais;
+- 259 questões;
+- 38 conjuntos de questões.
 
 Na camada atual de aplicabilidade:
 
 - PMDF: 34 unidades / 231 questões aplicáveis;
 - PMGO: 30 unidades / 203 questões aplicáveis;
-- PMMG: 25 unidades / 169 questões aplicáveis;
+- PMMG: 26 unidades / 176 questões aplicáveis;
 - núcleo comum aos três: 19 unidades / 127 questões;
 - U039 — Noções de Direito PMMG — LINDB permanece a primeira unidade de cobertura específica PMMG publicada;
 - U040 — Literatura PMMG — Campo Geral e Vidas Secas acrescenta a primeira cobertura pedagógica publicada da disciplina específica de Literatura;
+- U041 — LINDB — decisão pública e segurança jurídica amplia o recorte específico PMMG sem ativar a rotação definitiva;
 - a incidência histórica da prova aplicada em 20/10/2024 é usada como evidência de cobrança, sem ser convertida em peso definitivo de futuro edital;
 - U006 (Semântica) e U013 (remédios constitucionais) permanecem revalidadas para PMMG com evidência temática explícita do programa de referência.
 
@@ -113,6 +114,12 @@ O `LOT-0040` publica, separadamente do catálogo pedagógico, sete referências 
 O artefato `content/taf-pmmg-historical.json` declara explicitamente `temporalStatus: Histórico`, `currentIndexAvailable: false` e `autoApplicableNextEdital: false`. A fonte integral usada para os índices é a FNT-0025, cópia secundária auditada do Edital DRH/CRS nº 10/2024, e permanece rotulada como não oficial. O módulo público apresenta essas referências separadamente do histórico privado de treinos no Supabase.
 
 O gate `npm run taf:check` bloqueia regressões de vigência, autoaplicação futura, proveniência, IDs ou mistura entre os seletores de referência pública e histórico privado.
+
+## Provas anteriores no O6
+
+A página pública apresenta metadados históricos de quatro provas: PMGO 2022, PMDF 2023, PMMG 2023 e PMMG CFSd QP-PM/2025 com aplicação em 2024. O artefato `content/exams-history.json` publica somente identificação, data, quantidade de questões, existência de redação, situação documental e links institucionais.
+
+Cadernos, enunciados, alternativas, respostas e gabaritos ainda não validados permanecem fora do GitHub. Simulados oficiais continuam desativados até que a base pedagógica e o gate documental estejam aptos.
 
 ## Sincronização e monitoramento
 

@@ -42,6 +42,7 @@ test('módulo não apresenta índice oficial como vigente', () => {
 test('segurança, privacidade e responsividade estão explícitas', () => {
   assert.match(script, /não substitui avaliação médica/i);
   assert.match(script, /não são enviados ao GitHub nem ao Notion/i);
+  assert.doesNotMatch(script, /STU-MYCHAEL/);
   assert.match(css, /@media\(max-width:700px\)/);
   assert.match(readme, /registros pessoais de treino permanecem no Supabase/i);
 });
