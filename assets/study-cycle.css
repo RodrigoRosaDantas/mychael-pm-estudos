@@ -1,3 +1,5 @@
+body[data-page="schedule"] #guidedCycleProgress{display:none!important}
+.cycle-v1-page .curriculum-matrix-panel{display:none!important}
 .cycle-v1-page{display:grid;gap:1rem}
 .cycle-v1-hero{padding:clamp(1.5rem,4vw,3rem);border-radius:22px;background:linear-gradient(135deg,#173532,#28554e);color:#eef8f5;box-shadow:var(--shadow)}
 .cycle-v1-hero .status-pill{background:rgba(255,255,255,.13);color:#eaf8f5}
