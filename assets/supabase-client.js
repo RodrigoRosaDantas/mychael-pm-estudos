@@ -1,4 +1,6 @@
-import { createClient as createSupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient as createSupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.112.2';
+
+const clientCache = new Map();
 
 function adaptStudentProfileQuery(query) {
   let builder = query;
@@ -31,10 +33,14 @@ function adaptStudentProfileQuery(query) {
   return adapter;
 }
 
-export function createClient(...args) {
-  const client = createSupabaseClient(...args);
+export function createClient(url, publishableKey, options = {}) {
+  const cacheKey = `${url}\u0000${publishableKey}`;
+  const cached = clientCache.get(cacheKey);
+  if (cached) return cached;
+
+  const client = createSupabaseClient(url, publishableKey, options);
   const originalFrom = client.from.bind(client);
-  return new Proxy(client, {
+  const adaptedClient = new Proxy(client, {
     get(target, property, receiver) {
       if (property === 'from') {
         return (table) => table === 'student_profiles'
@@ -45,4 +51,6 @@ export function createClient(...args) {
       return typeof value === 'function' ? value.bind(target) : value;
     }
   });
+  clientCache.set(cacheKey, adaptedClient);
+  return adaptedClient;
 }

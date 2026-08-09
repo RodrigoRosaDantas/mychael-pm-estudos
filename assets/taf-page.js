@@ -51,7 +51,8 @@ function formatDate(value) {
   if (!value) return 'Data não informada';
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'short',
-    timeStyle: 'short'
+    timeStyle: 'short',
+    timeZone: 'America/Sao_Paulo'
   }).format(new Date(value));
 }
 
@@ -90,7 +91,7 @@ function publicIntro() {
   privacy.append(
     el('h2', { text: 'Privacidade do progresso' }),
     el('p', {
-      text: 'Resultados pessoais ficam exclusivamente no Supabase vinculado ao perfil STU-MYCHAEL. Eles não são enviados ao GitHub nem ao Notion editorial.'
+      text: 'Resultados pessoais ficam exclusivamente no armazenamento privado vinculado à sua conta. Eles não são enviados ao GitHub nem ao Notion editorial.'
     })
   );
 

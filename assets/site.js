@@ -2,11 +2,13 @@ import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 
 const catalogUrl = './content/catalog.json';
+const tafHistoryUrl = './content/taf-pmmg-historical.json';
 const pageId = document.body.dataset.page || 'home';
 const questionTimers = new Map();
 let catalog = null;
 let session = null;
 let profileActive = false;
+let tafHistoryPromise = null;
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: {
@@ -38,7 +40,7 @@ const PAGE_TITLES = {
   reviews: ['Revisões', 'Retome o que precisa ser lembrado no momento certo.'],
   errors: ['Caderno de erros', 'Revise e refaça somente as questões que ainda precisam de atenção.'],
   exams: ['Provas anteriores', 'Acervo histórico autêntico, separado dos simulados.'],
-  simulations: ['Simulados', 'Treinos completos serão liberados após a base mínima.'],
+  simulations: ['Simulados', 'Treinos completos serão liberados após validação pedagógica e documental.'],
   taf: ['TAF', 'Orientação e acompanhamento sem confundir treino com índice oficial.'],
   performance: ['Desempenho', 'Resumo privado do progresso sincronizado.'],
   settings: ['Configurações', 'Acesso e informações técnicas essenciais.']
@@ -156,6 +158,19 @@ async function loadCatalog() {
   return data;
 }
 
+async function loadPublishedTafCount() {
+  if (!tafHistoryPromise) {
+    tafHistoryPromise = fetch(tafHistoryUrl, { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) return 0;
+        const payload = await response.json();
+        return Array.isArray(payload.records) ? payload.records.length : 0;
+      })
+      .catch(() => 0);
+  }
+  return tafHistoryPromise;
+}
+
 async function refreshSession() {
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
@@ -268,6 +283,7 @@ function metric(value, label, href) {
 
 async function renderHome(target) {
   const unit = firstUnit();
+  const historicalTafCount = await loadPublishedTafCount();
   const hero = el('section', { className: 'hero-card' });
   hero.append(
     el('p', { className: 'status-pill', text: 'Conteúdo publicado e validado' }),
@@ -288,7 +304,7 @@ async function renderHome(target) {
   metrics.append(
     metric(catalog.units.length, 'unidades publicadas', 'materias.html'),
     metric(catalog.questions.length, 'questões disponíveis', 'questoes.html'),
-    metric(catalog.tafRecords?.length ?? 0, 'referências de TAF', 'taf.html')
+    metric(historicalTafCount, 'referências históricas de TAF', 'taf.html')
   );
   target.append(metrics);
 
@@ -791,7 +807,7 @@ async function renderReviews(target) {
     const row = el('article', { className: 'list-item' });
     const copy = el('div');
     copy.append(el('span', { className: `status-pill ${item.status}`, text: item.status === 'due' ? 'Revisão vencida' : 'Agendada' }), el('h2', { text: question?.title ?? item.source_id }));
-    copy.append(el('p', { text: item.next_review_at ? `Próxima revisão: ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(item.next_review_at))}` : 'Data não definida.' }));
+    copy.append(el('p', { text: item.next_review_at ? `Próxima revisão: ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }).format(new Date(item.next_review_at))}` : 'Data não definida.' }));
     row.append(copy);
     if (question) row.append(el('a', { className: 'primary-link', text: 'Revisar questão', href: pageUrl('questions', { unit: question.unitId, mode: 'errors', question: question.id }) }));
     list.append(row);
@@ -870,7 +886,7 @@ async function renderPerformance(target) {
 async function renderPlaceholder(target, type) {
   const copy = {
     exams: ['Provas anteriores', 'O acervo será publicado somente com prova, fonte e gabarito definitivo validados.'],
-    simulations: ['Simulados', 'Este módulo será liberado gradualmente, depois da formação de uma base mínima.'],
+    simulations: ['Simulados', 'Este módulo será liberado quando houver base suficiente e documentação oficial apta para montar provas sem gabarito duvidoso.'],
     taf: ['TAF', 'Área criada, ainda sem treino publicado. Índices históricos não são índices vigentes; treino não substitui avaliação médica, orientação profissional ou teste oficial.']
   }[type];
   const card = el('section', { className: `card empty-card ${type === 'taf' ? 'warning-card' : ''}` });

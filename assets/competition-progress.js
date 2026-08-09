@@ -274,7 +274,8 @@ function coverageBadges(rule) {
     const pendingPmmg = competition === 'PMMG' && rule.status === 'pmmg-topic-review-needed';
     const className = active ? 'coverage-badge active' : pendingPmmg ? 'coverage-badge pending' : 'coverage-badge inactive';
     const suffix = pendingPmmg ? ' · validar' : '';
-    parts.push(`<span class="${className}">${COMPETITION_LABELS[competition]}${suffix}</span>`);
+    const accessibleStatus = active ? 'aplica-se' : pendingPmmg ? 'aguarda validação' : 'não se aplica';
+    parts.push(`<span class="${className}" aria-label="${COMPETITION_LABELS[competition]}: ${accessibleStatus}">${COMPETITION_LABELS[competition]}${suffix}</span>`);
   }
   return parts.join('');
 }
@@ -282,7 +283,7 @@ function coverageBadges(rule) {
 function classificationLabel(rule) {
   if (rule.classification === 'common-3') return 'Núcleo comum aos três';
   if (rule.classification === 'shared-2') return 'Compartilhada por dois concursos';
-  if (rule.classification === 'specific') return 'Específica';
+  if (rule.classification === 'specific' || rule.classification === 'specific-rotation') return 'Específica de uma corporação';
   return 'Aplicabilidade em revisão';
 }
 
@@ -305,7 +306,7 @@ async function annotateStudy() {
       <strong>${escapeHtml(classificationLabel(rule))}</strong>
       <span>${escapeHtml(rule.note ?? 'Aplicabilidade validada pela matriz curricular.')}</span>
     </div>
-    <div class="coverage-badges" aria-label="Concursos atendidos por esta unidade">${coverageBadges(rule)}</div>
+    <div class="coverage-badges" aria-label="Aplicabilidade por concurso">${coverageBadges(rule)}</div>
   `;
   summary.append(strip);
 }
