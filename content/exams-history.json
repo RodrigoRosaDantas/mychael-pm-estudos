@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "publicationStatus": "published",
+  "scope": "historical-metadata-only",
+  "generatedAt": "2026-08-09T04:40:00Z",
+  "notice": "Acervo histórico. Estes dados descrevem concursos anteriores e não representam regras garantidas de um próximo edital. Cadernos e gabaritos só são exibidos quando a validação documental e a liberação editorial permitem.",
+  "exams": [
+    {
+      "id": "PMGO-SOLDADO-2022",
+      "corporation": "PMGO",
+      "title": "Soldado Combatente — Edital nº 002/2022",
+      "applicationDate": "2022-07-10",
+      "questions": 50,
+      "essay": true,
+      "documentStatus": "Página institucional e gabaritos oficiais localizados. O caderno não é redistribuído nesta plataforma.",
+      "availability": "Metadados históricos",
+      "officialLinks": [
+        {
+          "label": "SEAD/GO — página oficial do concurso",
+          "url": "https://goias.gov.br/administracao/edital-002-2022-concurso-pm-go-soldado/"
+        }
+      ]
+    },
+    {
+      "id": "PMDF-CFP-2023",
+      "corporation": "PMDF",
+      "title": "Curso de Formação de Praças — Edital Normativo nº 04/2023-DGP/PMDF",
+      "applicationDate": "2023-05-21",
+      "questions": 80,
+      "essay": true,
+      "documentStatus": "O concurso e o visualizador oficial estão identificados. O gabarito definitivo completo do Tipo 03 ainda está em validação documental.",
+      "availability": "Metadados históricos",
+      "officialLinks": [
+        {
+          "label": "PMDF — concursos",
+          "url": "https://portal.pm.df.gov.br/concursos/"
+        },
+        {
+          "label": "Instituto AOCP — visualizador oficial",
+          "url": "https://link.institutoaocp.org.br/visualizar-prova-gabarito-definitivo-public/index.jsp?concurso=549"
+        }
+      ]
+    },
+    {
+      "id": "PMMG-CFSD-2023",
+      "corporation": "PMMG",
+      "title": "Curso de Formação de Soldados — 2023",
+      "applicationDate": "2023-05-07",
+      "questions": 50,
+      "essay": false,
+      "documentStatus": "A publicação histórica do CRS foi identificada, mas o documento final direto ainda não foi recuperado para liberação no acervo público.",
+      "availability": "Metadados históricos",
+      "officialLinks": [
+        {
+          "label": "PMMG/CRS — publicação histórica identificada",
+          "url": "https://www.policiamilitar.mg.gov.br/site/crs/noticias/253756/cfsd-qp-pm-2023---gabarito-preliminar-e-prova"
+        }
+      ]
+    },
+    {
+      "id": "PMMG-CFSD-QPPM-2025",
+      "corporation": "PMMG",
+      "title": "CFSd QP-PM/2025 — prova aplicada em 2024",
+      "applicationDate": "2024-10-20",
+      "questions": 50,
+      "essay": false,
+      "documentStatus": "O certame é corroborado institucionalmente. O gabarito final direto do CRS ainda está em validação documental para o acervo público.",
+      "availability": "Metadados históricos",
+      "officialLinks": [
+        {
+          "label": "ALMG — referência institucional ao Edital DRH/CRS nº 10/2024",
+          "url": "https://www.almg.gov.br/comissoes/seguranca-publica/508/reuniao/2/2026-03-03/11%3A15"
+        }
+      ]
+    }
+  ]
+}
