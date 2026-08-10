@@ -1,6 +1,6 @@
 {
   "id": "STUDY-CYCLE-V1",
-  "version": 1,
+  "version": 2,
   "status": "active",
   "mode": "adaptation",
   "label": "Adaptação inicial",
@@ -17,7 +17,8 @@
     "resumeInterruptedUnit": true,
     "openErrorsBeforeNewContent": true,
     "dueReviewsBeforeNewContent": true,
-    "futurePublicationsOnlyInFutureCycles": true
+    "futurePublicationsOnlyInFutureCycles": true,
+    "publishedVolumeDoesNotDefineWeight": true
   },
   "cycles": [
     {
@@ -50,9 +51,9 @@
       "sessions": [
         {"number": 13, "unitId": "U022"},
         {"number": 14, "unitId": "U029"},
-        {"number": 15, "unitId": "U023"},
-        {"number": 16, "unitId": "U024"},
-        {"number": 17, "unitId": "U026"},
+        {"number": 15, "unitId": "U012"},
+        {"number": 16, "unitId": "U023"},
+        {"number": 17, "unitId": "U014"},
         {"number": 18, "unitId": "U030"}
       ]
     },
@@ -60,12 +61,12 @@
       "id": "C4",
       "number": 4,
       "sessions": [
-        {"number": 19, "unitId": "U027"},
-        {"number": 20, "unitId": "U028"},
-        {"number": 21, "unitId": "U010"},
-        {"number": 22, "unitId": "U012"},
-        {"number": 23, "unitId": "U011"},
-        {"number": 24, "unitId": "U014"}
+        {"number": 19, "unitId": "U010"},
+        {"number": 20, "unitId": "U015"},
+        {"number": 21, "unitId": "U011"},
+        {"number": 22, "unitId": "U016"},
+        {"number": 23, "unitId": "U024"},
+        {"number": 24, "unitId": "U017"}
       ]
     }
   ]

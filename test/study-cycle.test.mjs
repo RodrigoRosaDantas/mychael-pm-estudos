@@ -12,10 +12,12 @@ import {
 const plan = JSON.parse(await readFile(new URL('../content/study-cycle-v1.json', import.meta.url), 'utf8'));
 const catalog = JSON.parse(await readFile(new URL('../content/catalog.json', import.meta.url), 'utf8'));
 
-test('V1 tem quatro ciclos de seis sessões', () => {
+test('V1 tem quatro ciclos de seis sessões e uma matéria por sessão', () => {
   assert.equal(plan.cycles.length, 4);
   assert.ok(plan.cycles.every((cycle) => cycle.sessions.length === 6));
   assert.equal(flattenStudyCycle(plan).length, 24);
+  assert.equal(plan.subjectsPerSession, 1);
+  assert.equal(plan.checkpointAfterSession, 24);
 });
 
 test('V1 não inclui conteúdo específico', () => {
@@ -35,6 +37,33 @@ test('pré-requisitos essenciais aparecem antes dos dependentes', () => {
   before('U010', 'U011');
   before('U008', 'U012');
   before('U012', 'U014');
+  before('U014', 'U015');
+  before('U015', 'U016');
+  before('U016', 'U017');
+});
+
+test('circulação não é determinada apenas pelo estoque de Português', () => {
+  const unitById = new Map(catalog.units.map((unit) => [unit.id, unit]));
+  const counts = new Map();
+  for (const unitId of studyCycleUnitIds(plan)) {
+    const subjectId = unitById.get(unitId)?.subjectId;
+    counts.set(subjectId, (counts.get(subjectId) ?? 0) + 1);
+  }
+  const portugueseId = unitById.get('U001')?.subjectId;
+  const constitutionalId = unitById.get('U007')?.subjectId;
+  const penalId = unitById.get('U012')?.subjectId;
+  const administrativeId = unitById.get('U010')?.subjectId;
+  assert.ok(portugueseId && constitutionalId && penalId && administrativeId);
+  assert.equal(counts.get(portugueseId), 11);
+  assert.equal(counts.get(constitutionalId), 6);
+  assert.equal(counts.get(penalId), 5);
+  assert.equal(counts.get(administrativeId), 2);
+  assert.equal(new Set([portugueseId, constitutionalId, penalId, administrativeId]).size, 4);
+  assert.equal(counts.size, 4);
+});
+
+test('Ciclo 1 permanece preservado para o aluno já iniciado', () => {
+  assert.deepEqual(plan.cycles[0].sessions.map(({ unitId }) => unitId), ['U001', 'U007', 'U002', 'U003', 'U008', 'U004']);
 });
 
 test('U001 em andamento mantém ciclo 1 sessão 1', () => {
