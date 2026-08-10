@@ -49,10 +49,16 @@ test('circulação não é determinada apenas pelo estoque de Português', () =>
     const subjectId = unitById.get(unitId)?.subjectId;
     counts.set(subjectId, (counts.get(subjectId) ?? 0) + 1);
   }
-  assert.equal(counts.get('MAT-PORT'), 11);
-  assert.equal(counts.get('MAT-CONST'), 6);
-  assert.equal(counts.get('MAT-DPEN'), 5);
-  assert.equal(counts.get('MAT-DADM'), 2);
+  const portugueseId = unitById.get('U001')?.subjectId;
+  const constitutionalId = unitById.get('U007')?.subjectId;
+  const penalId = unitById.get('U012')?.subjectId;
+  const administrativeId = unitById.get('U010')?.subjectId;
+  assert.ok(portugueseId && constitutionalId && penalId && administrativeId);
+  assert.equal(counts.get(portugueseId), 11);
+  assert.equal(counts.get(constitutionalId), 6);
+  assert.equal(counts.get(penalId), 5);
+  assert.equal(counts.get(administrativeId), 2);
+  assert.equal(new Set([portugueseId, constitutionalId, penalId, administrativeId]).size, 4);
   assert.equal(counts.size, 4);
 });
 
