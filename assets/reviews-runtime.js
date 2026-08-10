@@ -145,7 +145,7 @@ function render(target, catalog, reviews) {
 
       if (question) {
         const action = node('a', 'primary-link', 'Revisar agora');
-        action.href = `questoes.html?unit=${encodeURIComponent(question.unitId)}&mode=errors&question=${encodeURIComponent(question.id)}`;
+        action.href = `questoes.html?unit=${encodeURIComponent(question.unitId)}&mode=review&question=${encodeURIComponent(question.id)}`;
         card.append(action);
       } else if (unit) {
         const action = node('a', 'primary-link', 'Revisar unidade');
