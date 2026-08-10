@@ -78,17 +78,17 @@ A camada de experiência inclui:
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado está na versão 38 com o `LOT-0042`:
+O catálogo cumulativo publicado está na versão 41:
 
-- 38 unidades;
-- 38 materiais;
-- 259 questões;
-- 38 conjuntos de questões.
+- 41 unidades;
+- 41 materiais;
+- 280 questões;
+- 41 conjuntos de questões.
 
 Na camada atual de aplicabilidade:
 
-- PMDF: 34 unidades / 231 questões aplicáveis;
-- PMGO: 30 unidades / 203 questões aplicáveis;
+- PMDF: 37 unidades / 252 questões aplicáveis;
+- PMGO: 33 unidades / 224 questões aplicáveis;
 - PMMG: 26 unidades / 176 questões aplicáveis;
 - núcleo comum aos três: 19 unidades / 127 questões;
 - U039 — Noções de Direito PMMG — LINDB permanece a primeira unidade de cobertura específica PMMG publicada;
