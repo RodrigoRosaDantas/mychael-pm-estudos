@@ -64,9 +64,9 @@ test('simulados explicam o gate documental e a tela do TAF esconde ID técnico',
   assert.doesNotMatch(tafPage, /STU-MYCHAEL/);
 });
 
-test('documentação técnica acompanha catálogo v38 e provas históricas do O6', () => {
-  assert.match(readme, /versão 38 com o `LOT-0042`/);
-  assert.match(readme, /38 unidades/);
-  assert.match(readme, /259 questões/);
+test('documentação técnica acompanha catálogo v41 e provas históricas do O6', () => {
+  assert.match(readme, /versão 41/);
+  assert.match(readme, /41 unidades/);
+  assert.match(readme, /280 questões/);
   assert.match(readme, /metadados históricos de quatro provas/);
 });
