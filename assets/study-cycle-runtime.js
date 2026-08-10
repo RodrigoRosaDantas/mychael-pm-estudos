@@ -12,6 +12,7 @@ const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey,
 let publicPromise = null;
 let renderQueued = false;
 let renderBusy = false;
+let renderObserver = null;
 
 function loadPublicData() {
   if (!publicPromise) {
@@ -298,10 +299,17 @@ async function renderReviews() {
   target.replaceChildren(wrap);
 }
 
+function observeRoot() {
+  const root = document.querySelector('#app');
+  if (!root || !renderObserver) return;
+  renderObserver.observe(root, { childList: true, subtree: true });
+}
+
 async function refresh() {
   renderQueued = false;
   if (renderBusy) return;
   renderBusy = true;
+  renderObserver?.disconnect();
   try {
     simplifyAccessCopy();
     await renderHome();
@@ -311,11 +319,12 @@ async function refresh() {
     console.warn('Study Cycle V1: não foi possível atualizar a experiência.', error);
   } finally {
     renderBusy = false;
+    observeRoot();
   }
 }
 
 function queueRefresh() {
-  if (renderQueued) return;
+  if (renderQueued || renderBusy) return;
   renderQueued = true;
   queueMicrotask(refresh);
 }
@@ -323,7 +332,10 @@ function queueRefresh() {
 function start() {
   injectStyle();
   const root = document.querySelector('#app');
-  if (root) new MutationObserver(queueRefresh).observe(root, { childList: true, subtree: true });
+  if (root) {
+    renderObserver = new MutationObserver(queueRefresh);
+    observeRoot();
+  }
   queueRefresh();
 }
 

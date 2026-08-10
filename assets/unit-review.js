@@ -13,6 +13,8 @@ const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey,
 let catalogPromise = null;
 let profilePromise = null;
 let reconciling = null;
+let uiRefreshBusy = false;
+let uiObserver = null;
 
 function queryParam(name) {
   return new URLSearchParams(window.location.search).get(name);
@@ -228,9 +230,27 @@ async function renderStudyReview() {
   target.prepend(panel);
 }
 
-function scheduleUiRefresh() {
-  if (pageId === 'reviews') augmentReviewCards().catch((error) => console.error('Revisão de unidade:', error));
-  if (pageId === 'study') renderStudyReview().catch((error) => console.error('Revisão de unidade:', error));
+function uiReady() {
+  if (pageId === 'reviews') return Boolean(document.querySelector('.review-v1-page, .review-list, .empty-card'));
+  if (pageId === 'study') return Boolean(document.querySelector('#pageContent')?.children.length);
+  return true;
+}
+
+async function scheduleUiRefresh() {
+  if (uiRefreshBusy) return;
+  uiRefreshBusy = true;
+  try {
+    if (pageId === 'reviews') await augmentReviewCards();
+    if (pageId === 'study') await renderStudyReview();
+  } catch (error) {
+    console.error('Revisão de unidade:', error);
+  } finally {
+    uiRefreshBusy = false;
+    if (uiReady()) {
+      uiObserver?.disconnect();
+      uiObserver = null;
+    }
+  }
 }
 
 async function start() {
@@ -239,11 +259,12 @@ async function start() {
   } catch (error) {
     console.error('Reconciliação de revisão por unidade:', error);
   }
-  scheduleUiRefresh();
   const root = document.querySelector('#app');
   if (root && (pageId === 'reviews' || pageId === 'study')) {
-    new MutationObserver(scheduleUiRefresh).observe(root, { childList: true, subtree: true });
+    uiObserver = new MutationObserver(() => { void scheduleUiRefresh(); });
+    uiObserver.observe(root, { childList: true, subtree: true });
   }
+  await scheduleUiRefresh();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
