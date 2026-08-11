@@ -57,6 +57,7 @@ const fragmentUrls = [
   new URL('content/lots/lot-0045.json', root),
   new URL('content/lots/lot-0046.json', root),
   new URL('content/lots/lot-0047.json', root),
+  new URL('content/lots/lot-0048-taxonomy.json', root),
   new URL('content/lots/lot-0048.json', root)
 ];
 const collections = ['subjects', 'topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
