@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-11",
+  "unitApplicability": [
+    {
+      "unitId": "U046",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified-not-pmmg",
+      "evidenceIds": ["FNT-0015", "FNT-0014", "FNT-0027"],
+      "note": "Anulação, revogação e convalidação integra os referenciais históricos oficiais PMDF 2023 e PMGO 2022. FNT-0027 sustenta normativamente os arts. 53 a 55 da Lei nº 9.784/1999. A classificação é histórica e não antecipa futuro edital nem presume incidência para PMMG."
+    }
+  ]
+}
