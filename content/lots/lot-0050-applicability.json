@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-11",
+  "unitApplicability": [
+    {
+      "unitId": "U049",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified",
+      "evidenceIds": ["FNT-0015", "FNT-0014", "FNT-0003"],
+      "note": "Inquérito policial foi revalidado no menor nível temático como compartilhado entre PMDF e PMGO. FNT-0015 e FNT-0014 são referências curriculares históricas oficiais; FNT-0003 é o CPP oficial vigente para o conteúdo normativo da unidade. A classificação é histórica e não antecipa futuro edital."
+    }
+  ]
+}
