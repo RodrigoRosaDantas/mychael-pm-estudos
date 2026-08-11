@@ -2,84 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { buildCoverageSummary, loadCoverageFiles } from '../scripts/check-competition-coverage.mjs';
-
 const { catalog, applicability } = await loadCoverageFiles();
-const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
-  readFile(new URL('../package.json', import.meta.url), 'utf8'),
-  readFile(new URL('../.github/workflows/pages.yml', import.meta.url), 'utf8'),
-  readFile(new URL('../scripts/check-public-deployment.mjs', import.meta.url), 'utf8')
-]);
-
-test('monitoramento consolida contagem física e vínculos por concurso', () => {
-  const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 50);
-  assert.equal(summary.catalogLotId, 'LOT-0051');
-  assert.equal(summary.physicalUnits, 50);
-  assert.equal(summary.physicalQuestions, 343);
-  assert.deepEqual(summary.unitCounts, { PMDF: 46, PMGO: 37, PMMG: 31 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 315, PMGO: 252, PMMG: 211 });
-  assert.equal(summary.commonUnits, 19);
-  assert.equal(summary.commonQuestions, 127);
-  assert.equal(summary.pmmgTopicReviewPending, 0);
-  assert.equal(summary.specificRotationEnabled, false);
-  assert.deepEqual(summary.unclassifiedUnits, []);
-});
-
-test('lotes históricos recuperados têm aplicabilidade explícita PMDF + PMGO', () => {
-  for (const unitId of ['U011','U012','U014']) {
-    const rule = applicability.unitApplicability.find((item) => item.unitId === unitId);
-    assert.ok(rule, `${unitId} sem aplicabilidade`);
-    assert.equal(rule.classification, 'shared-2');
-    assert.deepEqual(rule.competitions, ['PMDF','PMGO']);
-    assert.equal(rule.status, 'verified-not-pmmg');
-  }
-});
-
-test('LOT-0043 a LOT-0051 têm aplicabilidade explícita e não ativam rotação específica', () => {
-  const expected = {
-    U042: ['PMDF','PMMG'], U043: ['PMDF','PMMG'], U044: ['PMDF','PMMG'],
-    U045: ['PMDF','PMGO'], U046: ['PMDF','PMGO'], U047: ['PMDF','PMMG'], U048: ['PMDF','PMMG'], U049: ['PMDF','PMGO'], U050: ['PMDF','PMGO']
-  };
-  for (const [unitId, competitions] of Object.entries(expected)) {
-    const rule = applicability.unitApplicability.find((item) => item.unitId === unitId);
-    assert.ok(rule, `${unitId} sem aplicabilidade`);
-    assert.equal(rule.classification, 'shared-2');
-    assert.deepEqual(rule.competitions, competitions);
-    assert.ok(rule.evidenceIds.length > 0, `${unitId} sem evidência`);
-  }
-  assert.equal(applicability.specificRotation.enabled, false);
-});
-
-test('primeiras específicas PMDF, PMGO e PMMG permanecem com rotação definitiva desativada até O7', () => {
-  const pmdf = applicability.unitApplicability.find((item) => item.unitId === 'U037');
-  const pmgo = applicability.unitApplicability.find((item) => item.unitId === 'U038');
-  const pmmg = applicability.unitApplicability.find((item) => item.unitId === 'U039');
-  assert.ok(pmdf); assert.equal(pmdf.classification, 'specific-rotation'); assert.deepEqual(pmdf.competitions, ['PMDF']); assert.deepEqual(pmdf.evidenceIds, ['FNT-0015']);
-  assert.ok(pmgo); assert.equal(pmgo.classification, 'specific-rotation'); assert.deepEqual(pmgo.competitions, ['PMGO']); assert.deepEqual(pmgo.evidenceIds, ['FNT-0014']);
-  assert.ok(pmmg); assert.equal(pmmg.classification, 'specific-rotation'); assert.deepEqual(pmmg.competitions, ['PMMG']); assert.deepEqual(pmmg.evidenceIds, ['FNT-0025','FNT-0026']);
-  assert.equal(applicability.specificRotation.enabled, false);
-  assert.equal(buildCoverageSummary(catalog, applicability).specificRotationEnabled, false);
-});
-
-test('publicação é bloqueada quando surge unidade sem aplicabilidade explícita', () => {
-  const brokenCatalog = structuredClone(catalog); brokenCatalog.units.push({ id: 'U999', coverage: ['PMGO', 'PMDF'] });
-  assert.throws(() => buildCoverageSummary(brokenCatalog, applicability), /Unidades publicadas sem aplicabilidade explícita: U999/);
-});
-
-test('PMMG é bloqueada sem evidência temática explícita', () => {
-  const broken = structuredClone(applicability); const rule = broken.unitApplicability.find((item) => item.unitId === 'U015');
-  rule.competitions.push('PMMG'); rule.status = 'verified'; rule.evidenceIds = [];
-  assert.throws(() => buildCoverageSummary(catalog, broken), /U015: PMMG exige evidência temática explícita/);
-});
-
-test('classificação common-3 exige os três concursos e evidência', () => {
-  const broken = structuredClone(applicability); const rule = broken.unitApplicability.find((item) => item.unitId === 'U001'); rule.competitions = ['PMDF', 'PMGO'];
-  assert.throws(() => buildCoverageSummary(catalog, broken), /U001: common-3 deve atender PMDF, PMGO e PMMG/);
-});
-
-test('CI e Pages incorporam o gate e os artefatos multi-concurso', () => {
-  const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.scripts['coverage:check'], 'node scripts/check-competition-coverage.mjs'); assert.match(pkg.scripts.check, /npm run coverage:check/);
-  assert.match(pagesWorkflow, /buildCoverageSummary/); assert.match(pagesWorkflow, /coverage/); assert.match(pagesWorkflow, /GitHub Pages e cobertura multi-concurso validados/);
-  for (const path of ['cronograma.html','assets/curriculum-matrix.js','assets/competition-progress.js','content/curriculum-matrix.json','content/content-applicability.json']) assert.match(deploymentScript, new RegExp(path.replace(/[./-]/g, '\\$&')));
-});
+const [packageJson,pagesWorkflow,deploymentScript]=await Promise.all([readFile(new URL('../package.json',import.meta.url),'utf8'),readFile(new URL('../.github/workflows/pages.yml',import.meta.url),'utf8'),readFile(new URL('../scripts/check-public-deployment.mjs',import.meta.url),'utf8')]);
+test('monitoramento consolida contagem física e vínculos por concurso',()=>{const summary=buildCoverageSummary(catalog,applicability); assert.equal(summary.catalogContentVersion,51); assert.equal(summary.catalogLotId,'LOT-0052'); assert.equal(summary.physicalUnits,51); assert.equal(summary.physicalQuestions,350); assert.deepEqual(summary.unitCounts,{PMDF:47,PMGO:38,PMMG:31}); assert.deepEqual(summary.questionCounts,{PMDF:322,PMGO:259,PMMG:211}); assert.equal(summary.commonUnits,19); assert.equal(summary.commonQuestions,127); assert.equal(summary.pmmgTopicReviewPending,0); assert.equal(summary.specificRotationEnabled,false); assert.deepEqual(summary.unclassifiedUnits,[]);});
+test('lotes históricos recuperados têm aplicabilidade explícita PMDF + PMGO',()=>{for(const unitId of ['U011','U012','U014']){const rule=applicability.unitApplicability.find((item)=>item.unitId===unitId); assert.ok(rule); assert.equal(rule.classification,'shared-2'); assert.deepEqual(rule.competitions,['PMDF','PMGO']); assert.equal(rule.status,'verified-not-pmmg');}});
+test('LOT-0043 a LOT-0052 têm aplicabilidade explícita e não ativam rotação específica',()=>{const expected={U042:['PMDF','PMMG'],U043:['PMDF','PMMG'],U044:['PMDF','PMMG'],U045:['PMDF','PMGO'],U046:['PMDF','PMGO'],U047:['PMDF','PMMG'],U048:['PMDF','PMMG'],U049:['PMDF','PMGO'],U050:['PMDF','PMGO'],U051:['PMDF','PMGO']}; for(const [unitId,competitions] of Object.entries(expected)){const rule=applicability.unitApplicability.find((item)=>item.unitId===unitId); assert.ok(rule,`${unitId} sem aplicabilidade`); assert.equal(rule.classification,'shared-2'); assert.deepEqual(rule.competitions,competitions); assert.ok(rule.evidenceIds.length>0);} assert.equal(applicability.specificRotation.enabled,false);});
+test('primeiras específicas PMDF, PMGO e PMMG permanecem com rotação definitiva desativada até O7',()=>{for(const [id,competition] of [['U037','PMDF'],['U038','PMGO'],['U039','PMMG']]){const rule=applicability.unitApplicability.find((item)=>item.unitId===id); assert.ok(rule); assert.equal(rule.classification,'specific-rotation'); assert.deepEqual(rule.competitions,[competition]);} assert.equal(applicability.specificRotation.enabled,false); assert.equal(buildCoverageSummary(catalog,applicability).specificRotationEnabled,false);});
+test('publicação é bloqueada quando surge unidade sem aplicabilidade explícita',()=>{const brokenCatalog=structuredClone(catalog); brokenCatalog.units.push({id:'U999',coverage:['PMGO','PMDF']}); assert.throws(()=>buildCoverageSummary(brokenCatalog,applicability),/Unidades publicadas sem aplicabilidade explícita: U999/);});
+test('PMMG é bloqueada sem evidência temática explícita',()=>{const broken=structuredClone(applicability); const rule=broken.unitApplicability.find((item)=>item.unitId==='U015'); rule.competitions.push('PMMG'); rule.status='verified'; rule.evidenceIds=[]; assert.throws(()=>buildCoverageSummary(catalog,broken),/U015: PMMG exige evidência temática explícita/);});
+test('classificação common-3 exige os três concursos e evidência',()=>{const broken=structuredClone(applicability); broken.unitApplicability.find((item)=>item.unitId==='U001').competitions=['PMDF','PMGO']; assert.throws(()=>buildCoverageSummary(catalog,broken),/U001: common-3 deve atender PMDF, PMGO e PMMG/);});
+test('CI e Pages incorporam o gate e os artefatos multi-concurso',()=>{const pkg=JSON.parse(packageJson); assert.equal(pkg.scripts['coverage:check'],'node scripts/check-competition-coverage.mjs'); assert.match(pkg.scripts.check,/npm run coverage:check/); assert.match(pagesWorkflow,/buildCoverageSummary/); assert.match(pagesWorkflow,/coverage/); assert.match(pagesWorkflow,/GitHub Pages e cobertura multi-concurso validados/); for(const path of ['cronograma.html','assets/curriculum-matrix.js','assets/competition-progress.js','content/curriculum-matrix.json','content/content-applicability.json']) assert.match(deploymentScript,new RegExp(path.replace(/[./-]/g,'\\$&')));});

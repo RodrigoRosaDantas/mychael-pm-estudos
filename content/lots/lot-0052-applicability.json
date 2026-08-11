@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-11",
+  "unitApplicability": [
+    {
+      "unitId": "U051",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified",
+      "evidenceIds": ["FNT-0015", "FNT-0014", "FNT-0005"],
+      "note": "Direito Processual Penal Militar permanece compartilhado entre PMDF e PMGO nos referenciais históricos vigentes do projeto. FNT-0005 é a fonte normativa oficial revalidada em 11/08/2026 para os arts. 7º e 8º. A classificação não presume incidência para PMMG nem antecipa futuro edital."
+    }
+  ]
+}
