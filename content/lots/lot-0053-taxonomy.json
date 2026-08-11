@@ -1,0 +1,13 @@
+{
+  "lotId": "LOT-0053-taxonomy",
+  "contentVersion": 52,
+  "subjects": [],
+  "topics": [
+    {"historicalIncidence":"Não verificada","id":"ASS-ING-001-02","level":2,"name":"Itens gramaticais relevantes para a compreensão dos conteúdos semânticos","order":21012,"parentId":"ASS-ING-001","priority":"Média","stage":"Desenvolvimento","subjectId":"MAT-ING"}
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
