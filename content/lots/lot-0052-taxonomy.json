@@ -1,0 +1,14 @@
+{
+  "lotId": "LOT-0052-taxonomy",
+  "contentVersion": 51,
+  "subjects": [],
+  "topics": [
+    {"historicalIncidence":"Não verificada","id":"ASS-PPM-002","level":1,"name":"Polícia judiciária militar","order":7020,"parentId":null,"priority":"Alta","stage":"Base","subjectId":"MAT-PPM"},
+    {"historicalIncidence":"Não verificada","id":"ASS-PPM-002-01","level":2,"name":"Competência e atribuições da polícia judiciária militar","order":7021,"parentId":"ASS-PPM-002","priority":"Alta","stage":"Base","subjectId":"MAT-PPM"}
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
