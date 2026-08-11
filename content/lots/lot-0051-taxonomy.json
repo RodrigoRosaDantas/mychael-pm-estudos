@@ -1,0 +1,34 @@
+{
+  "lotId": "LOT-0051-taxonomy",
+  "contentVersion": 50,
+  "subjects": [],
+  "topics": [
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-DPM-002",
+      "level": 1,
+      "name": "Crime militar",
+      "order": 6020,
+      "parentId": null,
+      "priority": "Alta",
+      "stage": "Base",
+      "subjectId": "MAT-DPM"
+    },
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-DPM-002-01",
+      "level": 2,
+      "name": "Critérios de definição do crime militar",
+      "order": 6021,
+      "parentId": "ASS-DPM-002",
+      "priority": "Alta",
+      "stage": "Base",
+      "subjectId": "MAT-DPM"
+    }
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
