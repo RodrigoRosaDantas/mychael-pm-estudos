@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-11",
+  "unitApplicability": [
+    {
+      "unitId": "U052",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMMG"],
+      "status": "verified",
+      "evidenceIds": ["FNT-0015", "FNT-0025", "FNT-0026"],
+      "note": "Gramática funcional para compreensão textual permanece compartilhada entre PMDF e PMMG nos referenciais históricos vigentes do projeto. FNT-0015 é a matriz histórica oficial PMDF; FNT-0025 é a cópia histórica secundária PMMG corroborada oficialmente por FNT-0026. A classificação não antecipa futuro edital."
+    }
+  ]
+}
