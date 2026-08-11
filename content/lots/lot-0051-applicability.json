@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-11",
+  "unitApplicability": [
+    {
+      "unitId": "U050",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified",
+      "evidenceIds": ["FNT-0015", "FNT-0014", "FNT-0004"],
+      "note": "Direito Penal Militar permanece classificado no ciclo como compartilhado entre PMDF e PMGO. FNT-0015 e FNT-0014 são referências curriculares históricas das duas corporações e FNT-0004 é o Código Penal Militar oficial vigente, revalidado em 11/08/2026 para o art. 9º. A classificação não antecipa futuro edital."
+    }
+  ]
+}
