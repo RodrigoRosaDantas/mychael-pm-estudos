@@ -10,16 +10,16 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000413','Q000414','Q000415','Q000416','Q000417','Q000418','Q000419'];
 const answers = ['B','D','C','B','E','C','D'];
 
-test('LOT-0048 monta catálogo v47 sem reduzir validações', () => {
+test('LOT-0048 permanece íntegro no catálogo cumulativo v48', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(lot.lotId, 'LOT-0048');
   assert.equal(lot.contentVersion, 47);
-  assert.equal(catalog.contentVersion, 47);
-  assert.equal(catalog.publication.lotId, 'LOT-0048');
-  assert.equal(catalog.units.length, 47);
-  assert.equal(catalog.materials.length, 47);
-  assert.equal(catalog.questions.length, 322);
-  assert.equal(catalog.questionSets.length, 47);
+  assert.equal(catalog.contentVersion, 48);
+  assert.equal(catalog.publication.lotId, 'LOT-0049');
+  assert.equal(catalog.units.length, 48);
+  assert.equal(catalog.materials.length, 48);
+  assert.equal(catalog.questions.length, 329);
+  assert.equal(catalog.questionSets.length, 48);
 });
 
 test('U047 preserva taxonomia, fontes e separação teoria/questões', () => {
@@ -29,16 +29,10 @@ test('U047 preserva taxonomia, fontes e separação teoria/questões', () => {
   assert.ok(unit); assert.deepEqual(unit.coverage, ['PMDF','PMMG']); assert.deepEqual(unit.materialIds, ['M047']); assert.deepEqual(unit.questionIds, ids); assert.deepEqual(unit.questionSetIds, ['QS047']); assert.deepEqual(unit.sourceIds, ['FNT-0015','FNT-0025','FNT-0026']);
   const material = find(catalog.materials, 'M047');
   assert.ok(material); assert.equal(material.unitId, 'U047'); assert.equal(material.type, 'Aula teórica'); assert.equal('questionIds' in material, false); assert.equal('answer' in material, false); assert.equal('options' in material, false);
-  ids.forEach((id, index) => {
-    const q = find(catalog.questions, id);
-    assert.ok(q, id); assert.equal(q.unitId, 'U047', id); assert.equal(q.answer, answers[index], id); assert.equal(q.options.length, 5, id); assert.ok(q.options.some((o) => o.id === answers[index]), id); assert.deepEqual(q.sourceIds, ['FNT-0015','FNT-0025','FNT-0026'], id); assert.ok(q.commentary.length > 20, id); assert.ok(q.foundation.length > 20, id); assert.equal(q.annulled, false, id); assert.equal(q.duplicateOf, null, id); assert.equal(q.imageRequired, false, id); assert.equal(q.valid, true, id);
-  });
-  const set = find(catalog.questionSets, 'QS047');
-  assert.ok(set); assert.equal(set.unitId, 'U047'); assert.deepEqual(set.questionIds, ids); assert.equal(set.correctionMode, 'Ao finalizar'); assert.equal('questions' in set, false); assert.equal('answers' in set, false);
+  ids.forEach((id, index) => { const q = find(catalog.questions, id); assert.ok(q, id); assert.equal(q.unitId, 'U047', id); assert.equal(q.answer, answers[index], id); assert.equal(q.options.length, 5, id); assert.ok(q.options.some((o) => o.id === answers[index]), id); assert.deepEqual(q.sourceIds, ['FNT-0015','FNT-0025','FNT-0026'], id); assert.ok(q.commentary.length > 20, id); assert.ok(q.foundation.length > 20, id); assert.equal(q.annulled, false, id); assert.equal(q.duplicateOf, null, id); assert.equal(q.imageRequired, false, id); assert.equal(q.valid, true, id); });
+  const set = find(catalog.questionSets, 'QS047'); assert.ok(set); assert.equal(set.unitId, 'U047'); assert.deepEqual(set.questionIds, ids); assert.equal(set.correctionMode, 'Ao finalizar'); assert.equal('questions' in set, false); assert.equal('answers' in set, false);
 });
 
 test('U047 tem aplicabilidade explícita PMDF + PMMG sem ativar PMGO', () => {
-  const rule = applicability.unitApplicability.find((item) => item.unitId === 'U047');
-  assert.ok(rule); assert.equal(rule.classification, 'shared-2'); assert.deepEqual(rule.competitions, ['PMDF','PMMG']); assert.deepEqual(rule.evidenceIds, ['FNT-0015','FNT-0025','FNT-0026']);
-  assert.equal(applicability.specificRotation.enabled, false);
+  const rule = applicability.unitApplicability.find((item) => item.unitId === 'U047'); assert.ok(rule); assert.equal(rule.classification, 'shared-2'); assert.deepEqual(rule.competitions, ['PMDF','PMMG']); assert.deepEqual(rule.evidenceIds, ['FNT-0015','FNT-0025','FNT-0026']); assert.equal(applicability.specificRotation.enabled, false);
 });
