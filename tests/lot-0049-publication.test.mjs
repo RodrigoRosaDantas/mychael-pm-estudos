@@ -10,16 +10,16 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000420','Q000421','Q000422','Q000423','Q000424','Q000425','Q000426'];
 const answers = ['B','D','A','C','E','A','D'];
 
-test('LOT-0049 permanece íntegro no catálogo cumulativo v49', () => {
+test('LOT-0049 permanece íntegro no catálogo cumulativo v50', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(lot.lotId, 'LOT-0049');
   assert.equal(lot.contentVersion, 48);
-  assert.equal(catalog.contentVersion, 49);
-  assert.equal(catalog.publication.lotId, 'LOT-0050');
-  assert.equal(catalog.units.length, 49);
-  assert.equal(catalog.materials.length, 49);
-  assert.equal(catalog.questions.length, 336);
-  assert.equal(catalog.questionSets.length, 49);
+  assert.equal(catalog.contentVersion, 50);
+  assert.equal(catalog.publication.lotId, 'LOT-0051');
+  assert.equal(catalog.units.length, 50);
+  assert.equal(catalog.materials.length, 50);
+  assert.equal(catalog.questions.length, 343);
+  assert.equal(catalog.questionSets.length, 50);
 });
 
 test('U048 preserva taxonomia, fontes e separação teoria/questões', () => {
