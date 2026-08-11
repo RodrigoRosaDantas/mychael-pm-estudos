@@ -12,12 +12,12 @@ const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
 
 test('monitoramento consolida contagem física e vínculos por concurso', () => {
   const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 49);
-  assert.equal(summary.catalogLotId, 'LOT-0050');
-  assert.equal(summary.physicalUnits, 49);
-  assert.equal(summary.physicalQuestions, 336);
-  assert.deepEqual(summary.unitCounts, { PMDF: 45, PMGO: 36, PMMG: 31 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 308, PMGO: 245, PMMG: 211 });
+  assert.equal(summary.catalogContentVersion, 50);
+  assert.equal(summary.catalogLotId, 'LOT-0051');
+  assert.equal(summary.physicalUnits, 50);
+  assert.equal(summary.physicalQuestions, 343);
+  assert.deepEqual(summary.unitCounts, { PMDF: 46, PMGO: 37, PMMG: 31 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 315, PMGO: 252, PMMG: 211 });
   assert.equal(summary.commonUnits, 19);
   assert.equal(summary.commonQuestions, 127);
   assert.equal(summary.pmmgTopicReviewPending, 0);
@@ -35,10 +35,10 @@ test('lotes históricos recuperados têm aplicabilidade explícita PMDF + PMGO',
   }
 });
 
-test('LOT-0043 a LOT-0050 têm aplicabilidade explícita e não ativam rotação específica', () => {
+test('LOT-0043 a LOT-0051 têm aplicabilidade explícita e não ativam rotação específica', () => {
   const expected = {
     U042: ['PMDF','PMMG'], U043: ['PMDF','PMMG'], U044: ['PMDF','PMMG'],
-    U045: ['PMDF','PMGO'], U046: ['PMDF','PMGO'], U047: ['PMDF','PMMG'], U048: ['PMDF','PMMG'], U049: ['PMDF','PMGO']
+    U045: ['PMDF','PMGO'], U046: ['PMDF','PMGO'], U047: ['PMDF','PMMG'], U048: ['PMDF','PMMG'], U049: ['PMDF','PMGO'], U050: ['PMDF','PMGO']
   };
   for (const [unitId, competitions] of Object.entries(expected)) {
     const rule = applicability.unitApplicability.find((item) => item.unitId === unitId);
