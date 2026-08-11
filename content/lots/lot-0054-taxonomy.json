@@ -1,0 +1,13 @@
+{
+  "lotId": "LOT-0054-taxonomy",
+  "contentVersion": 53,
+  "subjects": [],
+  "topics": [
+    {"historicalIncidence":"Não verificada","id":"ASS-RLM-002","level":1,"name":"Lógica de argumentação","order":23020,"parentId":null,"priority":"Média","stage":"Desenvolvimento","subjectId":"MAT-RLM"}
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
