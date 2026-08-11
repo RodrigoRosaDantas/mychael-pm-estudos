@@ -6,6 +6,7 @@ const catalogUrl = new URL('content/catalog.json', root);
 const manifestUrl = new URL('content/manifest.json', root);
 const applicabilityUrl = new URL('content/content-applicability.json', root);
 const recoveredApplicabilityUrl = new URL('content/lots/lot-0012-0014-applicability.json', root);
+const publicationApplicabilityUrl = new URL('content/lots/lot-0043-0046-applicability.json', root);
 const fragmentUrls = [
   new URL('content/lots/lot-0003.json', root),
   new URL('content/lots/lot-0004-core.json', root),
@@ -48,7 +49,11 @@ const fragmentUrls = [
   new URL('content/lots/lot-0038.json', root),
   new URL('content/lots/lot-0039.json', root),
   new URL('content/lots/lot-0041.json', root),
-  new URL('content/lots/lot-0042.json', root)
+  new URL('content/lots/lot-0042.json', root),
+  new URL('content/lots/lot-0043.json', root),
+  new URL('content/lots/lot-0044.json', root),
+  new URL('content/lots/lot-0045.json', root),
+  new URL('content/lots/lot-0046.json', root)
 ];
 const collections = ['subjects', 'topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
 
@@ -76,41 +81,45 @@ export function assembleCatalog(baseCatalog, fragments) {
       ...additions
     ];
   }
-  catalog.contentVersion = 41;
-  catalog.generatedAt = '2026-08-09T21:45:00Z';
+  catalog.contentVersion = 45;
+  catalog.generatedAt = '2026-08-11T15:29:26Z';
   catalog.publicationStatus = 'published';
   catalog.publication = {
     authorized: true,
-    authorizedAt: '2026-08-09',
-    lotId: 'LOT-0042',
-    lotVersion: 1,
+    authorizedAt: '2026-08-11',
+    lotId: 'LOT-0046',
+    lotVersion: 2,
     source: 'Notion privado',
-    recoveredLotIds: ['LOT-0012', 'LOT-0013', 'LOT-0014']
+    recoveredLotIds: ['LOT-0012', 'LOT-0013', 'LOT-0014'],
+    batchLotIds: ['LOT-0043', 'LOT-0044', 'LOT-0045', 'LOT-0046']
   };
   return catalog;
 }
 
-function mergeApplicability(base, recovered) {
+function mergeApplicability(base, ...overlays) {
   const rules = [...(base.unitApplicability ?? [])];
   const byId = new Map(rules.map((rule, index) => [rule.unitId, index]));
-  for (const rule of recovered.unitApplicability ?? []) {
-    if (byId.has(rule.unitId)) rules[byId.get(rule.unitId)] = rule;
-    else {
-      byId.set(rule.unitId, rules.length);
-      rules.push(rule);
+  for (const overlay of overlays) {
+    for (const rule of overlay.unitApplicability ?? []) {
+      if (byId.has(rule.unitId)) rules[byId.get(rule.unitId)] = rule;
+      else {
+        byId.set(rule.unitId, rules.length);
+        rules.push(rule);
+      }
     }
   }
-  return { ...base, reviewedAt: '2026-08-09', unitApplicability: rules };
+  return { ...base, reviewedAt: '2026-08-11', unitApplicability: rules };
 }
 
-const [baseCatalog, baseApplicability, recoveredApplicability, ...fragments] = await Promise.all([
+const [baseCatalog, baseApplicability, recoveredApplicability, publicationApplicability, ...fragments] = await Promise.all([
   readFile(catalogUrl, 'utf8').then(JSON.parse),
   readFile(applicabilityUrl, 'utf8').then(JSON.parse),
   readFile(recoveredApplicabilityUrl, 'utf8').then(JSON.parse),
+  readFile(publicationApplicabilityUrl, 'utf8').then(JSON.parse),
   ...fragmentUrls.map((url) => readFile(url, 'utf8').then(JSON.parse))
 ]);
 const catalog = assembleCatalog(baseCatalog, fragments);
-const applicability = mergeApplicability(baseApplicability, recoveredApplicability);
+const applicability = mergeApplicability(baseApplicability, recoveredApplicability, publicationApplicability);
 const catalogBytes = Buffer.from(JSON.stringify(catalog));
 const digest = createHash('sha256').update(catalogBytes).digest('hex');
 const manifest = {
@@ -130,5 +139,6 @@ console.log(JSON.stringify({
   questions: catalog.questions.length,
   questionSets: catalog.questionSets.length,
   recoveredLotIds: catalog.publication.recoveredLotIds,
+  batchLotIds: catalog.publication.batchLotIds,
   sha256: digest
 }));
