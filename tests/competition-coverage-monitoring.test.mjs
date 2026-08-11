@@ -12,12 +12,12 @@ const [packageJson, pagesWorkflow, deploymentScript] = await Promise.all([
 
 test('monitoramento consolida contagem física e vínculos por concurso', () => {
   const summary = buildCoverageSummary(catalog, applicability);
-  assert.equal(summary.catalogContentVersion, 41);
-  assert.equal(summary.catalogLotId, 'LOT-0042');
-  assert.equal(summary.physicalUnits, 41);
-  assert.equal(summary.physicalQuestions, 280);
-  assert.deepEqual(summary.unitCounts, { PMDF: 37, PMGO: 33, PMMG: 26 });
-  assert.deepEqual(summary.questionCounts, { PMDF: 252, PMGO: 224, PMMG: 176 });
+  assert.equal(summary.catalogContentVersion, 45);
+  assert.equal(summary.catalogLotId, 'LOT-0046');
+  assert.equal(summary.physicalUnits, 45);
+  assert.equal(summary.physicalQuestions, 308);
+  assert.deepEqual(summary.unitCounts, { PMDF: 41, PMGO: 34, PMMG: 29 });
+  assert.deepEqual(summary.questionCounts, { PMDF: 280, PMGO: 231, PMMG: 197 });
   assert.equal(summary.commonUnits, 19);
   assert.equal(summary.commonQuestions, 127);
   assert.equal(summary.pmmgTopicReviewPending, 0);
@@ -33,6 +33,23 @@ test('lotes históricos recuperados têm aplicabilidade explícita PMDF + PMGO',
     assert.deepEqual(rule.competitions, ['PMDF','PMGO']);
     assert.equal(rule.status, 'verified-not-pmmg');
   }
+});
+
+test('LOT-0043 a LOT-0046 têm aplicabilidade explícita e não ativam rotação específica', () => {
+  const expected = {
+    U042: ['PMDF','PMMG'],
+    U043: ['PMDF','PMMG'],
+    U044: ['PMDF','PMMG'],
+    U045: ['PMDF','PMGO']
+  };
+  for (const [unitId, competitions] of Object.entries(expected)) {
+    const rule = applicability.unitApplicability.find((item) => item.unitId === unitId);
+    assert.ok(rule, `${unitId} sem aplicabilidade`);
+    assert.equal(rule.classification, 'shared-2');
+    assert.deepEqual(rule.competitions, competitions);
+    assert.ok(rule.evidenceIds.length > 0, `${unitId} sem evidência`);
+  }
+  assert.equal(applicability.specificRotation.enabled, false);
 });
 
 test('primeiras específicas PMDF, PMGO e PMMG permanecem com rotação definitiva desativada até O7', () => {
