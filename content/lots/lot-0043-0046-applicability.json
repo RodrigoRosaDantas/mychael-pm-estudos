@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-11",
+  "unitApplicability": [
+    {"unitId":"U042","classification":"shared-2","competitions":["PMDF","PMMG"],"status":"verified","evidenceIds":["FNT-0015","FNT-0025","FNT-0026"],"note":"Conectivos lógicos integram o núcleo proposicional das referências históricas PMDF 2023 e PMMG 2024. FNT-0015 é fonte oficial histórica PMDF; FNT-0025 é cópia secundária da matriz PMMG e FNT-0026 corrobora oficialmente o certame. Novo edital prevalece."},
+    {"unitId":"U043","classification":"shared-2","competitions":["PMDF","PMMG"],"status":"verified","evidenceIds":["FNT-0015","FNT-0025","FNT-0026"],"note":"Regra de três/proporcionalidade foi revalidada no menor nível temático para PMDF + PMMG. As referências são históricas e não antecipam conteúdo de futuro edital."},
+    {"unitId":"U044","classification":"shared-2","competitions":["PMDF","PMMG"],"status":"verified","evidenceIds":["FNT-0001","FNT-0015","FNT-0025","FNT-0026"],"note":"Direitos políticos integram a sobreposição histórica PMDF + PMMG; FNT-0001 é a Constituição compilada oficial vigente e foi revalidada em 11/08/2026 nos arts. 14 a 16. PMGO permanece fora deste recorte."},
+    {"unitId":"U045","classification":"shared-2","competitions":["PMDF","PMGO"],"status":"verified-not-pmmg","evidenceIds":["FNT-0015","FNT-0014"],"note":"Atos administrativos — elementos e atributos — integra os referenciais históricos oficiais PMDF 2023 e PMGO 2022. A unidade é introdutória e não presume incidência para PMMG nem futuro edital."}
+  ]
+}
