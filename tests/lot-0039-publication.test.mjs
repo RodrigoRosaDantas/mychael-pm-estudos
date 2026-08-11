@@ -10,16 +10,16 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000260','Q000261','Q000262','Q000263','Q000264','Q000265','Q000266'];
 const answers = ['C','A','D','B','E','C','A'];
 
-test('LOT-0039 permanece íntegro após a evolução do catálogo para v47', () => {
+test('LOT-0039 permanece íntegro após a evolução do catálogo para v48', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(lot0039.contentVersion, 36);
   assert.equal(lot0039.lotId, 'LOT-0039');
-  assert.equal(catalog.contentVersion, 47);
-  assert.equal(catalog.publication.lotId, 'LOT-0048');
-  assert.equal(catalog.units.length, 47);
-  assert.equal(catalog.materials.length, 47);
-  assert.equal(catalog.questions.length, 322);
-  assert.equal(catalog.questionSets.length, 47);
+  assert.equal(catalog.contentVersion, 48);
+  assert.equal(catalog.publication.lotId, 'LOT-0049');
+  assert.equal(catalog.units.length, 48);
+  assert.equal(catalog.materials.length, 48);
+  assert.equal(catalog.questions.length, 329);
+  assert.equal(catalog.questionSets.length, 48);
 });
 
 test('U039 preserva LINDB específica PMMG e rotação definitiva desativada', () => {
@@ -31,27 +31,14 @@ test('U039 preserva LINDB específica PMMG e rotação definitiva desativada', (
   assert.ok(parent); assert.equal(parent.subjectId, 'MAT-NDIR'); assert.equal(parent.parentId, null); assert.equal(parent.historicalIncidence, 'Baixa');
   assert.ok(child); assert.equal(child.subjectId, 'MAT-NDIR'); assert.equal(child.parentId, 'ASS-NDIR-001'); assert.equal(child.historicalIncidence, 'Baixa');
   assert.ok(source); assert.equal(source.official, true); assert.equal(source.temporalStatus, 'Vigente'); assert.equal(source.lastVerifiedAt, '2026-08-08');
-
   const unit = find(catalog.units, 'U039');
   assert.ok(unit); assert.deepEqual(unit.coverage, ['PMMG']); assert.equal(unit.firstTrail, false);
-  assert.deepEqual(unit.topicIds, ['ASS-NDIR-001','ASS-NDIR-001-01']);
-  assert.deepEqual(unit.sourceIds, ['FNT-0036']); assert.deepEqual(unit.materialIds, ['M039']); assert.deepEqual(unit.questionIds, ids); assert.deepEqual(unit.questionSetIds, ['QS039']); assert.equal(unit.reviewPlanned, true);
-
+  assert.deepEqual(unit.topicIds, ['ASS-NDIR-001','ASS-NDIR-001-01']); assert.deepEqual(unit.sourceIds, ['FNT-0036']); assert.deepEqual(unit.materialIds, ['M039']); assert.deepEqual(unit.questionIds, ids); assert.deepEqual(unit.questionSetIds, ['QS039']); assert.equal(unit.reviewPlanned, true);
   const material = find(catalog.materials, 'M039');
-  assert.ok(material); assert.equal(material.unitId, 'U039'); assert.deepEqual(material.sourceIds, ['FNT-0036']);
-  assert.equal('questionIds' in material, false); assert.equal('answer' in material, false); assert.equal('options' in material, false);
+  assert.ok(material); assert.equal(material.unitId, 'U039'); assert.deepEqual(material.sourceIds, ['FNT-0036']); assert.equal('questionIds' in material, false); assert.equal('answer' in material, false); assert.equal('options' in material, false);
   const headings = material.blocks.filter(({type}) => type === 'heading').map(({text}) => text);
   for (const term of ['Início da vigência','Continuidade e revogação','Desconhecimento da lei','Caso omisso','Fins sociais','Efeito imediato','Quadro-resumo','Erros comuns','Resumo','Orientação de revisão']) assert.ok(headings.some((h) => h.toLowerCase().includes(term.toLowerCase())), term);
-
-  ids.forEach((id, index) => {
-    const q = find(catalog.questions, id);
-    assert.ok(q, id); assert.equal(q.unitId, 'U039', id); assert.equal(q.subjectId, 'MAT-NDIR', id); assert.equal(q.answer, answers[index], id); assert.equal(q.options.length, 5, id); assert.ok(q.options.some((o) => o.id === answers[index]), id); assert.deepEqual(q.sourceIds, ['FNT-0036'], id); assert.ok(q.commentary.length > 20, id); assert.ok(q.foundation.length > 20, id); assert.equal(q.annulled, false, id); assert.equal(q.duplicateOf, null, id); assert.equal(q.imageRequired, false, id); assert.equal(q.valid, true, id);
-  });
-
-  const set = find(catalog.questionSets, 'QS039');
-  assert.ok(set); assert.equal(set.unitId, 'U039'); assert.deepEqual(set.questionIds, ids); assert.equal(set.correctionMode, 'Ao finalizar'); assert.equal('questions' in set, false); assert.equal('answers' in set, false);
-
-  const rule = applicability.unitApplicability.find((item) => item.unitId === 'U039');
-  assert.ok(rule); assert.equal(rule.classification, 'specific-rotation'); assert.deepEqual(rule.competitions, ['PMMG']); assert.equal(rule.status, 'verified'); assert.deepEqual(rule.evidenceIds, ['FNT-0025','FNT-0026']);
-  assert.equal(applicability.specificRotation.enabled, false);
+  ids.forEach((id, index) => { const q = find(catalog.questions, id); assert.ok(q, id); assert.equal(q.unitId, 'U039', id); assert.equal(q.subjectId, 'MAT-NDIR', id); assert.equal(q.answer, answers[index], id); assert.equal(q.options.length, 5, id); assert.ok(q.options.some((o) => o.id === answers[index]), id); assert.deepEqual(q.sourceIds, ['FNT-0036'], id); assert.ok(q.commentary.length > 20, id); assert.ok(q.foundation.length > 20, id); assert.equal(q.annulled, false, id); assert.equal(q.duplicateOf, null, id); assert.equal(q.imageRequired, false, id); assert.equal(q.valid, true, id); });
+  const set = find(catalog.questionSets, 'QS039'); assert.ok(set); assert.equal(set.unitId, 'U039'); assert.deepEqual(set.questionIds, ids); assert.equal(set.correctionMode, 'Ao finalizar'); assert.equal('questions' in set, false); assert.equal('answers' in set, false);
+  const rule = applicability.unitApplicability.find((item) => item.unitId === 'U039'); assert.ok(rule); assert.equal(rule.classification, 'specific-rotation'); assert.deepEqual(rule.competitions, ['PMMG']); assert.equal(rule.status, 'verified'); assert.deepEqual(rule.evidenceIds, ['FNT-0025','FNT-0026']); assert.equal(applicability.specificRotation.enabled, false);
 });
