@@ -1,0 +1,34 @@
+{
+  "lotId": "LOT-0059-taxonomy",
+  "contentVersion": 58,
+  "subjects": [],
+  "topics": [
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-PPEN-006",
+      "level": 1,
+      "name": "Prisões, liberdade e medidas cautelares",
+      "order": 5060,
+      "parentId": null,
+      "priority": "Alta",
+      "stage": "Desenvolvimento",
+      "subjectId": "MAT-PPEN"
+    },
+    {
+      "historicalIncidence": "Alta",
+      "id": "ASS-PPEN-006-01",
+      "level": 2,
+      "name": "Prisão em flagrante",
+      "order": 5061,
+      "parentId": "ASS-PPEN-006",
+      "priority": "Alta",
+      "stage": "Desenvolvimento",
+      "subjectId": "MAT-PPEN"
+    }
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
