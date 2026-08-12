@@ -1,0 +1,34 @@
+{
+  "lotId": "LOT-0060-taxonomy",
+  "contentVersion": 59,
+  "subjects": [],
+  "topics": [
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-DADM-004",
+      "level": 1,
+      "name": "Poderes administrativos",
+      "order": 3040,
+      "parentId": null,
+      "priority": "Alta",
+      "stage": "Base",
+      "subjectId": "MAT-DADM"
+    },
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-DADM-004-01",
+      "level": 2,
+      "name": "Poder hierárquico, disciplinar, regulamentar e de polícia",
+      "order": 3041,
+      "parentId": "ASS-DADM-004",
+      "priority": "Alta",
+      "stage": "Base",
+      "subjectId": "MAT-DADM"
+    }
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
