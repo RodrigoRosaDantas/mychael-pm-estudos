@@ -1,0 +1,23 @@
+{
+  "lotId": "LOT-0057-taxonomy",
+  "contentVersion": 56,
+  "subjects": [],
+  "topics": [
+    {
+      "historicalIncidence": "Baixa",
+      "id": "ASS-MAT-010",
+      "level": 1,
+      "name": "Teoria dos conjuntos e inclusão-exclusão",
+      "order": 22100,
+      "parentId": null,
+      "priority": "Média",
+      "stage": "Desenvolvimento",
+      "subjectId": "MAT-MAT"
+    }
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
