@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-12",
+  "unitApplicability": [
+    {
+      "unitId": "U059",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified",
+      "evidenceIds": ["FNT-0015", "FNT-0014"],
+      "note": "Poderes administrativos foi revalidado no menor nível temático como compartilhado entre PMDF e PMGO. FNT-0015 e FNT-0014 são referências curriculares históricas oficiais; a classificação é histórica e não antecipa futuro edital."
+    }
+  ]
+}
