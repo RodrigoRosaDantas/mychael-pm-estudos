@@ -1,0 +1,13 @@
+{
+  "lotId": "LOT-0056-taxonomy",
+  "contentVersion": 55,
+  "subjects": [],
+  "topics": [
+    {"historicalIncidence":"Média","id":"ASS-DCON-010","level":1,"name":"Defesa do Estado e das instituições democráticas","order":2100,"parentId":null,"priority":"Média","stage":"Desenvolvimento","subjectId":"MAT-DCON"}
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
