@@ -22,7 +22,8 @@ const applicabilityFiles = [
   'content/lots/lot-0057-applicability.json',
   'content/lots/lot-0058-applicability.json',
   'content/lots/lot-0059-applicability.json',
-  'content/lots/lot-0060-applicability.json'
+  'content/lots/lot-0060-applicability.json',
+  'content/lots/lot-0061-applicability.json'
 ];
 
 const fragmentFiles = [
@@ -96,7 +97,9 @@ const fragmentFiles = [
   'content/lots/lot-0059-taxonomy.json',
   'content/lots/lot-0059.json',
   'content/lots/lot-0060-taxonomy.json',
-  'content/lots/lot-0060.json'
+  'content/lots/lot-0060.json',
+  'content/lots/lot-0061-taxonomy.json',
+  'content/lots/lot-0061.json'
 ];
 
 const collections = ['subjects', 'topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
@@ -126,17 +129,17 @@ export function assembleCatalog(baseCatalog, fragments) {
       ...additions
     ];
   }
-  catalog.contentVersion = 59;
-  catalog.generatedAt = '2026-08-12T06:27:00Z';
+  catalog.contentVersion = 60;
+  catalog.generatedAt = '2026-08-12T07:34:00Z';
   catalog.publicationStatus = 'published';
   catalog.publication = {
     authorized: true,
     authorizedAt: '2026-08-12',
-    lotId: 'LOT-0060',
+    lotId: 'LOT-0061',
     lotVersion: 1,
     source: 'Notion privado',
     recoveredLotIds: ['LOT-0012', 'LOT-0013', 'LOT-0014'],
-    batchLotIds: ['LOT-0060']
+    batchLotIds: ['LOT-0061']
   };
   return catalog;
 }

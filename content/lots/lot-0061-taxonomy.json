@@ -1,0 +1,34 @@
+{
+  "lotId": "LOT-0061-taxonomy",
+  "contentVersion": 60,
+  "subjects": [],
+  "topics": [
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-PPM-003",
+      "level": 1,
+      "name": "Inquérito policial militar",
+      "order": 7030,
+      "parentId": null,
+      "priority": "Alta",
+      "stage": "Base",
+      "subjectId": "MAT-PPM"
+    },
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-PPM-003-01",
+      "level": 2,
+      "name": "Instauração, diligências e relatório do IPM",
+      "order": 7031,
+      "parentId": "ASS-PPM-003",
+      "priority": "Alta",
+      "stage": "Base",
+      "subjectId": "MAT-PPM"
+    }
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}

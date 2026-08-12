@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-12",
+  "unitApplicability": [
+    {
+      "unitId": "U060",
+      "classification": "shared-2",
+      "competitions": ["PMDF", "PMGO"],
+      "status": "verified",
+      "evidenceIds": ["FNT-0015", "FNT-0014"],
+      "note": "Inquérito policial militar foi classificado no menor nível temático como compartilhado entre PMDF e PMGO, conforme as referências curriculares históricas oficiais usadas na matriz. A classificação é histórica e não antecipa futuro edital."
+    }
+  ]
+}
