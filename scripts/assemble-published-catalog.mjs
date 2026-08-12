@@ -5,90 +5,99 @@ const root = new URL('../', import.meta.url);
 const catalogUrl = new URL('content/catalog.json', root);
 const manifestUrl = new URL('content/manifest.json', root);
 const applicabilityUrl = new URL('content/content-applicability.json', root);
-const recoveredApplicabilityUrl = new URL('content/lots/lot-0012-0014-applicability.json', root);
-const publicationApplicabilityUrl = new URL('content/lots/lot-0043-0046-applicability.json', root);
-const lot0047ApplicabilityUrl = new URL('content/lots/lot-0047-applicability.json', root);
-const lot0048ApplicabilityUrl = new URL('content/lots/lot-0048-applicability.json', root);
-const lot0049ApplicabilityUrl = new URL('content/lots/lot-0049-applicability.json', root);
-const lot0050ApplicabilityUrl = new URL('content/lots/lot-0050-applicability.json', root);
-const lot0051ApplicabilityUrl = new URL('content/lots/lot-0051-applicability.json', root);
-const lot0052ApplicabilityUrl = new URL('content/lots/lot-0052-applicability.json', root);
-const lot0053ApplicabilityUrl = new URL('content/lots/lot-0053-applicability.json', root);
-const lot0054ApplicabilityUrl = new URL('content/lots/lot-0054-applicability.json', root);
-const lot0055ApplicabilityUrl = new URL('content/lots/lot-0055-applicability.json', root);
-const lot0056ApplicabilityUrl = new URL('content/lots/lot-0056-applicability.json', root);
-const lot0057ApplicabilityUrl = new URL('content/lots/lot-0057-applicability.json', root);
-const lot0058ApplicabilityUrl = new URL('content/lots/lot-0058-applicability.json', root);
-const fragmentUrls = [
-  new URL('content/lots/lot-0003.json', root),
-  new URL('content/lots/lot-0004-core.json', root),
-  new URL('content/lots/lot-0004-questions.json', root),
-  new URL('content/lots/lot-0005.json', root),
-  new URL('content/lots/lot-0006.json', root),
-  new URL('content/lots/lot-0007-subject.json', root),
-  new URL('content/lots/lot-0007.json', root),
-  new URL('content/lots/lot-0008.json', root),
-  new URL('content/lots/lot-0009-taxonomy.json', root),
-  new URL('content/lots/lot-0009.json', root),
-  new URL('content/lots/lot-0010.json', root),
-  new URL('content/lots/lot-0015.json', root),
-  new URL('content/lots/lot-0016.json', root),
-  new URL('content/lots/lot-0017.json', root),
-  new URL('content/lots/lot-0018.json', root),
-  new URL('content/lots/lot-0019.json', root),
-  new URL('content/lots/lot-0020.json', root),
-  new URL('content/lots/lot-0021.json', root),
-  new URL('content/lots/lot-0022.json', root),
-  new URL('content/lots/lot-0023.json', root),
-  new URL('content/lots/lot-0024.json', root),
-  new URL('content/lots/lot-0026.json', root),
-  new URL('content/lots/lot-0027.json', root),
-  new URL('content/lots/lot-0028.json', root),
-  new URL('content/lots/lot-0029.json', root),
-  new URL('content/lots/lot-0030.json', root),
-  new URL('content/lots/lot-0025.json', root),
-  new URL('content/lots/lot-0031.json', root),
-  new URL('content/lots/lot-0032.json', root),
-  new URL('content/lots/lot-0033.json', root),
-  new URL('content/lots/lot-0034.json', root),
-  new URL('content/lots/lot-0011.json', root),
-  new URL('content/lots/lot-0012.json', root),
-  new URL('content/lots/lot-0013.json', root),
-  new URL('content/lots/lot-0014.json', root),
-  new URL('content/lots/lot-0035.json', root),
-  new URL('content/lots/lot-0036.json', root),
-  new URL('content/lots/lot-0037.json', root),
-  new URL('content/lots/lot-0038.json', root),
-  new URL('content/lots/lot-0039.json', root),
-  new URL('content/lots/lot-0041.json', root),
-  new URL('content/lots/lot-0042.json', root),
-  new URL('content/lots/lot-0043.json', root),
-  new URL('content/lots/lot-0044.json', root),
-  new URL('content/lots/lot-0045.json', root),
-  new URL('content/lots/lot-0046.json', root),
-  new URL('content/lots/lot-0047.json', root),
-  new URL('content/lots/lot-0048-taxonomy.json', root),
-  new URL('content/lots/lot-0048.json', root),
-  new URL('content/lots/lot-0049.json', root),
-  new URL('content/lots/lot-0050-taxonomy.json', root),
-  new URL('content/lots/lot-0050.json', root),
-  new URL('content/lots/lot-0051-taxonomy.json', root),
-  new URL('content/lots/lot-0051.json', root),
-  new URL('content/lots/lot-0052-taxonomy.json', root),
-  new URL('content/lots/lot-0052.json', root),
-  new URL('content/lots/lot-0053-taxonomy.json', root),
-  new URL('content/lots/lot-0053.json', root),
-  new URL('content/lots/lot-0054-taxonomy.json', root),
-  new URL('content/lots/lot-0054.json', root),
-  new URL('content/lots/lot-0055.json', root),
-  new URL('content/lots/lot-0056-taxonomy.json', root),
-  new URL('content/lots/lot-0056.json', root),
-  new URL('content/lots/lot-0057-taxonomy.json', root),
-  new URL('content/lots/lot-0057.json', root),
-  new URL('content/lots/lot-0058-taxonomy.json', root),
-  new URL('content/lots/lot-0058.json', root)
+
+const applicabilityFiles = [
+  'content/lots/lot-0012-0014-applicability.json',
+  'content/lots/lot-0043-0046-applicability.json',
+  'content/lots/lot-0047-applicability.json',
+  'content/lots/lot-0048-applicability.json',
+  'content/lots/lot-0049-applicability.json',
+  'content/lots/lot-0050-applicability.json',
+  'content/lots/lot-0051-applicability.json',
+  'content/lots/lot-0052-applicability.json',
+  'content/lots/lot-0053-applicability.json',
+  'content/lots/lot-0054-applicability.json',
+  'content/lots/lot-0055-applicability.json',
+  'content/lots/lot-0056-applicability.json',
+  'content/lots/lot-0057-applicability.json',
+  'content/lots/lot-0058-applicability.json',
+  'content/lots/lot-0059-applicability.json'
 ];
+
+const fragmentFiles = [
+  'content/lots/lot-0003.json',
+  'content/lots/lot-0004-core.json',
+  'content/lots/lot-0004-questions.json',
+  'content/lots/lot-0005.json',
+  'content/lots/lot-0006.json',
+  'content/lots/lot-0007-subject.json',
+  'content/lots/lot-0007.json',
+  'content/lots/lot-0008.json',
+  'content/lots/lot-0009-taxonomy.json',
+  'content/lots/lot-0009.json',
+  'content/lots/lot-0010.json',
+  'content/lots/lot-0015.json',
+  'content/lots/lot-0016.json',
+  'content/lots/lot-0017.json',
+  'content/lots/lot-0018.json',
+  'content/lots/lot-0019.json',
+  'content/lots/lot-0020.json',
+  'content/lots/lot-0021.json',
+  'content/lots/lot-0022.json',
+  'content/lots/lot-0023.json',
+  'content/lots/lot-0024.json',
+  'content/lots/lot-0026.json',
+  'content/lots/lot-0027.json',
+  'content/lots/lot-0028.json',
+  'content/lots/lot-0029.json',
+  'content/lots/lot-0030.json',
+  'content/lots/lot-0025.json',
+  'content/lots/lot-0031.json',
+  'content/lots/lot-0032.json',
+  'content/lots/lot-0033.json',
+  'content/lots/lot-0034.json',
+  'content/lots/lot-0011.json',
+  'content/lots/lot-0012.json',
+  'content/lots/lot-0013.json',
+  'content/lots/lot-0014.json',
+  'content/lots/lot-0035.json',
+  'content/lots/lot-0036.json',
+  'content/lots/lot-0037.json',
+  'content/lots/lot-0038.json',
+  'content/lots/lot-0039.json',
+  'content/lots/lot-0041.json',
+  'content/lots/lot-0042.json',
+  'content/lots/lot-0043.json',
+  'content/lots/lot-0044.json',
+  'content/lots/lot-0045.json',
+  'content/lots/lot-0046.json',
+  'content/lots/lot-0047.json',
+  'content/lots/lot-0048-taxonomy.json',
+  'content/lots/lot-0048.json',
+  'content/lots/lot-0049.json',
+  'content/lots/lot-0050-taxonomy.json',
+  'content/lots/lot-0050.json',
+  'content/lots/lot-0051-taxonomy.json',
+  'content/lots/lot-0051.json',
+  'content/lots/lot-0052-taxonomy.json',
+  'content/lots/lot-0052.json',
+  'content/lots/lot-0053-taxonomy.json',
+  'content/lots/lot-0053.json',
+  'content/lots/lot-0054-taxonomy.json',
+  'content/lots/lot-0054.json',
+  'content/lots/lot-0055.json',
+  'content/lots/lot-0056-taxonomy.json',
+  'content/lots/lot-0056.json',
+  'content/lots/lot-0057-taxonomy.json',
+  'content/lots/lot-0057.json',
+  'content/lots/lot-0058-taxonomy.json',
+  'content/lots/lot-0058.json',
+  'content/lots/lot-0059-taxonomy.json',
+  'content/lots/lot-0059.json'
+];
+
 const collections = ['subjects', 'topics', 'sources', 'units', 'materials', 'questions', 'questionSets'];
+const readJson = (path) => readFile(new URL(path, root), 'utf8').then(JSON.parse);
 
 function uniqueById(items) {
   const result = [];
@@ -114,17 +123,17 @@ export function assembleCatalog(baseCatalog, fragments) {
       ...additions
     ];
   }
-  catalog.contentVersion = 57;
-  catalog.generatedAt = '2026-08-12T03:29:00Z';
+  catalog.contentVersion = 58;
+  catalog.generatedAt = '2026-08-12T04:31:00Z';
   catalog.publicationStatus = 'published';
   catalog.publication = {
     authorized: true,
     authorizedAt: '2026-08-12',
-    lotId: 'LOT-0058',
-    lotVersion: 1,
+    lotId: 'LOT-0059',
+    lotVersion: 2,
     source: 'Notion privado',
     recoveredLotIds: ['LOT-0012', 'LOT-0013', 'LOT-0014'],
-    batchLotIds: ['LOT-0058']
+    batchLotIds: ['LOT-0059']
   };
   return catalog;
 }
@@ -144,62 +153,15 @@ function mergeApplicability(base, ...overlays) {
   return { ...base, reviewedAt: '2026-08-12', unitApplicability: rules };
 }
 
-const [
-  baseCatalog,
-  baseApplicability,
-  recoveredApplicability,
-  publicationApplicability,
-  lot0047Applicability,
-  lot0048Applicability,
-  lot0049Applicability,
-  lot0050Applicability,
-  lot0051Applicability,
-  lot0052Applicability,
-  lot0053Applicability,
-  lot0054Applicability,
-  lot0055Applicability,
-  lot0056Applicability,
-  lot0057Applicability,
-  lot0058Applicability,
-  ...fragments
-] = await Promise.all([
-  readFile(catalogUrl, 'utf8').then(JSON.parse),
-  readFile(applicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(recoveredApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(publicationApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0047ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0048ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0049ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0050ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0051ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0052ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0053ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0054ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0055ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0056ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0057ApplicabilityUrl, 'utf8').then(JSON.parse),
-  readFile(lot0058ApplicabilityUrl, 'utf8').then(JSON.parse),
-  ...fragmentUrls.map((url) => readFile(url, 'utf8').then(JSON.parse))
+const [baseCatalog, baseApplicability, applicabilityOverlays, fragments] = await Promise.all([
+  readJson('content/catalog.json'),
+  readJson('content/content-applicability.json'),
+  Promise.all(applicabilityFiles.map(readJson)),
+  Promise.all(fragmentFiles.map(readJson))
 ]);
 
 const catalog = assembleCatalog(baseCatalog, fragments);
-const applicability = mergeApplicability(
-  baseApplicability,
-  recoveredApplicability,
-  publicationApplicability,
-  lot0047Applicability,
-  lot0048Applicability,
-  lot0049Applicability,
-  lot0050Applicability,
-  lot0051Applicability,
-  lot0052Applicability,
-  lot0053Applicability,
-  lot0054Applicability,
-  lot0055Applicability,
-  lot0056Applicability,
-  lot0057Applicability,
-  lot0058Applicability,
-);
+const applicability = mergeApplicability(baseApplicability, ...applicabilityOverlays);
 const catalogBytes = Buffer.from(JSON.stringify(catalog));
 const digest = createHash('sha256').update(catalogBytes).digest('hex');
 const manifest = {
@@ -208,9 +170,11 @@ const manifest = {
   contentVersion: catalog.contentVersion,
   files: [{ path: 'content/catalog.json', sha256: digest, bytes: catalogBytes.length }]
 };
+
 await writeFile(catalogUrl, catalogBytes);
 await writeFile(applicabilityUrl, `${JSON.stringify(applicability, null, 2)}\n`);
 await writeFile(manifestUrl, `${JSON.stringify(manifest, null, 2)}\n`);
+
 console.log(JSON.stringify({
   status: 'assembled',
   contentVersion: catalog.contentVersion,
