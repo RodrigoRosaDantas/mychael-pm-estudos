@@ -10,16 +10,16 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000490','Q000491','Q000492','Q000493','Q000494','Q000495','Q000496'];
 const answers = ['C','B','A','D','E','C','D'];
 
-test('LOT-0059 monta catálogo v58 sem reduzir validações', () => {
+test('LOT-0059 permanece íntegro no catálogo v59 sem reduzir validações', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(lot.lotId, 'LOT-0059');
   assert.equal(lot.contentVersion, 58);
-  assert.equal(catalog.contentVersion, 58);
-  assert.equal(catalog.publication.lotId, 'LOT-0059');
-  assert.equal(catalog.units.length, 58);
-  assert.equal(catalog.materials.length, 58);
-  assert.equal(catalog.questions.length, 399);
-  assert.equal(catalog.questionSets.length, 58);
+  assert.equal(catalog.contentVersion, 59);
+  assert.equal(catalog.publication.lotId, 'LOT-0060');
+  assert.equal(catalog.units.length, 59);
+  assert.equal(catalog.materials.length, 59);
+  assert.equal(catalog.questions.length, 406);
+  assert.equal(catalog.questionSets.length, 59);
   assert.ok(find(catalog.topics, 'ASS-PPEN-006'));
   assert.ok(find(catalog.topics, 'ASS-PPEN-006-01'));
 });
@@ -32,7 +32,6 @@ test('U058 preserva fontes e separação teoria/questões', () => {
   assert.deepEqual(unit.questionIds, ids);
   assert.deepEqual(unit.questionSetIds, ['QS058']);
   assert.deepEqual(unit.sourceIds, ['FNT-0003']);
-
   const material = find(catalog.materials, 'M058');
   assert.ok(material);
   assert.equal(material.unitId, 'U058');
@@ -40,7 +39,6 @@ test('U058 preserva fontes e separação teoria/questões', () => {
   assert.equal('questionIds' in material, false);
   assert.equal('answer' in material, false);
   assert.equal('options' in material, false);
-
   ids.forEach((id, index) => {
     const q = find(catalog.questions, id);
     assert.ok(q, id);
@@ -56,7 +54,6 @@ test('U058 preserva fontes e separação teoria/questões', () => {
     assert.equal(q.imageRequired, false, id);
     assert.equal(q.valid, true, id);
   });
-
   const set = find(catalog.questionSets, 'QS058');
   assert.ok(set);
   assert.equal(set.unitId, 'U058');
