@@ -10,16 +10,16 @@ const find = (collection, id) => collection.find((item) => item.id === id);
 const ids = ['Q000504','Q000505','Q000506','Q000507','Q000508','Q000509','Q000510'];
 const answers = ['B','C','D','A','E','C','D'];
 
-test('LOT-0061 monta catálogo v60 sem reduzir validações', () => {
+test('LOT-0061 permanece íntegro no catálogo v61 sem reduzir validações', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(lot.lotId, 'LOT-0061');
   assert.equal(lot.contentVersion, 60);
-  assert.equal(catalog.contentVersion, 60);
-  assert.equal(catalog.publication.lotId, 'LOT-0061');
-  assert.equal(catalog.units.length, 60);
-  assert.equal(catalog.materials.length, 60);
-  assert.equal(catalog.questions.length, 413);
-  assert.equal(catalog.questionSets.length, 60);
+  assert.equal(catalog.contentVersion, 61);
+  assert.equal(catalog.publication.lotId, 'LOT-0062');
+  assert.equal(catalog.units.length, 61);
+  assert.equal(catalog.materials.length, 61);
+  assert.equal(catalog.questions.length, 420);
+  assert.equal(catalog.questionSets.length, 61);
   assert.ok(find(catalog.topics, 'ASS-PPM-003'));
   assert.ok(find(catalog.topics, 'ASS-PPM-003-01'));
 });
