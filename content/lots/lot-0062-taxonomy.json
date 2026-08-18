@@ -1,0 +1,23 @@
+{
+  "lotId": "LOT-0062-taxonomy",
+  "contentVersion": 61,
+  "subjects": [],
+  "topics": [
+    {
+      "historicalIncidence": "Não verificada",
+      "id": "ASS-DH-007-02",
+      "level": 2,
+      "name": "Sistema Interamericano de Direitos Humanos",
+      "order": 28072,
+      "parentId": "ASS-DH-007",
+      "priority": "Média",
+      "stage": "Desenvolvimento",
+      "subjectId": "MAT-DH"
+    }
+  ],
+  "sources": [],
+  "units": [],
+  "materials": [],
+  "questions": [],
+  "questionSets": []
+}
