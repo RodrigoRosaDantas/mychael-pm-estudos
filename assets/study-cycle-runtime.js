@@ -69,6 +69,14 @@ function node(tag, className, text) {
   return item;
 }
 
+function renderCycleStatus(target, title, detail, eyebrow = 'Seu ponto no ciclo') {
+  target.replaceChildren(
+    node('p', 'eyebrow', eyebrow),
+    node('h2', '', title),
+    node('p', '', detail)
+  );
+}
+
 function simplifyAccessCopy() {
   if (pageId !== 'home') return;
   for (const paragraph of document.querySelectorAll('.auth-card p')) {
@@ -216,7 +224,7 @@ async function renderSchedule() {
 
   if (!privateProgress.authenticated) {
     const status = target.querySelector('#cycleV1Current');
-    if (status) status.innerHTML = '<p class="eyebrow">Seu ponto no ciclo</p><h2>Entre para acompanhar o progresso</h2><p>O cronograma público não contém dados pessoais.</p>';
+    if (status) renderCycleStatus(status, 'Entre para acompanhar o progresso', 'O cronograma público não contém dados pessoais.');
     return;
   }
   const progress = deriveStudyCycleProgress({ plan, catalog, studyUnits: privateProgress.studyUnits, openErrorQuestionIds: privateProgress.openErrorQuestionIds });
@@ -231,12 +239,27 @@ async function renderSchedule() {
   const status = target.querySelector('#cycleV1Current');
   if (!status) return;
   if (isSundayInBrasilia()) {
-    status.innerHTML = `<p class="eyebrow">Seu ponto no ciclo</p><h2>Domingo é folga</h2><p>${progress.current ? `A próxima sessão continua no Ciclo ${progress.current.cycleNumber}, sessão ${progress.current.positionInCycle} de 6.` : 'O checkpoint fica para o próximo dia de estudo.'}</p>`;
+    renderCycleStatus(
+      status,
+      'Domingo é folga',
+      progress.current
+        ? `A próxima sessão continua no Ciclo ${progress.current.cycleNumber}, sessão ${progress.current.positionInCycle} de 6.`
+        : 'O checkpoint fica para o próximo dia de estudo.'
+    );
   } else if (progress.checkpointDue) {
-    status.innerHTML = '<p class="eyebrow">Checkpoint</p><h2>24 de 24 sessões concluídas</h2><p>Os próximos ciclos só serão montados depois de revisar o progresso e o novo acervo publicado.</p>';
+    renderCycleStatus(
+      status,
+      '24 de 24 sessões concluídas',
+      'Os próximos ciclos só serão montados depois de revisar o progresso e o novo acervo publicado.',
+      'Checkpoint'
+    );
   } else {
     const currentUnit = (catalog.units ?? []).find((unit) => unit.id === progress.current?.unitId);
-    status.innerHTML = `<p class="eyebrow">Seu ponto no ciclo</p><h2>Ciclo ${progress.current?.cycleNumber ?? 1} · sessão ${progress.current?.positionInCycle ?? 1} de 6</h2><p>${currentUnit?.title ?? 'Próxima unidade'} · ${progress.completedSessions}/24 sessões concluídas.</p>`;
+    renderCycleStatus(
+      status,
+      `Ciclo ${progress.current?.cycleNumber ?? 1} · sessão ${progress.current?.positionInCycle ?? 1} de 6`,
+      `${currentUnit?.title ?? 'Próxima unidade'} · ${progress.completedSessions}/24 sessões concluídas.`
+    );
   }
 }
 
