@@ -1,4 +1,4 @@
-const DATA_URL = './content/taf-pmmg-historical.json';
+import { loadTafHistory } from './content-loader.js';
 
 let dataPromise = null;
 
@@ -11,10 +11,8 @@ function el(tag, options = {}) {
 
 async function loadReferences() {
   if (!dataPromise) {
-    dataPromise = fetch(DATA_URL, { cache: 'no-store' })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(`TAF histórico indisponível (${response.status}).`);
-        const payload = await response.json();
+    dataPromise = loadTafHistory()
+      .then((payload) => {
         if (!Array.isArray(payload.records)) throw new Error('Formato de TAF histórico inválido.');
         return payload;
       })

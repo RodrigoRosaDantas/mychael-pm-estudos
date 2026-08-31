@@ -1,7 +1,7 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
+import { loadCatalog as loadSharedCatalog } from './content-loader.js';
 
-const catalogUrl = './content/catalog.json';
 const reviewWorkspace = document.querySelector('#reviewWorkspace');
 const errorWorkspace = document.querySelector('#errorWorkspace');
 const performanceWorkspace = document.querySelector('#performanceWorkspace');
@@ -150,9 +150,7 @@ function renderPerformance({ attempts, units, errors, reviews }) {
 
 async function loadCatalog() {
   try {
-    const response = await fetch(`${catalogUrl}?v=${Date.now()}`, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    catalog = await response.json();
+    catalog = await loadSharedCatalog();
   } catch (error) {
     console.error('Falha ao carregar catálogo para os painéis privados:', error);
   }

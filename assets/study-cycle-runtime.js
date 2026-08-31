@@ -1,10 +1,9 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { deriveStudyCycleProgress, isReviewDue, isSundayInBrasilia } from './study-cycle.js';
+import { loadCatalog, loadStudyCycle } from './content-loader.js';
 
 const pageId = document.body.dataset.page || 'home';
-const CATALOG_URL = './content/catalog.json';
-const CYCLE_URL = './content/study-cycle-v1.json';
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
 });
@@ -17,14 +16,8 @@ let renderObserver = null;
 function loadPublicData() {
   if (!publicPromise) {
     publicPromise = Promise.all([
-      fetch(CATALOG_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Catálogo indisponível.');
-        return response.json();
-      }),
-      fetch(CYCLE_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Cronograma inicial indisponível.');
-        return response.json();
-      })
+      loadCatalog(),
+      loadStudyCycle()
     ]).then(([catalog, plan]) => ({ catalog, plan }));
   }
   return publicPromise;

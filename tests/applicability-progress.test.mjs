@@ -8,12 +8,13 @@ import {
 } from '../assets/applicability-core.js';
 
 const applicability = JSON.parse(await readFile(new URL('../content/content-applicability.json', import.meta.url), 'utf8'));
-const [studyHtml, subjectsHtml, scheduleHtml, performanceHtml, uiModule] = await Promise.all([
+const [studyHtml, subjectsHtml, scheduleHtml, performanceHtml, uiModule, contentLoader] = await Promise.all([
   readFile(new URL('../estudar.html', import.meta.url), 'utf8'),
   readFile(new URL('../materias.html', import.meta.url), 'utf8'),
   readFile(new URL('../cronograma.html', import.meta.url), 'utf8'),
   readFile(new URL('../desempenho.html', import.meta.url), 'utf8'),
-  readFile(new URL('../assets/competition-progress.js', import.meta.url), 'utf8')
+  readFile(new URL('../assets/competition-progress.js', import.meta.url), 'utf8'),
+  readFile(new URL('../assets/content-loader.js', import.meta.url), 'utf8')
 ]);
 
 test('camada de aplicabilidade preserva guardrails e não infere PMMG', () => {
@@ -98,5 +99,5 @@ test('próximo passo respeita núcleo comum antes de convergência por dois quan
 
 test('páginas relevantes carregam a camada multi-concurso sem segredo elevado', () => {
   for (const html of [studyHtml,subjectsHtml,scheduleHtml,performanceHtml]) assert.match(html,/competition-progress\.js/);
-  assert.match(uiModule,/content\/content-applicability\.json/); assert.match(uiModule,/question_attempts/); assert.match(uiModule,/study_units/); assert.match(uiModule,/error_items/); assert.match(uiModule,/Corrigir erros pendentes/); assert.match(uiModule,/mode=errors/); assert.doesNotMatch(uiModule,/service_role|sb_secret_/i);
+  assert.match(uiModule,/loadApplicability/); assert.match(contentLoader,/content\/content-applicability\.json/); assert.match(uiModule,/question_attempts/); assert.match(uiModule,/study_units/); assert.match(uiModule,/error_items/); assert.match(uiModule,/Corrigir erros pendentes/); assert.match(uiModule,/mode=errors/); assert.doesNotMatch(uiModule,/service_role|sb_secret_/i);
 });

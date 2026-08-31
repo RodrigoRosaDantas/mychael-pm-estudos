@@ -20,6 +20,7 @@ export const REQUIRED_DEPLOYMENT_PATHS = Object.freeze([
   'assets/applicability-core.js',
   'assets/competition-progress.js',
   'assets/competition-progress.css',
+  'assets/content-loader.js',
   'assets/supabase-client.js',
   'assets/supabase-config.js',
   'content/catalog.json',
@@ -54,7 +55,7 @@ export function validatePublicationFiles(files) {
   const styles = toBuffer(files.get('assets/styles.css')).toString('utf8');
   const enhancements = toBuffer(files.get('assets/enhancements.js')).toString('utf8');
   const competitionProgress = toBuffer(files.get('assets/competition-progress.js')).toString('utf8');
-  const curriculumMatrix = toBuffer(files.get('assets/curriculum-matrix.js')).toString('utf8');
+  const contentLoader = toBuffer(files.get('assets/content-loader.js')).toString('utf8');
   for (const page of PAGE_PATHS) {
     const html = toBuffer(files.get(page)).toString('utf8');
     assert(html.includes('id="app"'), `${page}: raiz da aplicação ausente.`);
@@ -71,8 +72,8 @@ export function validatePublicationFiles(files) {
     assert(site.includes(`'${page}'`), `Navegação pública sem ${page}.`);
   }
   assert(enhancements.includes('cronograma.html'), 'Navegação progressiva sem Cronograma.');
-  assert(curriculumMatrix.includes('content/curriculum-matrix.json'), 'Matriz curricular pública não carrega sua fonte.');
-  assert(competitionProgress.includes('content/content-applicability.json'), 'Progresso por concurso não carrega aplicabilidade.');
+  assert(contentLoader.includes('content/curriculum-matrix.json'), 'Matriz curricular pública não carrega sua fonte.');
+  assert(contentLoader.includes('content/content-applicability.json'), 'Progresso por concurso não carrega aplicabilidade.');
   assert(site.includes("from('error_items')"), 'O caderno de erros não consulta dados privados.');
   assert(site.includes('loadOpenErrorQuestionIds'), 'A opção de refazer erros está ausente.');
   assert(site.includes('questionScope'), 'A refação global entre unidades está ausente.');

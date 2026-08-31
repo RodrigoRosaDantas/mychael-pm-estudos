@@ -1,26 +1,15 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { nextReviewAt, nextReviewInterval } from './review-schedule.js';
+import { loadCatalog } from './content-loader.js';
 
 const pageId = document.body.dataset.page || '';
-const CATALOG_URL = './content/catalog.json';
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
 });
 
-let catalogPromise = null;
 let reviewAnsweredOnPage = false;
 let saving = false;
-
-function loadCatalog() {
-  if (!catalogPromise) {
-    catalogPromise = fetch(CATALOG_URL, { cache: 'no-store' }).then((response) => {
-      if (!response.ok) throw new Error('Catálogo indisponível para validar a resposta.');
-      return response.json();
-    });
-  }
-  return catalogPromise;
-}
 
 function queryParam(name) {
   return new URLSearchParams(window.location.search).get(name);

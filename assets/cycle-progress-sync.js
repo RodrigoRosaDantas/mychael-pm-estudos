@@ -1,7 +1,7 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
+import { loadCatalog } from './content-loader.js';
 
-const CATALOG_URL = './content/catalog.json';
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: {
     persistSession: true,
@@ -13,17 +13,6 @@ const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey,
 let timer = null;
 let syncing = false;
 let rerun = false;
-let catalogPromise = null;
-
-function loadCatalog() {
-  if (!catalogPromise) {
-    catalogPromise = fetch(CATALOG_URL, { cache: 'no-store' }).then((response) => {
-      if (!response.ok) throw new Error('Catálogo indisponível para sincronizar o ciclo.');
-      return response.json();
-    });
-  }
-  return catalogPromise;
-}
 
 function latestAttemptsByQuestion(attempts) {
   const latest = new Map();

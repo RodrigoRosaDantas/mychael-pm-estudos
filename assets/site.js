@@ -1,8 +1,7 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
+import { loadCatalog as loadSharedCatalog, loadTafHistory } from './content-loader.js';
 
-const catalogUrl = './content/catalog.json';
-const tafHistoryUrl = './content/taf-pmmg-historical.json';
 const pageId = document.body.dataset.page || 'home';
 const questionTimers = new Map();
 let catalog = null;
@@ -150,9 +149,7 @@ function buildShell() {
 }
 
 async function loadCatalog() {
-  const response = await fetch(catalogUrl, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`Falha ao carregar o catálogo (${response.status}).`);
-  const data = await response.json();
+  const data = await loadSharedCatalog();
   if (data.publicationStatus !== 'published') throw new Error('O catálogo público ainda não está liberado.');
   catalog = data;
   return data;
@@ -160,10 +157,8 @@ async function loadCatalog() {
 
 async function loadPublishedTafCount() {
   if (!tafHistoryPromise) {
-    tafHistoryPromise = fetch(tafHistoryUrl, { cache: 'no-store' })
-      .then(async (response) => {
-        if (!response.ok) return 0;
-        const payload = await response.json();
+    tafHistoryPromise = loadTafHistory()
+      .then((payload) => {
         return Array.isArray(payload.records) ? payload.records.length : 0;
       })
       .catch(() => 0);

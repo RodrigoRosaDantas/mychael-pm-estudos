@@ -34,10 +34,10 @@ test('fluxo de revisão por unidade usa runtime dedicado sem observadores genér
   assert.match(reviewsRuntime, /mode=review/);
 });
 
-test('README registra o catálogo cumulativo v41 vigente', () => {
-  assert.match(readme, /versão 41/);
-  assert.match(readme, /41 unidades/);
-  assert.match(readme, /280 questões/);
-  assert.match(readme, /PMDF: 37 unidades \/ 252 questões/);
-  assert.match(readme, /PMGO: 33 unidades \/ 224 questões/);
+test('README registra o catálogo cumulativo v62 vigente', () => {
+  assert.match(readme, /versão 62/);
+  assert.match(readme, /62 unidades/);
+  assert.match(readme, /427 questões/);
+  assert.match(readme, /PMDF: 58 unidades \/ 399 questões/);
+  assert.match(readme, /PMGO: 42 unidades \/ 287 questões/);
 });

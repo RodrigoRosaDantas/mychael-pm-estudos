@@ -1,4 +1,4 @@
-const DATA_URL = './content/exams-history.json';
+import { loadExamsHistory } from './content-loader.js';
 
 let dataPromise = null;
 let rendering = false;
@@ -18,9 +18,7 @@ function formatDate(value) {
 
 function loadData() {
   if (!dataPromise) {
-    dataPromise = fetch(DATA_URL, { cache: 'no-store' }).then(async (response) => {
-      if (!response.ok) throw new Error(`Falha ao carregar o acervo histórico (${response.status}).`);
-      const data = await response.json();
+    dataPromise = loadExamsHistory().then((data) => {
       if (data.publicationStatus !== 'published' || data.scope !== 'historical-metadata-only') {
         throw new Error('O acervo histórico ainda não está liberado para exibição pública.');
       }

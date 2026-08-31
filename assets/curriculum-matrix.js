@@ -1,4 +1,4 @@
-const MATRIX_URL = './content/curriculum-matrix.json';
+import { loadCurriculumMatrix } from './content-loader.js';
 
 const SHORT_NAMES = Object.freeze({
   'PMDF-SOLDADO': 'PMDF',
@@ -136,9 +136,7 @@ function buildPanel(matrix) {
 }
 
 async function loadMatrix() {
-  const response = await fetch(MATRIX_URL, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`Matriz curricular indisponível (${response.status}).`);
-  return response.json();
+  return loadCurriculumMatrix();
 }
 
 async function mount() {

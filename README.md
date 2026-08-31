@@ -78,19 +78,20 @@ A camada de experiência inclui:
 
 ## Estado do catálogo
 
-O catálogo cumulativo publicado está na versão 41:
+O catálogo cumulativo publicado está na versão 62:
 
-- 41 unidades;
-- 41 materiais;
-- 280 questões;
-- 41 conjuntos de questões.
+- 62 unidades;
+- 62 materiais;
+- 427 questões;
+- 62 conjuntos de questões.
 
 Na camada atual de aplicabilidade:
 
-- PMDF: 37 unidades / 252 questões aplicáveis;
-- PMGO: 33 unidades / 224 questões aplicáveis;
-- PMMG: 26 unidades / 176 questões aplicáveis;
+- PMDF: 58 unidades / 399 questões aplicáveis;
+- PMGO: 42 unidades / 287 questões aplicáveis;
+- PMMG: 38 unidades / 260 questões aplicáveis;
 - núcleo comum aos três: 19 unidades / 127 questões;
+- U062 — Inglês — Inferência e organização de microtextos é a unidade mais recente publicada, com aplicabilidade PMDF + PMMG;
 - U039 — Noções de Direito PMMG — LINDB permanece a primeira unidade de cobertura específica PMMG publicada;
 - U040 — Literatura PMMG — Campo Geral e Vidas Secas acrescenta a primeira cobertura pedagógica publicada da disciplina específica de Literatura;
 - U041 — LINDB — decisão pública e segurança jurídica amplia o recorte específico PMMG sem ativar a rotação definitiva;

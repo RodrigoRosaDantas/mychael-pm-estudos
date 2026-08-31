@@ -5,10 +5,12 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataPath = path.join(root, 'content', 'taf-pmmg-historical.json');
 const modulePath = path.join(root, 'assets', 'taf-historical-references.js');
+const contentLoaderPath = path.join(root, 'assets', 'content-loader.js');
 const htmlPath = path.join(root, 'taf.html');
 
 const payload = JSON.parse(await readFile(dataPath, 'utf8'));
 const moduleSource = await readFile(modulePath, 'utf8');
+const contentLoaderSource = await readFile(contentLoaderPath, 'utf8');
 const html = await readFile(htmlPath, 'utf8');
 
 if (payload.schemaVersion !== 1) throw new Error('TAF PMMG: schemaVersion inválida.');
@@ -53,7 +55,7 @@ for (const requiredId of [
 if (!html.includes('./assets/taf-historical-references.js')) {
   throw new Error('taf.html: módulo de referências históricas PMMG ausente.');
 }
-if (!moduleSource.includes('./content/taf-pmmg-historical.json')) {
+if (!moduleSource.includes('loadTafHistory') || !contentLoaderSource.includes('./content/taf-pmmg-historical.json')) {
   throw new Error('TAF PMMG: módulo não carrega o artefato histórico validado.');
 }
 if (!moduleSource.includes('Não são índices vigentes') || !moduleSource.includes('cópia integral secundária auditada')) {

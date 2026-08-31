@@ -1,16 +1,15 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { REVIEW_INTERVALS, nextReviewAt, nextReviewInterval } from './review-schedule.js';
+import { loadCatalog } from './content-loader.js';
 
 const pageId = document.body.dataset.page || '';
 const profileId = supabaseConfig.profileId;
-const catalogUrl = './content/catalog.json';
 const initialUnitReviewInterval = REVIEW_INTERVALS.find((interval) => interval > 1) ?? 7;
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
 });
 
-let catalogPromise = null;
 let profilePromise = null;
 let reconciling = null;
 let uiRefreshBusy = false;
@@ -18,16 +17,6 @@ let uiObserver = null;
 
 function queryParam(name) {
   return new URLSearchParams(window.location.search).get(name);
-}
-
-function loadCatalog() {
-  if (!catalogPromise) {
-    catalogPromise = fetch(catalogUrl, { cache: 'no-store' }).then((response) => {
-      if (!response.ok) throw new Error('Catálogo indisponível para revisão.');
-      return response.json();
-    });
-  }
-  return catalogPromise;
 }
 
 async function hasActiveProfile() {

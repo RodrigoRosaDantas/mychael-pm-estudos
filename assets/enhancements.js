@@ -1,3 +1,9 @@
+import {
+  loadCatalog as loadSharedCatalog,
+  loadDeploymentMetadata,
+  loadManifest
+} from './content-loader.js';
+
 const pageId = document.body.dataset.page || 'home';
 const STORAGE_PREFIX = 'mychael-pm:';
 const THEME_KEY = `${STORAGE_PREFIX}theme`;
@@ -90,11 +96,7 @@ function cycleTheme() {
 
 function loadCatalog() {
   if (!state.catalogPromise) {
-    state.catalogPromise = fetch('./content/catalog.json', { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error('Catálogo indisponível.');
-        return response.json();
-      })
+    state.catalogPromise = loadSharedCatalog()
       .catch((error) => {
         console.warn('Enhancements: catálogo indisponível.', error);
         return null;
@@ -107,12 +109,10 @@ function loadDeployment() {
   if (!state.deploymentPromise) {
     state.deploymentPromise = (async () => {
       try {
-        const response = await fetch('./content/deployment.json', { cache: 'no-store' });
-        if (response.ok) return { source: 'deployment', data: await response.json() };
+        return { source: 'deployment', data: await loadDeploymentMetadata() };
       } catch {}
       try {
-        const response = await fetch('./content/manifest.json', { cache: 'no-store' });
-        if (response.ok) return { source: 'manifest', data: await response.json() };
+        return { source: 'manifest', data: await loadManifest() };
       } catch {}
       return { source: 'none', data: null };
     })();

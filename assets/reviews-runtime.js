@@ -2,6 +2,7 @@ import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { isReviewDue } from './study-cycle.js';
 import { REVIEW_INTERVALS, nextReviewAt } from './review-schedule.js';
+import { loadCatalog } from './content-loader.js';
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
@@ -95,8 +96,8 @@ async function reconcileCompletedUnitReviews() {
 }
 
 async function loadData() {
-  const [catalogResponse, reviewsResult] = await Promise.all([
-    fetch('./content/catalog.json', { cache: 'no-store' }),
+  const [catalog, reviewsResult] = await Promise.all([
+    loadCatalog(),
     supabase
       .from('review_items')
       .select('id, source_type, source_id, reason, status, repetitions, interval_days, next_review_at')
@@ -104,9 +105,8 @@ async function loadData() {
       .in('status', ['scheduled', 'due'])
       .order('next_review_at', { ascending: true })
   ]);
-  if (!catalogResponse.ok) throw new Error('Catálogo indisponível.');
   if (reviewsResult.error) throw reviewsResult.error;
-  return { catalog: await catalogResponse.json(), reviews: reviewsResult.data ?? [] };
+  return { catalog, reviews: reviewsResult.data ?? [] };
 }
 
 function render(target, catalog, reviews) {
