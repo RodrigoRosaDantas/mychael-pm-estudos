@@ -316,7 +316,7 @@ async function renderReviews() {
 }
 
 function observeRoot() {
-  const root = document.querySelector('#app');
+  const root = document.querySelector('#pageContent');
   if (!root || !renderObserver) return;
   renderObserver.observe(root, { childList: true, subtree: true });
 }

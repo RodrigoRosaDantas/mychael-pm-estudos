@@ -22,9 +22,15 @@ const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey,
 const state = {
   publicPromise: null,
   privatePromise: null,
+  authVersion: 0,
   observer: null,
   queued: false
 };
+
+supabase.auth.onAuthStateChange(() => {
+  state.authVersion += 1;
+  state.privatePromise = null;
+});
 
 function injectStyles() {
   if (document.querySelector('link[data-competition-progress]')) return;
@@ -99,6 +105,10 @@ function privateData() {
         return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [], degraded: true };
       }
     })();
+    const pending = state.privatePromise;
+    pending.finally(() => {
+      if (state.privatePromise === pending) state.privatePromise = null;
+    });
   }
   return state.privatePromise;
 }
@@ -148,7 +158,9 @@ async function renderPerformancePanel() {
   if (pageId !== 'performance' || document.querySelector('#competitionProgressPanel')) return;
   const target = document.querySelector('#pageContent');
   if (!target?.children.length) return;
+  const authVersion = state.authVersion;
   const [{ catalog, applicability }, privateProgress] = await Promise.all([publicData(), privateData()]);
+  if (authVersion !== state.authVersion) return;
   if (!privateProgress.authenticated) return;
   if (document.querySelector('#competitionProgressPanel')) return;
 
@@ -224,7 +236,9 @@ async function renderScheduleProgress() {
   if (pageId !== 'schedule' || document.querySelector('#guidedCycleProgress')) return;
   const target = document.querySelector('#pageContent');
   if (!target?.children.length) return;
+  const authVersion = state.authVersion;
   const [{ catalog, applicability }, privateProgress] = await Promise.all([publicData(), privateData()]);
+  if (authVersion !== state.authVersion) return;
   if (document.querySelector('#guidedCycleProgress')) return;
   const model = computeCompetitionProgress({
     catalog,

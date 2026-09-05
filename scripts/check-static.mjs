@@ -30,6 +30,7 @@ const requiredFiles = [
   'assets/competition-progress.css',
   'assets/content-loader.js',
   'assets/supabase-client.js',
+  'assets/supabase-read-fetch.js',
   'assets/supabase-config.js',
   'content/catalog.json',
   'content/manifest.json',

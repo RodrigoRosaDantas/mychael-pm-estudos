@@ -947,9 +947,20 @@ async function boot() {
     console.error(error);
     setStatus('Falha ao carregar a plataforma. Atualize a página e tente novamente.', 'error');
   }
-  supabase.auth.onAuthStateChange(async () => {
-    await refreshSession();
-    await renderCurrentPage();
+  let authRefreshTimer;
+  supabase.auth.onAuthStateChange(() => {
+    // Auth callbacks run under the SDK's session lock. Read the session only
+    // after the callback returns, and coalesce events arriving in the same turn.
+    clearTimeout(authRefreshTimer);
+    authRefreshTimer = setTimeout(async () => {
+      try {
+        await refreshSession();
+        await renderCurrentPage();
+      } catch (error) {
+        console.error(error);
+        setStatus('Não foi possível atualizar a sessão. Atualize a página e tente novamente.', 'error');
+      }
+    }, 0);
   });
 }
 
