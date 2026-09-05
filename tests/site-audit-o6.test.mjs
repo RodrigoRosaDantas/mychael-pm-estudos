@@ -11,7 +11,8 @@ const [
   tafPage,
   scheduleHtml,
   readme,
-  contentLoader
+  contentLoader,
+  reviewsRuntime
 ] = await Promise.all([
   readFile(new URL('../assets/site.js', import.meta.url), 'utf8'),
   readFile(new URL('../assets/enhancements.js', import.meta.url), 'utf8'),
@@ -21,13 +22,14 @@ const [
   readFile(new URL('../assets/taf-page.js', import.meta.url), 'utf8'),
   readFile(new URL('../cronograma.html', import.meta.url), 'utf8'),
   readFile(new URL('../README.md', import.meta.url), 'utf8'),
-  readFile(new URL('../assets/content-loader.js', import.meta.url), 'utf8')
+  readFile(new URL('../assets/content-loader.js', import.meta.url), 'utf8'),
+  readFile(new URL('../assets/reviews-runtime.js', import.meta.url), 'utf8')
 ]);
 
 test('rodapé e datas privadas usam explicitamente o horário de Brasília', () => {
   assert.match(enhancements, /const BRASILIA_TIME_ZONE = 'America\/Sao_Paulo'/);
   assert.match(enhancements, /timeZone: BRASILIA_TIME_ZONE/);
-  assert.match(site, /timeZone: 'America\/Sao_Paulo'/);
+  assert.match(reviewsRuntime, /timeZone: 'America\/Sao_Paulo'/);
   assert.match(tafPage, /timeZone: 'America\/Sao_Paulo'/);
 });
 

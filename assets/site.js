@@ -8,6 +8,7 @@ let catalog = null;
 let session = null;
 let profileActive = false;
 let tafHistoryPromise = null;
+let pageRenderVersion = 0;
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: {
@@ -786,28 +787,12 @@ async function renderQuestions(target) {
   draw();
 }
 
-async function renderReviews(target) {
+async function renderReviews(target, isCurrent) {
   if (!session?.user || !profileActive) return requireLoginMessage(target);
-  const { data, error } = await supabase
-    .from('review_items')
-    .select('id, source_type, source_id, reason, status, repetitions, next_review_at')
-    .eq('profile_id', supabaseConfig.profileId)
-    .in('status', ['scheduled', 'due'])
-    .order('next_review_at', { ascending: true });
-  if (error) throw error;
-  if (!data?.length) return target.append(el('section', { className: 'card empty-card', text: 'Nenhuma revisão pendente.' }));
-  const list = el('section', { className: 'card list-card' });
-  for (const item of data) {
-    const question = item.source_type === 'question' ? findById(catalog.questions, item.source_id) : null;
-    const row = el('article', { className: 'list-item' });
-    const copy = el('div');
-    copy.append(el('span', { className: `status-pill ${item.status}`, text: item.status === 'due' ? 'Revisão vencida' : 'Agendada' }), el('h2', { text: question?.title ?? item.source_id }));
-    copy.append(el('p', { text: item.next_review_at ? `Próxima revisão: ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }).format(new Date(item.next_review_at))}` : 'Data não definida.' }));
-    row.append(copy);
-    if (question) row.append(el('a', { className: 'primary-link', text: 'Revisar questão', href: pageUrl('questions', { unit: question.unitId, mode: 'errors', question: question.id }) }));
-    list.append(row);
-  }
-  target.append(list);
+  const { renderReviewPage } = await import('./reviews-runtime.js');
+  if (!isCurrent()) return;
+  const rendered = await renderReviewPage(target, isCurrent);
+  if (!rendered && isCurrent()) requireLoginMessage(target);
 }
 
 async function renderErrors(target) {
@@ -907,6 +892,8 @@ async function renderSettings(target) {
 }
 
 async function renderCurrentPage() {
+  const version = ++pageRenderVersion;
+  const isCurrent = () => version === pageRenderVersion;
   const target = document.querySelector('#pageContent');
   target.replaceChildren();
   setStatus('');
@@ -915,7 +902,7 @@ async function renderCurrentPage() {
     study: renderStudy,
     subjects: renderSubjects,
     questions: renderQuestions,
-    reviews: renderReviews,
+    reviews: (node) => renderReviews(node, isCurrent),
     errors: renderErrors,
     performance: renderPerformance,
     exams: (node) => renderPlaceholder(node, 'exams'),
@@ -926,6 +913,7 @@ async function renderCurrentPage() {
   try {
     await (renderers[pageId] ?? renderHome)(target);
   } catch (error) {
+    if (!isCurrent()) return;
     console.error(error);
     setStatus('Não foi possível carregar esta página. Atualize e tente novamente.', 'error');
   }
@@ -949,6 +937,7 @@ async function boot() {
   }
   let authRefreshTimer;
   supabase.auth.onAuthStateChange(() => {
+    pageRenderVersion += 1;
     // Auth callbacks run under the SDK's session lock. Read the session only
     // after the callback returns, and coalesce events arriving in the same turn.
     clearTimeout(authRefreshTimer);

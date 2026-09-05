@@ -21,6 +21,7 @@ const db = {
     { id: 'rev-2', profile_id: 'STU-MYCHAEL', source_type: 'question', source_id: 'Q000006', status: 'scheduled', repetitions: 0, next_review_at: '2026-08-05T10:01:00.000Z' }
   ]
 };
+globalThis.__errorNotebookDb = db;
 let sequence = 10;
 const matches = (row, filters) => filters.every((filter) => filter.type === 'eq'
   ? row[filter.column] === filter.value
@@ -194,4 +195,34 @@ test('layout mantém navegação adequada no computador e no celular', async ({ 
     await expect(sidebar).toBeVisible();
     await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
   }
+});
+
+test('refazer uma revisão correta salva a tentativa sem avançar novamente o prazo', async ({ page }) => {
+  await page.goto('/questoes.html?unit=U001&mode=review&question=Q000005');
+  await expect(page.getByRole('button', { name: 'Responder revisão', exact: true })).toBeVisible();
+  const answer = await page.evaluate(async () => {
+    const db = globalThis.__errorNotebookDb;
+    db.error_items = [];
+    const review = db.review_items.find((row) => row.source_id === 'Q000005');
+    Object.assign(review, { status: 'scheduled', repetitions: 0, interval_days: 1, next_review_at: '2020-01-01T12:00:00.000Z' });
+    const catalog = await (await fetch('./content/catalog.json')).json();
+    return catalog.questions.find((row) => row.id === 'Q000005').answer;
+  });
+  await page.locator(`.option-row input[value="${answer}"]`).check();
+  await page.getByRole('button', { name: 'Responder revisão', exact: true }).click();
+  await expect(page.locator('.question-save-status')).toHaveText('Revisão concluída e próxima etapa agendada.');
+  const afterFirst = await page.evaluate(() => {
+    const db = globalThis.__errorNotebookDb;
+    return { review: db.review_items.find((row) => row.source_id === 'Q000005'), attempts: db.question_attempts.length };
+  });
+  expect(afterFirst.review.interval_days).toBe(7);
+  expect(afterFirst.review.repetitions).toBe(1);
+  await page.getByRole('button', { name: 'Responder novamente', exact: true }).click();
+  await expect(page.locator('.question-save-status')).toHaveText('Resposta salva. O agendamento da revisão foi mantido.');
+  const afterSecond = await page.evaluate(() => {
+    const db = globalThis.__errorNotebookDb;
+    return { review: db.review_items.find((row) => row.source_id === 'Q000005'), attempts: db.question_attempts.length };
+  });
+  expect(afterSecond.review).toEqual(afterFirst.review);
+  expect(afterSecond.attempts).toBe(afterFirst.attempts + 1);
 });

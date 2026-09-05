@@ -28,25 +28,6 @@ function reviewLabel(intervalDays) {
   return 'Revisão programada';
 }
 
-function waitForBaseRender() {
-  return new Promise((resolve) => {
-    const ready = () => {
-      const target = document.querySelector('#pageContent');
-      const status = document.querySelector('#pageStatus')?.textContent?.trim();
-      if (target && target.children.length && status !== 'Carregando…') {
-        resolve(target);
-        return true;
-      }
-      return false;
-    };
-    if (ready()) return;
-    const observer = new MutationObserver(() => {
-      if (ready()) observer.disconnect();
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
-  });
-}
-
 async function activeProfile() {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   if (sessionError || !sessionData.session?.user) return false;
@@ -59,7 +40,7 @@ async function activeProfile() {
   return profile?.is_active === true;
 }
 
-async function reconcileCompletedUnitReviews() {
+async function reconcileCompletedUnitReviews(isCurrent) {
   const [unitsResult, reviewsResult] = await Promise.all([
     supabase
       .from('study_units')
@@ -73,6 +54,7 @@ async function reconcileCompletedUnitReviews() {
       .eq('source_type', 'unit')
   ]);
   if (unitsResult.error || reviewsResult.error) throw unitsResult.error || reviewsResult.error;
+  if (!isCurrent()) return;
 
   const existing = new Set((reviewsResult.data ?? []).map((item) => item.source_id));
   const rows = (unitsResult.data ?? [])
@@ -141,6 +123,13 @@ function render(target, catalog, reviews) {
         node('h2', '', unit?.title ?? question?.title ?? item.source_id),
         node('p', '', due ? 'Entre antes de conteúdo novo.' : reviewLabel(item.interval_days))
       );
+      const nextDate = new Date(item.next_review_at ?? '');
+      if (Number.isFinite(nextDate.getTime())) {
+        const formatted = new Intl.DateTimeFormat('pt-BR', {
+          dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo'
+        }).format(nextDate);
+        copy.append(node('p', '', `Próxima revisão: ${formatted}`));
+      }
       card.append(copy);
 
       if (question) {
@@ -161,22 +150,14 @@ function render(target, catalog, reviews) {
   target.replaceChildren(wrap);
 }
 
-async function start() {
-  const target = await waitForBaseRender();
-  try {
-    if (!(await activeProfile())) return;
-    await reconcileCompletedUnitReviews();
-    const { catalog, reviews } = await loadData();
-    render(target, catalog, reviews);
-  } catch (error) {
-    console.error('Revisões:', error);
-    if (!target.children.length) {
-      const card = node('section', 'card empty-card');
-      card.append(node('h2', '', 'Não foi possível carregar as revisões'), node('p', '', 'Atualize a página e tente novamente.'));
-      target.append(card);
-    }
-  }
+// The base page owns this render on initial load and every session refresh.
+// Discard reads that finish after that render or session has been superseded.
+export async function renderReviewPage(target, isCurrent) {
+  if (!(await activeProfile()) || !isCurrent()) return false;
+  await reconcileCompletedUnitReviews(isCurrent);
+  if (!isCurrent()) return false;
+  const { catalog, reviews } = await loadData();
+  if (!isCurrent()) return false;
+  render(target, catalog, reviews);
+  return true;
 }
-
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
-else void start();

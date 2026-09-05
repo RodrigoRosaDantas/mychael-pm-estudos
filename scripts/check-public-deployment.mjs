@@ -23,6 +23,7 @@ export const REQUIRED_DEPLOYMENT_PATHS = Object.freeze([
   'assets/content-loader.js',
   'assets/supabase-client.js',
   'assets/supabase-read-fetch.js',
+  'assets/reviews-runtime.js',
   'assets/supabase-config.js',
   'content/catalog.json',
   'content/manifest.json',

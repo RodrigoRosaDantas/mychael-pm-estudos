@@ -31,6 +31,7 @@ const requiredFiles = [
   'assets/content-loader.js',
   'assets/supabase-client.js',
   'assets/supabase-read-fetch.js',
+  'assets/reviews-runtime.js',
   'assets/supabase-config.js',
   'content/catalog.json',
   'content/manifest.json',

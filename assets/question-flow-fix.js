@@ -1,6 +1,7 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { nextReviewAt, nextReviewInterval } from './review-schedule.js';
+import { isReviewDue } from './study-cycle.js';
 import { loadCatalog } from './content-loader.js';
 
 const pageId = document.body.dataset.page || '';
@@ -70,13 +71,6 @@ async function loadQuestionReview(questionId) {
     .maybeSingle();
   if (error) throw error;
   return data ?? null;
-}
-
-function reviewIsDue(review, now = Date.now()) {
-  if (!review) return false;
-  if (review.status === 'due') return true;
-  const dueAt = new Date(review.next_review_at ?? '').getTime();
-  return Number.isFinite(dueAt) && dueAt <= now;
 }
 
 async function openOrRefreshError(questionId, attemptId, currentError) {
@@ -187,7 +181,7 @@ async function updateUnitProgress(unit) {
   return { completed, mastery, answered, correct, total };
 }
 
-async function saveAttempt(question, unit, answer, mode) {
+async function saveAttempt(question, unit, answer) {
   await ensureActiveProfile();
   await ensureUnitStarted(unit.id);
   const [errorBefore, reviewBefore, countResult] = await Promise.all([
@@ -214,18 +208,21 @@ async function saveAttempt(question, unit, answer, mode) {
   }).select('id, question_id, answer, is_correct, attempt_number, answered_at').single();
   if (error) throw error;
 
+  let reviewAdvanced = false;
   if (!isCorrect) {
     await openOrRefreshError(question.id, attempt.id, errorBefore);
     await resetCorrectiveReview(question.id, reviewBefore);
   } else if (errorBefore) {
     await resolveOpenError(errorBefore);
     await advanceReview(question.id, reviewBefore, { correctedError: true });
-  } else if (mode === 'review' || reviewIsDue(reviewBefore)) {
+    reviewAdvanced = true;
+  } else if (isReviewDue(reviewBefore)) {
     await advanceReview(question.id, reviewBefore);
+    reviewAdvanced = true;
   }
 
   const progress = await updateUnitProgress(unit);
-  return { attempt, progress };
+  return { attempt, progress, reviewAdvanced };
 }
 
 function renderFeedback(card, question, attempt) {
@@ -288,7 +285,7 @@ async function interceptQuestionSubmit(event) {
     const unit = (catalog.units ?? []).find((item) => item.id === question?.unitId);
     if (!question || !unit) throw new Error('Questão ou unidade não localizada no catálogo publicado.');
     const mode = queryParam('mode') === 'review' ? 'review' : queryParam('mode') === 'errors' ? 'errors' : 'all';
-    const { attempt } = await saveAttempt(question, unit, String(answer), mode);
+    const { attempt, reviewAdvanced } = await saveAttempt(question, unit, String(answer));
 
     if (mode === 'errors' && attempt.is_correct) {
       window.location.href = returnToErrorsUrl(queryParam('unit') ? unit.id : null).toString();
@@ -298,7 +295,7 @@ async function interceptQuestionSubmit(event) {
       reviewAnsweredOnPage = mode === 'review';
       renderFeedback(card, question, attempt);
       if (status) status.textContent = attempt.is_correct
-        ? mode === 'review' ? 'Revisão concluída e próxima etapa agendada.' : 'Correto. O erro foi resolvido e a próxima revisão foi agendada.'
+        ? reviewAdvanced ? 'Revisão concluída e próxima etapa agendada.' : 'Resposta salva. O agendamento da revisão foi mantido.'
         : 'Resposta salva. O erro permanece como prioridade e a revisão volta para o ciclo curto.';
       if (submit) { submit.disabled = false; submit.textContent = mode === 'review' ? 'Responder novamente' : 'Refazer questão'; }
       if (mode === 'review' && !card.querySelector('[data-review-back]')) {
