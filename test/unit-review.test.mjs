@@ -7,7 +7,6 @@ const reviewsRuntime = await readFile(new URL('../assets/reviews-runtime.js', im
 const site = await readFile(new URL('../assets/site.js', import.meta.url), 'utf8');
 const questionsPage = await readFile(new URL('../questoes.html', import.meta.url), 'utf8');
 const reviewsPage = await readFile(new URL('../revisoes.html', import.meta.url), 'utf8');
-const studyPage = await readFile(new URL('../estudar.html', import.meta.url), 'utf8');
 const readme = await readFile(new URL('../README.md', import.meta.url), 'utf8');
 
 test('unidade concluída entra em revisão espaçada sem duplicar registro', () => {
@@ -27,7 +26,7 @@ test('revisão de unidade respeita erros abertos e avança pelas âncoras', () =
 
 test('fluxo de revisão por unidade usa runtime dedicado sem observadores genéricos em Revisões', () => {
   assert.match(questionsPage, /assets\/unit-review\.js/);
-  assert.match(studyPage, /assets\/unit-review\.js/);
+  assert.match(site, /import\('\.\/unit-review\.js'\)/);
   assert.match(site, /import\('\.\/reviews-runtime\.js'\)/);
   assert.doesNotMatch(reviewsPage, /assets\/(?:unit-review|study-cycle-runtime|question-flow-fix)\.js/);
   assert.match(reviewsRuntime, /source_type: 'unit'/);

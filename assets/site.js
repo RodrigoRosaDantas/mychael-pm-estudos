@@ -424,6 +424,13 @@ async function renderSubjects(target) {
   target.append(grid);
 }
 
+async function renderStudyPage(target, isCurrent) {
+  await renderStudy(target);
+  if (queryParam('mode') !== 'review' || !isCurrent()) return;
+  const { renderStudyReview } = await import('./unit-review.js');
+  if (isCurrent()) await renderStudyReview(target, isCurrent);
+}
+
 async function loadLatestAttempts(questionIds = []) {
   if (!session?.user || !profileActive || questionIds.length === 0) return new Map();
   const { data, error } = await supabase
@@ -899,7 +906,7 @@ async function renderCurrentPage() {
   setStatus('');
   const renderers = {
     home: renderHome,
-    study: renderStudy,
+    study: (node) => renderStudyPage(node, isCurrent),
     subjects: renderSubjects,
     questions: renderQuestions,
     reviews: (node) => renderReviews(node, isCurrent),
