@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.112.2';
+import { createReadFetch } from './supabase-read-fetch.js';
 
 const clientCache = new Map();
 
@@ -38,7 +39,13 @@ export function createClient(url, publishableKey, options = {}) {
   const cached = clientCache.get(cacheKey);
   if (cached) return cached;
 
-  const client = createSupabaseClient(url, publishableKey, options);
+  const reads = createReadFetch(url, options.global?.fetch);
+  const client = createSupabaseClient(url, publishableKey, {
+    ...options,
+    global: { ...options.global, fetch: reads.fetch }
+  });
+  // Keep this callback synchronous: Supabase holds its auth lock while notifying.
+  client.auth.onAuthStateChange(() => reads.invalidate());
   const originalFrom = client.from.bind(client);
   const adaptedClient = new Proxy(client, {
     get(target, property, receiver) {

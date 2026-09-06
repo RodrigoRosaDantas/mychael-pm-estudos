@@ -10,7 +10,9 @@ const [
   competitionProgress,
   tafPage,
   scheduleHtml,
-  readme
+  readme,
+  contentLoader,
+  reviewsRuntime
 ] = await Promise.all([
   readFile(new URL('../assets/site.js', import.meta.url), 'utf8'),
   readFile(new URL('../assets/enhancements.js', import.meta.url), 'utf8'),
@@ -19,18 +21,20 @@ const [
   readFile(new URL('../assets/competition-progress.js', import.meta.url), 'utf8'),
   readFile(new URL('../assets/taf-page.js', import.meta.url), 'utf8'),
   readFile(new URL('../cronograma.html', import.meta.url), 'utf8'),
-  readFile(new URL('../README.md', import.meta.url), 'utf8')
+  readFile(new URL('../README.md', import.meta.url), 'utf8'),
+  readFile(new URL('../assets/content-loader.js', import.meta.url), 'utf8'),
+  readFile(new URL('../assets/reviews-runtime.js', import.meta.url), 'utf8')
 ]);
 
 test('rodapé e datas privadas usam explicitamente o horário de Brasília', () => {
   assert.match(enhancements, /const BRASILIA_TIME_ZONE = 'America\/Sao_Paulo'/);
   assert.match(enhancements, /timeZone: BRASILIA_TIME_ZONE/);
-  assert.match(site, /timeZone: 'America\/Sao_Paulo'/);
+  assert.match(reviewsRuntime, /timeZone: 'America\/Sao_Paulo'/);
   assert.match(tafPage, /timeZone: 'America\/Sao_Paulo'/);
 });
 
 test('home conta as referências históricas de TAF realmente publicadas', () => {
-  assert.match(site, /taf-pmmg-historical\.json/);
+  assert.match(contentLoader, /taf-pmmg-historical\.json/);
   assert.match(site, /Array\.isArray\(payload\.records\) \? payload\.records\.length : 0/);
   assert.match(site, /referências históricas de TAF/);
 });
@@ -64,9 +68,9 @@ test('simulados explicam o gate documental e a tela do TAF esconde ID técnico',
   assert.doesNotMatch(tafPage, /STU-MYCHAEL/);
 });
 
-test('documentação técnica acompanha catálogo v41 e provas históricas do O6', () => {
-  assert.match(readme, /versão 41/);
-  assert.match(readme, /41 unidades/);
-  assert.match(readme, /280 questões/);
+test('documentação técnica acompanha catálogo v62 e provas históricas do O6', () => {
+  assert.match(readme, /versão 62/);
+  assert.match(readme, /62 unidades/);
+  assert.match(readme, /427 questões/);
   assert.match(readme, /metadados históricos de quatro provas/);
 });

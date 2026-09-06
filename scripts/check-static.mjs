@@ -28,7 +28,11 @@ const requiredFiles = [
   'assets/applicability-core.js',
   'assets/competition-progress.js',
   'assets/competition-progress.css',
+  'assets/content-loader.js',
   'assets/supabase-client.js',
+  'assets/supabase-read-fetch.js',
+  'assets/reviews-runtime.js',
+  'assets/unit-review.js',
   'assets/supabase-config.js',
   'content/catalog.json',
   'content/manifest.json',
@@ -48,6 +52,7 @@ const enhancements = await readFile(path.join(root, 'assets/enhancements.js'), '
 const curriculumMatrix = await readFile(path.join(root, 'assets/curriculum-matrix.js'), 'utf8');
 const competitionProgress = await readFile(path.join(root, 'assets/competition-progress.js'), 'utf8');
 const applicabilityCore = await readFile(path.join(root, 'assets/applicability-core.js'), 'utf8');
+const contentLoader = await readFile(path.join(root, 'assets/content-loader.js'), 'utf8');
 const client = await readFile(path.join(root, 'assets/supabase-client.js'), 'utf8');
 const styles = await readFile(path.join(root, 'assets/styles.css'), 'utf8');
 const enhancementStyles = await readFile(path.join(root, 'assets/enhancements.css'), 'utf8');
@@ -109,15 +114,15 @@ for (const uxBehavior of [
   if (!enhancements.includes(uxBehavior)) throw new Error(`Melhoria de experiência ausente: ${uxBehavior}.`);
 }
 for (const monitoringBehavior of [
-  'content/content-applicability.json',
   'Progresso no acervo por foco',
   'Núcleo comum aos três'
 ]) {
-  if (!competitionProgress.includes(monitoringBehavior) && !applicabilityCore.includes(monitoringBehavior)) {
+  if (![competitionProgress, applicabilityCore].some((source) => source.includes(monitoringBehavior))) {
     throw new Error(`Experiência multi-concurso ausente: ${monitoringBehavior}.`);
   }
 }
-if (!curriculumMatrix.includes('content/curriculum-matrix.json')) throw new Error('Matriz curricular não carrega sua fonte pública.');
+if (!contentLoader.includes('content/content-applicability.json')) throw new Error('Progresso por concurso não carrega aplicabilidade.');
+if (!contentLoader.includes('content/curriculum-matrix.json')) throw new Error('Matriz curricular não carrega sua fonte pública.');
 if (!Array.isArray(applicability.unitApplicability)) throw new Error('Aplicabilidade por unidade inválida.');
 if (!site.includes("import { createClient } from './supabase-client.js'")) {
   throw new Error('Cliente Supabase não está isolado para validação segura no navegador.');

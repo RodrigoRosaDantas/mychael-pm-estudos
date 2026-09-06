@@ -58,6 +58,7 @@ export function isSundayInBrasilia(date = new Date()) {
 
 export function isReviewDue(item, now = Date.now()) {
   if (item?.status === 'due') return true;
+  if (item?.status !== 'scheduled') return false;
   if (!item?.next_review_at) return false;
   const dueAt = new Date(item.next_review_at).getTime();
   return Number.isFinite(dueAt) && dueAt <= now;

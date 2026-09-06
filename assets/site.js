@@ -1,14 +1,14 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
+import { loadCatalog as loadSharedCatalog, loadTafHistory } from './content-loader.js';
 
-const catalogUrl = './content/catalog.json';
-const tafHistoryUrl = './content/taf-pmmg-historical.json';
 const pageId = document.body.dataset.page || 'home';
 const questionTimers = new Map();
 let catalog = null;
 let session = null;
 let profileActive = false;
 let tafHistoryPromise = null;
+let pageRenderVersion = 0;
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: {
@@ -150,9 +150,7 @@ function buildShell() {
 }
 
 async function loadCatalog() {
-  const response = await fetch(catalogUrl, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`Falha ao carregar o catálogo (${response.status}).`);
-  const data = await response.json();
+  const data = await loadSharedCatalog();
   if (data.publicationStatus !== 'published') throw new Error('O catálogo público ainda não está liberado.');
   catalog = data;
   return data;
@@ -160,10 +158,8 @@ async function loadCatalog() {
 
 async function loadPublishedTafCount() {
   if (!tafHistoryPromise) {
-    tafHistoryPromise = fetch(tafHistoryUrl, { cache: 'no-store' })
-      .then(async (response) => {
-        if (!response.ok) return 0;
-        const payload = await response.json();
+    tafHistoryPromise = loadTafHistory()
+      .then((payload) => {
         return Array.isArray(payload.records) ? payload.records.length : 0;
       })
       .catch(() => 0);
@@ -426,6 +422,13 @@ async function renderSubjects(target) {
     grid.append(card);
   }
   target.append(grid);
+}
+
+async function renderStudyPage(target, isCurrent) {
+  await renderStudy(target);
+  if (queryParam('mode') !== 'review' || !isCurrent()) return;
+  const { renderStudyReview } = await import('./unit-review.js');
+  if (isCurrent()) await renderStudyReview(target, isCurrent);
 }
 
 async function loadLatestAttempts(questionIds = []) {
@@ -791,28 +794,12 @@ async function renderQuestions(target) {
   draw();
 }
 
-async function renderReviews(target) {
+async function renderReviews(target, isCurrent) {
   if (!session?.user || !profileActive) return requireLoginMessage(target);
-  const { data, error } = await supabase
-    .from('review_items')
-    .select('id, source_type, source_id, reason, status, repetitions, next_review_at')
-    .eq('profile_id', supabaseConfig.profileId)
-    .in('status', ['scheduled', 'due'])
-    .order('next_review_at', { ascending: true });
-  if (error) throw error;
-  if (!data?.length) return target.append(el('section', { className: 'card empty-card', text: 'Nenhuma revisão pendente.' }));
-  const list = el('section', { className: 'card list-card' });
-  for (const item of data) {
-    const question = item.source_type === 'question' ? findById(catalog.questions, item.source_id) : null;
-    const row = el('article', { className: 'list-item' });
-    const copy = el('div');
-    copy.append(el('span', { className: `status-pill ${item.status}`, text: item.status === 'due' ? 'Revisão vencida' : 'Agendada' }), el('h2', { text: question?.title ?? item.source_id }));
-    copy.append(el('p', { text: item.next_review_at ? `Próxima revisão: ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }).format(new Date(item.next_review_at))}` : 'Data não definida.' }));
-    row.append(copy);
-    if (question) row.append(el('a', { className: 'primary-link', text: 'Revisar questão', href: pageUrl('questions', { unit: question.unitId, mode: 'errors', question: question.id }) }));
-    list.append(row);
-  }
-  target.append(list);
+  const { renderReviewPage } = await import('./reviews-runtime.js');
+  if (!isCurrent()) return;
+  const rendered = await renderReviewPage(target, isCurrent);
+  if (!rendered && isCurrent()) requireLoginMessage(target);
 }
 
 async function renderErrors(target) {
@@ -912,15 +899,17 @@ async function renderSettings(target) {
 }
 
 async function renderCurrentPage() {
+  const version = ++pageRenderVersion;
+  const isCurrent = () => version === pageRenderVersion;
   const target = document.querySelector('#pageContent');
   target.replaceChildren();
   setStatus('');
   const renderers = {
     home: renderHome,
-    study: renderStudy,
+    study: (node) => renderStudyPage(node, isCurrent),
     subjects: renderSubjects,
     questions: renderQuestions,
-    reviews: renderReviews,
+    reviews: (node) => renderReviews(node, isCurrent),
     errors: renderErrors,
     performance: renderPerformance,
     exams: (node) => renderPlaceholder(node, 'exams'),
@@ -931,6 +920,7 @@ async function renderCurrentPage() {
   try {
     await (renderers[pageId] ?? renderHome)(target);
   } catch (error) {
+    if (!isCurrent()) return;
     console.error(error);
     setStatus('Não foi possível carregar esta página. Atualize e tente novamente.', 'error');
   }
@@ -952,9 +942,21 @@ async function boot() {
     console.error(error);
     setStatus('Falha ao carregar a plataforma. Atualize a página e tente novamente.', 'error');
   }
-  supabase.auth.onAuthStateChange(async () => {
-    await refreshSession();
-    await renderCurrentPage();
+  let authRefreshTimer;
+  supabase.auth.onAuthStateChange(() => {
+    pageRenderVersion += 1;
+    // Auth callbacks run under the SDK's session lock. Read the session only
+    // after the callback returns, and coalesce events arriving in the same turn.
+    clearTimeout(authRefreshTimer);
+    authRefreshTimer = setTimeout(async () => {
+      try {
+        await refreshSession();
+        await renderCurrentPage();
+      } catch (error) {
+        console.error(error);
+        setStatus('Não foi possível atualizar a sessão. Atualize a página e tente novamente.', 'error');
+      }
+    }, 0);
   });
 }
 

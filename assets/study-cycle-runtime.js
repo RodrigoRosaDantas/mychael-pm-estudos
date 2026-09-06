@@ -1,10 +1,9 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { deriveStudyCycleProgress, isReviewDue, isSundayInBrasilia } from './study-cycle.js';
+import { loadCatalog, loadStudyCycle } from './content-loader.js';
 
 const pageId = document.body.dataset.page || 'home';
-const CATALOG_URL = './content/catalog.json';
-const CYCLE_URL = './content/study-cycle-v1.json';
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
 });
@@ -17,14 +16,8 @@ let renderObserver = null;
 function loadPublicData() {
   if (!publicPromise) {
     publicPromise = Promise.all([
-      fetch(CATALOG_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Catálogo indisponível.');
-        return response.json();
-      }),
-      fetch(CYCLE_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Cronograma inicial indisponível.');
-        return response.json();
-      })
+      loadCatalog(),
+      loadStudyCycle()
     ]).then(([catalog, plan]) => ({ catalog, plan }));
   }
   return publicPromise;
@@ -74,6 +67,14 @@ function node(tag, className, text) {
   if (className) item.className = className;
   if (text != null) item.textContent = text;
   return item;
+}
+
+function renderCycleStatus(target, title, detail, eyebrow = 'Seu ponto no ciclo') {
+  target.replaceChildren(
+    node('p', 'eyebrow', eyebrow),
+    node('h2', '', title),
+    node('p', '', detail)
+  );
 }
 
 function simplifyAccessCopy() {
@@ -223,7 +224,7 @@ async function renderSchedule() {
 
   if (!privateProgress.authenticated) {
     const status = target.querySelector('#cycleV1Current');
-    if (status) status.innerHTML = '<p class="eyebrow">Seu ponto no ciclo</p><h2>Entre para acompanhar o progresso</h2><p>O cronograma público não contém dados pessoais.</p>';
+    if (status) renderCycleStatus(status, 'Entre para acompanhar o progresso', 'O cronograma público não contém dados pessoais.');
     return;
   }
   const progress = deriveStudyCycleProgress({ plan, catalog, studyUnits: privateProgress.studyUnits, openErrorQuestionIds: privateProgress.openErrorQuestionIds });
@@ -238,12 +239,27 @@ async function renderSchedule() {
   const status = target.querySelector('#cycleV1Current');
   if (!status) return;
   if (isSundayInBrasilia()) {
-    status.innerHTML = `<p class="eyebrow">Seu ponto no ciclo</p><h2>Domingo é folga</h2><p>${progress.current ? `A próxima sessão continua no Ciclo ${progress.current.cycleNumber}, sessão ${progress.current.positionInCycle} de 6.` : 'O checkpoint fica para o próximo dia de estudo.'}</p>`;
+    renderCycleStatus(
+      status,
+      'Domingo é folga',
+      progress.current
+        ? `A próxima sessão continua no Ciclo ${progress.current.cycleNumber}, sessão ${progress.current.positionInCycle} de 6.`
+        : 'O checkpoint fica para o próximo dia de estudo.'
+    );
   } else if (progress.checkpointDue) {
-    status.innerHTML = '<p class="eyebrow">Checkpoint</p><h2>24 de 24 sessões concluídas</h2><p>Os próximos ciclos só serão montados depois de revisar o progresso e o novo acervo publicado.</p>';
+    renderCycleStatus(
+      status,
+      '24 de 24 sessões concluídas',
+      'Os próximos ciclos só serão montados depois de revisar o progresso e o novo acervo publicado.',
+      'Checkpoint'
+    );
   } else {
     const currentUnit = (catalog.units ?? []).find((unit) => unit.id === progress.current?.unitId);
-    status.innerHTML = `<p class="eyebrow">Seu ponto no ciclo</p><h2>Ciclo ${progress.current?.cycleNumber ?? 1} · sessão ${progress.current?.positionInCycle ?? 1} de 6</h2><p>${currentUnit?.title ?? 'Próxima unidade'} · ${progress.completedSessions}/24 sessões concluídas.</p>`;
+    renderCycleStatus(
+      status,
+      `Ciclo ${progress.current?.cycleNumber ?? 1} · sessão ${progress.current?.positionInCycle ?? 1} de 6`,
+      `${currentUnit?.title ?? 'Próxima unidade'} · ${progress.completedSessions}/24 sessões concluídas.`
+    );
   }
 }
 
@@ -300,7 +316,7 @@ async function renderReviews() {
 }
 
 function observeRoot() {
-  const root = document.querySelector('#app');
+  const root = document.querySelector('#pageContent');
   if (!root || !renderObserver) return;
   renderObserver.observe(root, { childList: true, subtree: true });
 }

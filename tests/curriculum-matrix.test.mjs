@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const [matrixRaw, scheduleHtml, matrixJs] = await Promise.all([
+const [matrixRaw, scheduleHtml, matrixJs, contentLoader] = await Promise.all([
   readFile(new URL('../content/curriculum-matrix.json', import.meta.url), 'utf8'),
   readFile(new URL('../cronograma.html', import.meta.url), 'utf8'),
-  readFile(new URL('../assets/curriculum-matrix.js', import.meta.url), 'utf8')
+  readFile(new URL('../assets/curriculum-matrix.js', import.meta.url), 'utf8'),
+  readFile(new URL('../assets/content-loader.js', import.meta.url), 'utf8')
 ]);
 const matrix = JSON.parse(matrixRaw);
 const byDiscipline = new Map(matrix.disciplines.map((item) => [item.id, item]));
@@ -60,7 +61,8 @@ test('proveniência da PMMG é transparente enquanto o arquivo oficial direto n�
 test('cronograma carrega a matriz apenas como camada de planejamento', () => {
   assert.match(scheduleHtml, /assets\/curriculum-matrix\.css/);
   assert.match(scheduleHtml, /assets\/curriculum-matrix\.js/);
-  assert.match(matrixJs, /content\/curriculum-matrix\.json/);
+  assert.match(matrixJs, /loadCurriculumMatrix/);
+  assert.match(contentLoader, /content\/curriculum-matrix\.json/);
   assert.match(matrixJs, /percentuais acima descrevem a prova de referência/i);
   assert.doesNotMatch(matrixJs, /content\/catalog\.json/);
   assert.doesNotMatch(matrixJs, /fetch\([^\n]+method\s*:\s*['"](?:POST|PUT|PATCH|DELETE)/i);

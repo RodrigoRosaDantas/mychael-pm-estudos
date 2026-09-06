@@ -49,8 +49,10 @@ test('acervo público de provas contém somente metadados históricos', async ()
 test('página de provas carrega o renderizador histórico separado', async () => {
   const html = await readFile(new URL('../provas.html', import.meta.url), 'utf8');
   const script = await readFile(new URL('../assets/exams-page.js', import.meta.url), 'utf8');
+  const contentLoader = await readFile(new URL('../assets/content-loader.js', import.meta.url), 'utf8');
   assert.match(html, /assets\/exams-page\.js/);
-  assert.match(script, /content\/exams-history\.json/);
+  assert.match(script, /loadExamsHistory/);
+  assert.match(contentLoader, /content\/exams-history\.json/);
   assert.match(script, /historical-metadata-only/);
   assert.doesNotMatch(script, /simulation_attempts|question_attempts|service_role/);
 });

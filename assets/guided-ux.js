@@ -1,10 +1,9 @@
 import { createClient } from './supabase-client.js';
 import { supabaseConfig } from './supabase-config.js';
 import { nextGuidedStep } from './applicability-core.js';
+import { loadApplicability, loadCatalog } from './content-loader.js';
 
 const pageId = document.body.dataset.page || 'home';
-const CATALOG_URL = './content/catalog.json';
-const APPLICABILITY_URL = './content/content-applicability.json';
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
   auth: {
@@ -23,14 +22,8 @@ const state = {
 function publicData() {
   if (!state.publicPromise) {
     state.publicPromise = Promise.all([
-      fetch(CATALOG_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Catálogo indisponível.');
-        return response.json();
-      }),
-      fetch(APPLICABILITY_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Camada de aplicabilidade indisponível.');
-        return response.json();
-      })
+      loadCatalog(),
+      loadApplicability()
     ]).then(([catalog, applicability]) => ({ catalog, applicability }));
   }
   return state.publicPromise;

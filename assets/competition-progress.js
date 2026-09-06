@@ -5,10 +5,9 @@ import {
   nextGuidedStep,
   resolveUnitApplicability
 } from './applicability-core.js';
+import { loadApplicability, loadCatalog } from './content-loader.js';
 
 const pageId = document.body.dataset.page || 'home';
-const CATALOG_URL = './content/catalog.json';
-const APPLICABILITY_URL = './content/content-applicability.json';
 const STYLE_URL = './assets/competition-progress.css';
 const COMPETITION_LABELS = Object.freeze({ PMDF: 'PMDF', PMGO: 'PMGO', PMMG: 'PMMG' });
 
@@ -23,9 +22,15 @@ const supabase = createClient(supabaseConfig.url, supabaseConfig.publishableKey,
 const state = {
   publicPromise: null,
   privatePromise: null,
+  authVersion: 0,
   observer: null,
   queued: false
 };
+
+supabase.auth.onAuthStateChange(() => {
+  state.authVersion += 1;
+  state.privatePromise = null;
+});
 
 function injectStyles() {
   if (document.querySelector('link[data-competition-progress]')) return;
@@ -45,14 +50,8 @@ function escapeHtml(value) {
 function publicData() {
   if (!state.publicPromise) {
     state.publicPromise = Promise.all([
-      fetch(CATALOG_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Catálogo indisponível.');
-        return response.json();
-      }),
-      fetch(APPLICABILITY_URL, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error('Camada de aplicabilidade indisponível.');
-        return response.json();
-      })
+      loadCatalog(),
+      loadApplicability()
     ]).then(([catalog, applicability]) => ({ catalog, applicability }));
   }
   return state.publicPromise;
@@ -106,6 +105,10 @@ function privateData() {
         return { authenticated: false, studyUnits: [], attempts: [], openErrorQuestionIds: [], degraded: true };
       }
     })();
+    const pending = state.privatePromise;
+    pending.finally(() => {
+      if (state.privatePromise === pending) state.privatePromise = null;
+    });
   }
   return state.privatePromise;
 }
@@ -155,7 +158,9 @@ async function renderPerformancePanel() {
   if (pageId !== 'performance' || document.querySelector('#competitionProgressPanel')) return;
   const target = document.querySelector('#pageContent');
   if (!target?.children.length) return;
+  const authVersion = state.authVersion;
   const [{ catalog, applicability }, privateProgress] = await Promise.all([publicData(), privateData()]);
+  if (authVersion !== state.authVersion) return;
   if (!privateProgress.authenticated) return;
   if (document.querySelector('#competitionProgressPanel')) return;
 
@@ -231,7 +236,9 @@ async function renderScheduleProgress() {
   if (pageId !== 'schedule' || document.querySelector('#guidedCycleProgress')) return;
   const target = document.querySelector('#pageContent');
   if (!target?.children.length) return;
+  const authVersion = state.authVersion;
   const [{ catalog, applicability }, privateProgress] = await Promise.all([publicData(), privateData()]);
+  if (authVersion !== state.authVersion) return;
   if (document.querySelector('#guidedCycleProgress')) return;
   const model = computeCompetitionProgress({
     catalog,
